@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using WireDev.Erp.V2024.Api.Context;
+using WireDev.Erp.V1.Api.Context;
 
-namespace WireDev.Erp.V2024.Api
+namespace WireDev.Erp.V1.Api
 {
     public class Program
     {

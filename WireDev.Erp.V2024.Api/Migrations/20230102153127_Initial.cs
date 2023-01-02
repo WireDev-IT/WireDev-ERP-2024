@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace WireDev.Erp.V2024.Api.Migrations
+namespace WireDev.Erp.V1.Api.Migrations
 {
     /// <inheritdoc />
     public partial class Initial : Migration

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace WireDev.Erp.V2024.Api.Context
+namespace WireDev.Erp.V1.Api.Context
 {
     public class ApplicationUserDbContext : IdentityDbContext<IdentityUser>
     {

@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using WireDev.Erp.V2024.Api.Context;
+using WireDev.Erp.V1.Api.Context;
 
 #nullable disable
 
-namespace WireDev.Erp.V2024.Api.Migrations
+namespace WireDev.Erp.V1.Api.Migrations
 {
     [DbContext(typeof(ApplicationUserDbContext))]
     partial class ApplicationUserDbContextModelSnapshot : ModelSnapshot

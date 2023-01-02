@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using WireDev.Erp.V2024.Api.Context;
+using WireDev.Erp.V1.Api.Context;
 
 #nullable disable
 
-namespace WireDev.Erp.V2024.Api.Migrations
+namespace WireDev.Erp.V1.Api.Migrations
 {
     [DbContext(typeof(ApplicationUserDbContext))]
     [Migration("20230102153127_Initial")]

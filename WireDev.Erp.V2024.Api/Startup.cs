@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using WireDev.Erp.V2024.Api.Context;
+using WireDev.Erp.V1.Api.Context;
 
-namespace WireDev.Erp.V2024.Api
+namespace WireDev.Erp.V1.Api
 {
     public class Startup
     {
@@ -51,6 +51,21 @@ namespace WireDev.Erp.V2024.Api
                     ValidIssuer = Configuration["JWT:ValidIssuer"],
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"]))
                 };
+            });
+
+            _ = services.AddAuthorization(opts =>
+            {
+                opts.AddPolicy("management", policy =>
+                {
+                    _ = policy.RequireRole("Manager");
+                    _ = policy.RequireClaim("scopes", "PRODUCTS:RW");
+                });
+            });
+
+            _ = services.AddAuthorization(options =>
+            {
+                options.AddPolicy("read", policy => policy.RequireClaim("scope", "weather.read"));
+                options.AddPolicy("readwrite", policy => policy.RequireClaim("scope", "weather.readwrite"));
             });
         }
 

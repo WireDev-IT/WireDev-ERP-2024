@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WireDev.Erp.V2024.Api", "WireDev.ERP.V2024.Api\WireDev.Erp.V2024.Api.csproj", "{AC4CCD91-64F8-4E01-A147-6F4D7092E9A4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WireDev.Erp.V1.Api", "WireDev.ERP.V2024.Api\WireDev.Erp.V1.Api.csproj", "{AC4CCD91-64F8-4E01-A147-6F4D7092E9A4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WireDev.Erp.V2024.Models", "WireDev.Erp.V2024.Models\WireDev.Erp.V2024.Models.csproj", "{5473B302-8361-4F0E-B831-EB92C065E738}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WireDev.Erp.V1.Models", "WireDev.Erp.V2024.Models\WireDev.Erp.V1.Models.csproj", "{5473B302-8361-4F0E-B831-EB92C065E738}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WireDev.Erp.V1.Admin", "WireDev.Erp.V1.Admin\WireDev.Erp.V1.Admin.csproj", "{E25B4987-D64B-4A00-B0F1-27FCAA20ABA0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{5473B302-8361-4F0E-B831-EB92C065E738}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5473B302-8361-4F0E-B831-EB92C065E738}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5473B302-8361-4F0E-B831-EB92C065E738}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E25B4987-D64B-4A00-B0F1-27FCAA20ABA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E25B4987-D64B-4A00-B0F1-27FCAA20ABA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E25B4987-D64B-4A00-B0F1-27FCAA20ABA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E25B4987-D64B-4A00-B0F1-27FCAA20ABA0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

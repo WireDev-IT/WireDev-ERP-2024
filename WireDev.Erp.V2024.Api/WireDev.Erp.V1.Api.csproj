@@ -5,7 +5,13 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>639789bf-8666-4305-8336-5ec633ebe8cf</UserSecretsId>
+    <StartupObject>WireDev.Erp.V2024.Api.Program</StartupObject>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="icon.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.12" />
@@ -26,7 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WireDev.Erp.V2024.Models\WireDev.Erp.V2024.Models.csproj" />
+    <ProjectReference Include="..\WireDev.Erp.V2024.Models\WireDev.Erp.V1.Models.csproj" />
   </ItemGroup>
 
 </Project>

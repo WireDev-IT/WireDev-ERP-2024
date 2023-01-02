@@ -1,4 +1,4 @@
-namespace WireDev.Erp.V2024.Api
+namespace WireDev.Erp.V1.Api
 {
     public class WeatherForecast
     {

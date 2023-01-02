@@ -1,15 +1,17 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using WireDev.Erp.V2024.Models.Authentication;
+using WireDev.Erp.V1.Models.Authentication;
 
-namespace WireDev.Erp.V2024.Api.Controllers
+namespace WireDev.Erp.V1.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [AllowAnonymous]
     public class AuthenticateController : ControllerBase
     {
         private readonly UserManager<IdentityUser> userManager;
@@ -36,6 +38,8 @@ namespace WireDev.Erp.V2024.Api.Controllers
                 {
                     new Claim(ClaimTypes.Name, user.UserName),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim("scope", "weather.read"),
+                    new Claim("scope", "weather.readwrite")
                 };
 
                 foreach (string? userRole in userRoles)

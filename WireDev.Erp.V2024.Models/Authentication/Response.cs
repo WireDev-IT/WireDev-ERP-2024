@@ -1,4 +1,4 @@
-﻿namespace WireDev.Erp.V2024.Models.Authentication
+﻿namespace WireDev.Erp.V1.Models.Authentication
 {
     public class Response
     {
