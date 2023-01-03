@@ -6,4 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Statistics\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Statistics\" />
+  </ItemGroup>
 </Project>

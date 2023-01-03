@@ -2,10 +2,12 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using WireDev.Erp.V1.Models.Authentication;
+using WireDev.Erp.V1.Models.Statistics;
 
 namespace WireDev.Erp.V1.Api.Controllers
 {
@@ -23,6 +25,15 @@ namespace WireDev.Erp.V1.Api.Controllers
             this.userManager = userManager;
             this.roleManager = roleManager;
             _configuration = configuration;
+        }
+
+        [HttpGet]
+        [Route("test")]
+        public async Task Test()
+        {
+            DayStats d = new(DateTime.Now);
+            Debug.WriteLine(d.GetDate());
+            Ok(new Response { Status = "Success", Message = d.GetDate().ToString() });
         }
 
         [HttpPost]
