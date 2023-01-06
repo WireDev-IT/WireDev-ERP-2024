@@ -1,4 +1,4 @@
-﻿namespace WireDev.Erp.V1.Models.Statistics
+﻿namespace WireDev.Erp.V1.Models.Interfaces
 {
     public interface IEventOnDate
     {

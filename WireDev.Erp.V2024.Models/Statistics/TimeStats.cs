@@ -1,4 +1,6 @@
 ﻿using System;
+using WireDev.Erp.V1.Models.Interfaces;
+
 namespace WireDev.Erp.V1.Models.Statistics
 {
     public class TimeStats : ITimeStats

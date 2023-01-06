@@ -1,9 +1,9 @@
 ﻿using System;
 namespace WireDev.Erp.V1.Models.Statistics
 {
-	public class SoldOnDate : EventOnDate
+	public class DisposedOnDate : EventOnDate
 	{
-        public SoldOnDate(DateTime date, Guid productId) : base(date, productId)
+        public DisposedOnDate(DateTime date, Guid productId) : base(date, productId)
         {
         }
     }

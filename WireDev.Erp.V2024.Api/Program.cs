@@ -10,7 +10,10 @@ namespace WireDev.Erp.V1.Api
 
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            IHost host = CreateHostBuilder(args).Build();
+            Logger = host.Services.GetRequiredService<ILogger<Program>>();
+            Logger.LogInformation("Host created");
+            host.Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args)

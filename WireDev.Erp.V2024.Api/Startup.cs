@@ -24,6 +24,7 @@ namespace WireDev.Erp.V1.Api
 
             // For Entity Framework
             _ = services.AddDbContext<ApplicationUserDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("UserConnStr")));
+            _ = services.AddDbContext<ProductDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("UserConnStr")));
 
             // For Identity
             _ = services.AddIdentity<IdentityUser, IdentityRole>()
@@ -53,19 +54,22 @@ namespace WireDev.Erp.V1.Api
                 };
             });
 
-            _ = services.AddAuthorization(opts =>
-            {
-                opts.AddPolicy("management", policy =>
-                {
-                    _ = policy.RequireRole("Manager");
-                    _ = policy.RequireClaim("scopes", "PRODUCTS:RW");
-                });
-            });
+            //_ = services.AddAuthorization(opts =>
+            //{
+            //    opts.AddPolicy("management", policy =>
+            //    {
+            //        _ = policy.RequireRole("Manager");
+            //        _ = policy.RequireClaim("scopes", "PRODUCTS:RW");
+            //    });
+            //});
 
             _ = services.AddAuthorization(options =>
             {
-                options.AddPolicy("read", policy => policy.RequireClaim("scope", "weather.read"));
-                options.AddPolicy("readwrite", policy => policy.RequireClaim("scope", "weather.readwrite"));
+                options.AddPolicy("PRODUCTS:RO", policy => policy.RequireClaim("scope", "PRODUCTS:RO"));
+                options.AddPolicy("PRODUCTS:RW", policy => policy.RequireClaim("scope", "PRODUCTS:RW"));
+                options.AddPolicy("PURCHASE_SELL:RW", policy => policy.RequireClaim("scope", "PURCHASE_SELL:RW"));
+                options.AddPolicy("PURCHASE_CANCEL:RW", policy => policy.RequireClaim("scope", "PURCHASE_CANCEL:RW"));
+                options.AddPolicy("PURCHASE_WITHDRAW:RW", policy => policy.RequireClaim("scope", "PURCHASE_WITHDRAW:RW"));
             });
         }
 

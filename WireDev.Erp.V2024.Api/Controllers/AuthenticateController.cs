@@ -27,17 +27,7 @@ namespace WireDev.Erp.V1.Api.Controllers
             _configuration = configuration;
         }
 
-        [HttpGet]
-        [Route("test")]
-        public async Task Test()
-        {
-            DayStats d = new(DateTime.Now);
-            Debug.WriteLine(d.GetDate());
-            Ok(new Response { Status = "Success", Message = d.GetDate().ToString() });
-        }
-
-        [HttpPost]
-        [Route("login")]
+        [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
             IdentityUser user = await userManager.FindByNameAsync(model.Username);
@@ -77,8 +67,7 @@ namespace WireDev.Erp.V1.Api.Controllers
             return Unauthorized();
         }
 
-        [HttpPost]
-        [Route("register")]
+        [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
             IdentityUser userExists = await userManager.FindByNameAsync(model.Username);
@@ -99,8 +88,7 @@ namespace WireDev.Erp.V1.Api.Controllers
                 : (IActionResult)Ok(new Response { Status = "Success", Message = "User created successfully!" });
         }
 
-        [HttpPost]
-        [Route("register-admin")]
+        [HttpPost("register-admin")]
         public async Task<IActionResult> RegisterAdmin([FromBody] RegisterModel model)
         {
             IdentityUser userExists = await userManager.FindByNameAsync(model.Username);

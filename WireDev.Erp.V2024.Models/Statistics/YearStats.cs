@@ -1,9 +1,9 @@
 ﻿using System;
 namespace WireDev.Erp.V1.Models.Statistics
 {
-    public class DayStats : TimeStats
+    public class YearStats : TimeStats
     {
-        public DayStats(DateTime date) : base(date)
+        public YearStats(DateTime date) : base(date)
         {
 
         }
