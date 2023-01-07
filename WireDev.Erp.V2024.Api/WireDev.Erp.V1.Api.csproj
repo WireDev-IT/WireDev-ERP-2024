@@ -35,4 +35,8 @@
     <ProjectReference Include="..\WireDev.Erp.V2024.Models\WireDev.Erp.V1.Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

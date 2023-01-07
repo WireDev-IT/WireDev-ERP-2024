@@ -1,5 +1,8 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
+using System.Text.Json;
 using WireDev.Erp.V1.Models.Enums;
 
 namespace WireDev.Erp.V1.Models.Storage
@@ -8,13 +11,16 @@ namespace WireDev.Erp.V1.Models.Storage
     {
         public Purchase()
         {
+            Uuid = Guid.NewGuid();
         }
 
-        public bool Posted { get; private set; } = false;
-        public void Post() => Posted = true;
-
+        [Key]
+        public Guid Uuid { get; }
+        [Column(TypeName = "decimal(5, 2)")]
         public decimal TotalPrice { get; private set; } = 0;
         public Dictionary<(Guid productId, Guid priceId, TransactionType type), uint> Items { get; private set; } = new();
+        public bool Posted { get; private set; } = false;
+
         public bool TryAddItem(Guid productId, Guid priceId, TransactionType type, uint itemCount)
         {
             if (!Posted)
@@ -22,7 +28,7 @@ namespace WireDev.Erp.V1.Models.Storage
                 Items.Add((productId, priceId, type), itemCount);
 
                 //TODO: Find price
-                Price price = new(0, 0);
+                Price price = new();
 
                 if (type == TransactionType.Sell)
                 {
@@ -41,5 +47,6 @@ namespace WireDev.Erp.V1.Models.Storage
             }
             return false;
         }
+        public void Post() => Posted = true;
     }
 }

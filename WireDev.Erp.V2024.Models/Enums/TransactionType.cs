@@ -1,5 +1,4 @@
-﻿using System;
-namespace WireDev.Erp.V1.Models.Enums
+﻿namespace WireDev.Erp.V1.Models.Enums
 {
 	public enum TransactionType
 	{

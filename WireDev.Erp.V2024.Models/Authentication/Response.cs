@@ -2,7 +2,15 @@
 {
     public class Response
     {
-        public string? Status { get; set; }
-        public string? Message { get; set; }
+        public Response(bool success, string? message, object? data = null)
+        {
+            Status = success ? "Success" : "Error";
+            Message = message;
+            Data = data;
+        }
+
+        public string Status { get; }
+        public string? Message { get; }
+        public object? Data { get; }
     }
 }

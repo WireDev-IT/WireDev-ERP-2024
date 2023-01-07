@@ -24,7 +24,7 @@ namespace WireDev.Erp.V1.Api
 
             // For Entity Framework
             _ = services.AddDbContext<ApplicationUserDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("UserConnStr")));
-            _ = services.AddDbContext<ProductDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("UserConnStr")));
+            _ = services.AddDbContext<ProductDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ProductConnStr")));
 
             // For Identity
             _ = services.AddIdentity<IdentityUser, IdentityRole>()

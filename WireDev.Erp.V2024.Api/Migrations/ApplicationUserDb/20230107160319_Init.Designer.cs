@@ -3,17 +3,20 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WireDev.Erp.V1.Api.Context;
 
 #nullable disable
 
-namespace WireDev.Erp.V1.Api.Migrations
+namespace WireDev.Erp.V1.Api.Migrations.ApplicationUserDb
 {
     [DbContext(typeof(ApplicationUserDbContext))]
-    partial class ApplicationUserDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230107160319_Init")]
+    partial class Init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

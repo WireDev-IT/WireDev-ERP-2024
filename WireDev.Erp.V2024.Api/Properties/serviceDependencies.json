@@ -5,6 +5,11 @@
     },
     "mssql1": {
       "type": "mssql",
+      "connectionId": "ConnectionStrings:ProductConnStr",
+      "dynamicId": null
+    },
+    "mssql2": {
+      "type": "mssql",
       "connectionId": "ConnectionStrings:UserConnStr",
       "dynamicId": null
     }
