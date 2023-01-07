@@ -5,19 +5,21 @@ namespace WireDev.Erp.V1.Models.Storage
 {
     public class Product
     {
-        public Product(string name, Guid priceId, bool active = false, string? description = null)
+        public Product(string name, string? description = null, bool active = false)
         {
-            DateCreated = DateTime.Now;
+            DateCreated = DateTime.UtcNow;
             Uuid = Guid.NewGuid();
             Name = name;
             Active = active;
-            Prices.Add(priceId);
         }
 
         public DateTime DateCreated { get; }
 
+        public bool Used { get; private set; } = false;
+        public void Use() => Used = true;
+
         [Key]
-        public Guid? Uuid { get; }
+        public Guid Uuid { get; }
         public string Name { get; set; }
         public string? Description { get; set; }
         public bool Active { get; set; }

@@ -1,4 +1,4 @@
-﻿namespace WireDev.Erp.V1.Models.Storage
+﻿namespace WireDev.Erp.V1.Models.Interfaces
 {
     public interface IPrice
     {
@@ -13,7 +13,7 @@
         bool Archived { get; set; }
 
         /// <summary>
-        /// The Description of the price.
+        /// The description of the price.
         /// </summary>
         string? Description { get; set; }
 

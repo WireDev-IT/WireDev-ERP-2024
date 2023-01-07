@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using WireDev.Erp.V1.Models.Interfaces;
 
 namespace WireDev.Erp.V1.Models.Storage
 {

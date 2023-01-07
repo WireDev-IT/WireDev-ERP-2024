@@ -13,7 +13,7 @@ namespace WireDev.Erp.V1.Models.Storage
         public bool Posted { get; private set; } = false;
         public void Post() => Posted = true;
 
-        public decimal TotalPrice { get; private set; }
+        public decimal TotalPrice { get; private set; } = 0;
         public Dictionary<(Guid productId, Guid priceId, TransactionType type), uint> Items { get; private set; } = new();
         public bool TryAddItem(Guid productId, Guid priceId, TransactionType type, uint itemCount)
         {

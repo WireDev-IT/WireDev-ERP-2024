@@ -10,11 +10,12 @@ namespace WireDev.Erp.V1.Models.Statistics
         {
             ProductId = productId;
             PriceId = priceId;
+            Transactions = new();
         }
 
         public Guid ProductId { get; }
         public Guid PriceId { get; }
-        public Dictionary<long, TransactionType> Transactions { get; private set; } = new();
+        public Dictionary<long, TransactionType> Transactions { get; private set; }
 
         public void AddTransaction(TransactionType type)
         {
