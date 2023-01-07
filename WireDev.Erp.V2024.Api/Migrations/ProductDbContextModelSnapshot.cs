@@ -44,7 +44,7 @@ namespace WireDev.Erp.V1.Api.Migrations
                     b.HasData(
                         new
                         {
-                            Uuid = new Guid("38f3afd5-5b00-4dc1-b489-bf940729d89f"),
+                            Uuid = new Guid("c3eb8b6d-ac1e-4cf2-a27e-5f3a43d97412"),
                             Description = "Default_Price"
                         });
                 });
@@ -77,7 +77,7 @@ namespace WireDev.Erp.V1.Api.Migrations
                     b.HasData(
                         new
                         {
-                            Uuid = new Guid("04d1efb1-c4b2-4aeb-befb-a924bb0e2f4e"),
+                            Uuid = new Guid("2b94e353-6c64-4922-93e0-4f3855743286"),
                             Archived = false,
                             Description = "Default_Price",
                             Locked = false,
@@ -131,7 +131,7 @@ namespace WireDev.Erp.V1.Api.Migrations
                     b.HasData(
                         new
                         {
-                            Uuid = new Guid("028d2f3d-a6e6-4314-95ce-4cf681e310ac"),
+                            Uuid = new Guid("c112a489-fad9-449c-ba1e-282aecea657a"),
                             Active = false,
                             Archived = false,
                             Categories = "[]",
