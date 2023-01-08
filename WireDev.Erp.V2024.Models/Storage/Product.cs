@@ -28,14 +28,19 @@ namespace WireDev.Erp.V1.Models.Storage
 
         [Key]
         public Guid Uuid { get; }
-        public string Name { get; set; }
+        [Required(ErrorMessage = "Product needs a name.")]
+        public string? Name { get; set; }
         public string? Description { get; set; }
-        public bool Active { get; set; }
+        public bool Active { get; set; } = false;
         public bool Archived { get; set; } = false;
+        public uint Availible { get; private set; } = 0;
 
         public List<Guid> Prices { get; set; } = new();
         public List<Guid> Categories { get; set; } = new();
         public Dictionary<string, string> Properties { get; set; } = new();
         public Dictionary<string, string> Metadata { get; set; } = new();
+
+        public uint Add(uint add) => Availible += add;
+        public uint Remove(uint add) => Availible -= add;
     }
 }

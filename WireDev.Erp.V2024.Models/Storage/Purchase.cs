@@ -18,6 +18,7 @@ namespace WireDev.Erp.V1.Models.Storage
         public Guid Uuid { get; }
         [Column(TypeName = "decimal(5, 2)")]
         public decimal TotalPrice { get; private set; } = 0;
+        public DateTime? DatePosted { get; private set; } = null;
         public Dictionary<(Guid productId, Guid priceId, TransactionType type), uint> Items { get; private set; } = new();
         public bool Posted { get; private set; } = false;
 
@@ -34,7 +35,7 @@ namespace WireDev.Erp.V1.Models.Storage
                 {
                     TotalPrice = decimal.Add(TotalPrice, price.SellValue);
                 }
-                else if (type == TransactionType.Disposed)
+                else if (type == TransactionType.Disposed || type == TransactionType.Purchase)
                 {
                     TotalPrice = decimal.Subtract(TotalPrice, price.RetailValue);
                 }
@@ -47,6 +48,11 @@ namespace WireDev.Erp.V1.Models.Storage
             }
             return false;
         }
-        public void Post() => Posted = true;
+
+        public void Post()
+        {
+            Posted = true;
+            DatePosted = DateTime.UtcNow;
+        }
     }
 }

@@ -5,7 +5,8 @@
 		Sell,
 		Cancel,
 		Withdraw,
-		Disposed
+		Disposed,
+		Purchase
 	}
 }
 

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WireDev.Erp.V1.Api.Context;
 
@@ -10,9 +11,11 @@ using WireDev.Erp.V1.Api.Context;
 namespace WireDev.Erp.V1.Api.Migrations
 {
     [DbContext(typeof(ProductDbContext))]
-    partial class ProductDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230108184316_Init")]
+    partial class Init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.1");
@@ -39,8 +42,8 @@ namespace WireDev.Erp.V1.Api.Migrations
                     b.HasData(
                         new
                         {
-                            Uuid = new Guid("1c96c230-a083-4a8e-923f-30383ecf136d"),
-                            Description = "Default_Catetgory"
+                            Uuid = new Guid("52912cba-7c40-4062-8ccb-d0a153dc6d7f"),
+                            Description = "Default_Price"
                         });
                 });
 
@@ -72,7 +75,7 @@ namespace WireDev.Erp.V1.Api.Migrations
                     b.HasData(
                         new
                         {
-                            Uuid = new Guid("832975c0-8992-4b92-a561-c1e486e39ab5"),
+                            Uuid = new Guid("d348aa97-7324-4c91-8a11-5bc87aeba237"),
                             Archived = false,
                             Description = "Default_Price",
                             Locked = false,
@@ -91,9 +94,6 @@ namespace WireDev.Erp.V1.Api.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("Archived")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<uint>("Availible")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Categories")
@@ -129,10 +129,9 @@ namespace WireDev.Erp.V1.Api.Migrations
                     b.HasData(
                         new
                         {
-                            Uuid = new Guid("946bf7d2-3a92-4c8a-8d37-7be2d7f1aed0"),
+                            Uuid = new Guid("4714b90d-b94a-407b-9204-55a4a45b45ec"),
                             Active = false,
                             Archived = false,
-                            Availible = 0u,
                             Categories = "[]",
                             Metadata = "{}",
                             Name = "Default_Product",
@@ -148,9 +147,6 @@ namespace WireDev.Erp.V1.Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("DatePosted")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("Items")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -164,16 +160,6 @@ namespace WireDev.Erp.V1.Api.Migrations
                     b.HasKey("Uuid");
 
                     b.ToTable("Purchases");
-
-                    b.HasData(
-                        new
-                        {
-                            Uuid = new Guid("2ce5bea1-93f9-4fd5-90e8-c06a6828be02"),
-                            DatePosted = new DateTime(2023, 1, 8, 20, 46, 45, 97, DateTimeKind.Utc).AddTicks(7600),
-                            Items = "{}",
-                            Posted = true,
-                            TotalPrice = 0m
-                        });
                 });
 #pragma warning restore 612, 618
         }

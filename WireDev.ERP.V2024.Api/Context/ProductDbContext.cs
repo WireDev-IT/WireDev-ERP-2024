@@ -30,16 +30,21 @@ namespace WireDev.Erp.V1.Api.Context
 
             _ = builder.Entity<Product>().HasData(new Product() { Name = "Default_Product" });
             _ = builder.Entity<Price>().HasData(new Price() { Description = "Default_Price" });
-            _ = builder.Entity<Category>().HasData(new Category() { Description = "Default_Price" });
+            _ = builder.Entity<Category>().HasData(new Category() { Description = "Default_Catetgory" });
+            Purchase p = new();
+            p.Post();
+            _ = builder.Entity<Purchase>().HasData(p);
 
             _ = builder.Entity<Product>()
                 .Property(e => e.Metadata)
                 .HasConversion(v => JsonSerializer.Serialize(v, null as JsonSerializerOptions),
                                v => JsonSerializer.Deserialize<Dictionary<string, string>>(v, null as JsonSerializerOptions));
+
             _ = builder.Entity<Product>()
                 .Property(e => e.Properties)
                 .HasConversion(v => JsonSerializer.Serialize(v, null as JsonSerializerOptions),
                                v => JsonSerializer.Deserialize<Dictionary<string, string>>(v, null as JsonSerializerOptions));
+
             _ = builder.Entity<Product>()
                 .Property(e => e.Categories)
                 .HasConversion(v => JsonSerializer.Serialize(v, null as JsonSerializerOptions),
@@ -48,6 +53,7 @@ namespace WireDev.Erp.V1.Api.Context
                                    (c1, c2) => c1.SequenceEqual(c2),
                                    c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
                                    c => c.ToList()));
+
             _ = builder.Entity<Product>()
                 .Property(e => e.Prices)
                 .HasConversion(v => JsonSerializer.Serialize(v, null as JsonSerializerOptions),

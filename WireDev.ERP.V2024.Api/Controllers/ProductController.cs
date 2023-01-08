@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WireDev.Erp.V1.Api.Context;
 using WireDev.Erp.V1.Models.Authentication;
@@ -61,7 +62,7 @@ namespace WireDev.Erp.V1.Api.Controllers
         /// <returns>The UUID of the added product.</returns>
         //[Authorize("PRODUCTS:RW")]
         [HttpPost("add")]
-        public async Task<IActionResult> AddProduct([FromBody] Product product)
+        public async Task<IActionResult> AddProduct([FromBody][Required(ErrorMessage = "To add a product, you have to provide one.")] Product product)
         {
             try
             {
@@ -80,7 +81,7 @@ namespace WireDev.Erp.V1.Api.Controllers
 
         //[Authorize("PRODUCTS:RW")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> ModifyProduct(Guid id, [FromBody] Product product)
+        public async Task<IActionResult> ModifyProduct(Guid id, [FromBody][Required(ErrorMessage = "To modify a product, you have to provide changes.")] Product product)
         {
             Product? p;
             try

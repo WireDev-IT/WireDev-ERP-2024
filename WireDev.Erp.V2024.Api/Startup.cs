@@ -23,8 +23,11 @@ namespace WireDev.Erp.V1.Api
             _ = services.AddSwaggerGen();
 
             // For Entity Framework
-            _ = services.AddDbContext<ApplicationUserDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("UserConnStr")));
-            _ = services.AddDbContext<ProductDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ProductConnStr")));
+            //_ = services.AddDbContext<ApplicationUserDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("UserConnStr")));
+            //_ = services.AddDbContext<ProductDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ProductConnStr")));
+
+            _ = services.AddDbContext<ApplicationUserDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("WebApiDatabase")));
+            _ = services.AddDbContext<ProductDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("WebApiDatabase")));
 
             // For Identity
             _ = services.AddIdentity<IdentityUser, IdentityRole>()
