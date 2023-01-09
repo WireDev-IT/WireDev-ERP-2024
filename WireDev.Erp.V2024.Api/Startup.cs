@@ -60,19 +60,26 @@ namespace WireDev.Erp.V1.Api
                 };
             });
 
-            //_ = services.AddAuthorization(opts =>
-            //{
-            //    opts.AddPolicy("management", policy =>
-            //    {
-            //        _ = policy.RequireRole("Manager");
-            //        _ = policy.RequireClaim("scopes", "PRODUCTS:RW");
-            //    });
-            //});
+            _ = services.AddAuthorization(opts =>
+            {
+                opts.AddPolicy("admin", policy =>
+                {
+                    _ = policy.RequireRole("Administrator");
+                    _ = policy.RequireClaim("scopes", "ADMIN:RW");
+                });
+            });
 
             _ = services.AddAuthorization(options =>
             {
+                options.AddPolicy("ADMIN:RW", policy => policy.RequireClaim("scope", "ADMIN:RW"));
                 options.AddPolicy("PRODUCTS:RO", policy => policy.RequireClaim("scope", "PRODUCTS:RO"));
                 options.AddPolicy("PRODUCTS:RW", policy => policy.RequireClaim("scope", "PRODUCTS:RW"));
+                options.AddPolicy("PRICES:RO", policy => policy.RequireClaim("scope", "PRICES:RO"));
+                options.AddPolicy("PRICES:RW", policy => policy.RequireClaim("scope", "PRICES:RW"));
+                options.AddPolicy("CATEGORIES:RO", policy => policy.RequireClaim("scope", "CATEGORIES:RO"));
+                options.AddPolicy("CATEGORIES:RW", policy => policy.RequireClaim("scope", "CATEGORIES:RW"));
+                options.AddPolicy("PURCHASE:RO", policy => policy.RequireClaim("scope", "PURCHASE:RO"));
+                options.AddPolicy("PURCHASE_BUY:RW", policy => policy.RequireClaim("scope", "PURCHASE_BUY:RW"));
                 options.AddPolicy("PURCHASE_SELL:RW", policy => policy.RequireClaim("scope", "PURCHASE_SELL:RW"));
                 options.AddPolicy("PURCHASE_CANCEL:RW", policy => policy.RequireClaim("scope", "PURCHASE_CANCEL:RW"));
                 options.AddPolicy("PURCHASE_WITHDRAW:RW", policy => policy.RequireClaim("scope", "PURCHASE_WITHDRAW:RW"));
@@ -80,7 +87,7 @@ namespace WireDev.Erp.V1.Api
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
