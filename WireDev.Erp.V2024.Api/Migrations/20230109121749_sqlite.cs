@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace WireDev.Erp.V1.Api.Migrations.ApplicationUserDb
+namespace WireDev.Erp.V1.Api.Migrations
 {
     /// <inheritdoc />
     public partial class sqlite : Migration

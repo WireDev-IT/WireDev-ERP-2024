@@ -2,20 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WireDev.Erp.V1.Api.Context;
 
 #nullable disable
 
-namespace WireDev.Erp.V1.Api.Migrations.ApplicationUserDb
+namespace WireDev.Erp.V1.Api.Migrations
 {
     [DbContext(typeof(ApplicationUserDbContext))]
-    [Migration("20230108204729_sqlite")]
-    partial class sqlite
+    partial class ApplicationUserDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.1");

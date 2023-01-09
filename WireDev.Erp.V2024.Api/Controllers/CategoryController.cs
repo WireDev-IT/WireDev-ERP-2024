@@ -1,39 +1,38 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WireDev.Erp.V1.Api.Context;
 using WireDev.Erp.V1.Models.Authentication;
-using WireDev.Erp.V1.Models.Enums;
 using WireDev.Erp.V1.Models.Storage;
 
 namespace WireDev.Erp.V1.Api.Controllers
 {
-    [ApiController]
-    //[Authorize("PRODUCTS:RO,PRODUCTS:RW")]
-    [Route("api/[controller]")]
-    public class ProductController : Controller
+    public class CategoryController : Controller
     {
-        private readonly ProductDbContext _context;
-        private readonly ILogger<ProductController> _logger;
+        private readonly CategoryDbContext _context;
+        private readonly ILogger<CategoryController> _logger;
 
-        public ProductController(ProductDbContext context, ILogger<ProductController> logger)
+        public CategoryController(CategoryDbContext context, ILogger<CategoryController> logger)
         {
             _logger = logger;
             _context = context;
         }
 
         [HttpGet("all")]
-        public async Task<IActionResult> GetProducts()
+        public async Task<IActionResult> GetCategories()
         {
-            List<Product>? list;
+            List<Category>? list;
             try
             {
-                list = await _context.Products.ToListAsync();
+                list = await _context.Categories.ToListAsync();
             }
             catch (Exception ex)
             {
-                string message = $"List of products cannot be retrieved!";
+                string message = $"List of categories cannot be retrieved!";
                 _logger.LogError(message, ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
             }
@@ -42,17 +41,17 @@ namespace WireDev.Erp.V1.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetProduct(Guid id)
+        public async Task<IActionResult> GetCategory(Guid id)
         {
-            Product? product;
+            Category? category;
             try
             {
-                product = await _context.Products.FirstAsync(x => x.Uuid == id);
-                return Ok(new Response(true, null, product));
+                category = await _context.Categories.FirstAsync(x => x.Uuid == id);
+                return Ok(new Response(true, null, category));
             }
             catch (Exception ex)
             {
-                string message = $"Product with the UUID {id} was not found!";
+                string message = $"Category with the UUID {id} was not found!";
                 _logger.LogWarning(message, ex);
                 return NotFound(new Response(true, message));
             }
@@ -61,15 +60,15 @@ namespace WireDev.Erp.V1.Api.Controllers
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="product"></param>
-        /// <returns>The UUID of the added product.</returns>
-        //[Authorize("PRODUCTS:RW")]
+        /// <param name="category"></param>
+        /// <returns>The UUID of the added category.</returns>
+        //[Authorize("CATEGORIES:RW")]
         [HttpPost("add")]
-        public async Task<IActionResult> AddProduct([FromBody][Required(ErrorMessage = "To add a product, you have to provide one.")] Product product)
+        public async Task<IActionResult> AddCategory([FromBody][Required(ErrorMessage = "To add a category, you have to provide one.")] Category category)
         {
             try
             {
-                _ = await _context.Products.AddAsync(product);
+                _ = await _context.Categories.AddAsync(category);
                 _ = await _context.SaveChangesAsync();
             }
             catch (DbUpdateException ex)
@@ -80,24 +79,24 @@ namespace WireDev.Erp.V1.Api.Controllers
             }
             catch (Exception ex)
             {
-                string message = $"Add product {product.Uuid} failed!";
+                string message = $"Add category {category.Uuid} failed!";
                 _logger.LogError(message, ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
             }
 
-            return Ok(new Response(true, null, product.Uuid));
+            return Ok(new Response(true, null, category.Uuid));
         }
 
-        //[Authorize("PRODUCTS:RW")]
+        //[Authorize("CATEGORIES:RW")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> ModifyProduct(Guid id, [FromBody][Required(ErrorMessage = "To modify a product, you have to provide changes.")] Product product)
+        public async Task<IActionResult> ModifyCategory(Guid id, [FromBody][Required(ErrorMessage = "To modify a category, you have to provide changes.")] Category category)
         {
-            Product? p;
+            Category? c;
             try
             {
-                p = await _context.Products.FirstAsync(x => x.Uuid == id);
-                p = product;
-                _ = _context.Update(p);
+                c = await _context.Categories.FirstAsync(x => x.Uuid == id);
+                c = category;
+                _ = _context.Update(category);
                 _ = _context.SaveChanges();
             }
             catch (DbUpdateException ex)
@@ -108,34 +107,34 @@ namespace WireDev.Erp.V1.Api.Controllers
             }
             catch (ArgumentNullException ex)
             {
-                string message = $"Product with the UUID {id} was not found!";
+                string message = $"Category with the UUID {id} was not found!";
                 _logger.LogError(message, ex);
                 return NotFound(new Response(false, message));
             }
             catch (Exception ex)
             {
-                string message = $"Edit product {id} failed!";
+                string message = $"Edit category {id} failed!";
                 _logger.LogError(message, ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
             }
 
-            return Ok(new Response(true, null, p));
+            return Ok(new Response(true, null, category));
         }
 
-        //[Authorize("PRODUCTS:RW")]
+        //[Authorize("CATEGORIES:RW")]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProduct(Guid id)
+        public async Task<IActionResult> DeleteCategory(Guid id)
         {
-            Product? p;
+            Category? c;
             try
             {
-                p = await _context.Products.FirstAsync(x => x.Uuid == id);
-                _ = _context.Products.Remove(p);
+                c = await _context.Categories.FirstAsync(x => x.Uuid == id);
+                _ = _context.Categories.Remove(c);
                 _ = _context.SaveChanges();
             }
             catch (ArgumentNullException ex)
             {
-                string message = $"Product with the UUID {id} was not found!";
+                string message = $"Category with the UUID {id} was not found!";
                 _logger.LogWarning(message, ex);
                 return NotFound(new Response(false, message));
             }
@@ -147,12 +146,12 @@ namespace WireDev.Erp.V1.Api.Controllers
             }
             catch (Exception ex)
             {
-                string message = $"Product with the UUID {id} could not be removed!";
+                string message = $"Category with the UUID {id} could not be removed!";
                 _logger.LogError(message, ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
             }
 
-            return Ok(new Response(true, "Product was removed."));
+            return Ok(new Response(true, "Category was removed."));
         }
     }
 }
