@@ -27,7 +27,7 @@ namespace WireDev.Erp.V1.Api.Context
             _ = builder.Entity<Purchase>()
                 .Property(e => e.Items)
                 .HasConversion(v => JsonSerializer.Serialize(v, null as JsonSerializerOptions),
-                   v => JsonSerializer.Deserialize<Dictionary<(Guid productId, Guid priceId, TransactionType type), uint>>(v, null as JsonSerializerOptions));
+                   v => JsonSerializer.Deserialize<Dictionary<(uint productId, Guid priceId, TransactionType type), uint>>(v, null as JsonSerializerOptions));
 
         }
 

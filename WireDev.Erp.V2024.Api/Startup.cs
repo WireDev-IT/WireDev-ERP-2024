@@ -30,7 +30,7 @@ namespace WireDev.Erp.V1.Api
             _ = services.AddDbContext<ProductDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("WebApiDatabase")));
             _ = services.AddDbContext<CategoryDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("WebApiDatabase")));
             _ = services.AddDbContext<PurchaseDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("WebApiDatabase")));
-            _ = services.AddDbContext<PriceDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("WebApiDatabase")));
+            //_ = services.AddDbContext<PriceDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("WebApiDatabase")));
 
             // For Identity
             _ = services.AddIdentity<IdentityUser, IdentityRole>()

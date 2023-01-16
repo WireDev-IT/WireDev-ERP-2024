@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using WireDev.Erp.V1.Models.Storage;
 using WireDev.Erp.V1.Api.Context;
+using Microsoft.EntityFrameworkCore;
+using WireDev.Erp.V1.Models.Authentication;
+using WireDev.Erp.V1.Models.Enums;
 
 namespace WireDev.Erp.V1.Api.Controllers
 {
@@ -27,39 +30,108 @@ namespace WireDev.Erp.V1.Api.Controllers
         [HttpGet("all")]
         public async Task<IActionResult> GetPurchases()
         {
-            return StatusCode(StatusCodes.Status501NotImplemented);
+            List<Purchase>? list;
+            try
+            {
+                list = await _context.Purchases.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                string message = $"List of purchases cannot be retrieved!";
+                _logger.LogError(message, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+            }
+
+            return Ok(new Response(true, null, list));
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPurchase(Guid id)
         {
-            return StatusCode(StatusCodes.Status501NotImplemented);
+            Purchase? purchase;
+            try
+            {
+                purchase = await _context.Purchases.FirstAsync(x => x.Uuid == id);
+                return Ok(new Response(true, null, purchase));
+            }
+            catch (Exception ex)
+            {
+                string message = $"Purchase with the UUID {id} was not found!";
+                _logger.LogWarning(message, ex);
+                return NotFound(new Response(true, message));
+            }
         }
 
         //[Authorize("PURCHASE_BUY:RW")]
         [HttpPost("buy")]
-        public async Task<IActionResult> BuyPurchase([FromBody] Purchase puchase)
+        public async Task<IActionResult> BuyPurchase([FromBody] Purchase purchase)
         {
             return StatusCode(StatusCodes.Status501NotImplemented);
         }
 
         //[Authorize("PURCHASE_SELL:RW")]
         [HttpPost("sell")]
-        public async Task<IActionResult> SellPurchase([FromBody] Purchase puchase)
+        public async Task<IActionResult> SellPurchase([FromBody] Purchase purchase)
         {
-            return StatusCode(StatusCodes.Status501NotImplemented);
+            foreach(KeyValuePair<(uint productId, Guid priceId, TransactionType type), uint> kvp in purchase.Items)
+            {
+                if (kvp.Key.type != TransactionType.Sell)
+                {
+                    string message = $"Prodcut {kvp.Key.productId} has no correct transaction type!";
+                    _logger.LogWarning(message);
+                    return StatusCode(StatusCodes.Status400BadRequest, new Response(false, message));
+                }
+            }
+
+            try
+            {
+                _ = await _context.Purchases.AddAsync(purchase);
+                _ = await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                string message = $"Could not save changes to database!";
+                _logger.LogError(message, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+            }
+            catch (Exception ex)
+            {
+                string message = $"Add purchase {purchase.Uuid} failed!";
+                _logger.LogError(message, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+            }
+
+            try
+            {
+                _ = await _context.Purchases.AddAsync(purchase);
+                _ = await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                string message = $"Could not save changes to database!";
+                _logger.LogError(message, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+            }
+            catch (Exception ex)
+            {
+                string message = $"Add purchase {purchase.Uuid} failed!";
+                _logger.LogError(message, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+            }
+
+            return Ok(new Response(true, null, purchase.Uuid));
         }
 
         //[Authorize("PURCHASE_CANCEL:RW")]
         [HttpPost("cancel")]
-        public async Task<IActionResult> CancelPurchase([FromBody] Purchase puchase)
+        public async Task<IActionResult> CancelPurchase([FromBody] Purchase purchase)
         {
             return StatusCode(StatusCodes.Status501NotImplemented);
         }
 
         //[Authorize("PURCHASE_WITHDRAW:RW")]
         [HttpPost("withdraw")]
-        public async Task<IActionResult> WithdrawPurchase([FromBody] Purchase puchase)
+        public async Task<IActionResult> WithdrawPurchase([FromBody] Purchase purchase)
         {
             return StatusCode(StatusCodes.Status501NotImplemented);
         }

@@ -17,7 +17,7 @@ namespace WireDev.Erp.V1.Models.Storage
         /// <summary>
         /// A list of all products with prices, quantity and their performed transaction of this purchase.
         /// </summary>
-        Dictionary<(Guid productId, Guid priceId, TransactionType type), uint> Items { get; }
+        Dictionary<(uint productId, Guid priceId, TransactionType type), uint> Items { get; }
 
         /// <summary>
         /// Locks the purchase to prevent changes.
@@ -31,6 +31,6 @@ namespace WireDev.Erp.V1.Models.Storage
         /// <param name="type">The type of transaction of the product.The number of processed products of this transaction.</param>
         /// <param name="itemCount"></param>
         /// <returns>true, if the purchase has not yet been posted. Otherwise false.</returns>
-        bool TryAddItem(Guid productId, Guid priceId, TransactionType type, uint itemCount);
+        bool TryAddItem(uint productId, Guid priceId, TransactionType type, uint itemCount);
     }
 }

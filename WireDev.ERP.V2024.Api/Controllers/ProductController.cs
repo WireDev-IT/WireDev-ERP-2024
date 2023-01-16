@@ -15,12 +15,14 @@ namespace WireDev.Erp.V1.Api.Controllers
     public class ProductController : Controller
     {
         private readonly ProductDbContext _context;
+        private readonly PurchaseDbContext _context2;
         private readonly ILogger<ProductController> _logger;
 
-        public ProductController(ProductDbContext context, ILogger<ProductController> logger)
+        public ProductController(ProductDbContext context, PurchaseDbContext context2, ILogger<ProductController> logger)
         {
             _logger = logger;
             _context = context;
+            _context2 = context2;
         }
 
         [HttpGet("all")]
@@ -42,7 +44,7 @@ namespace WireDev.Erp.V1.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetProduct(Guid id)
+        public async Task<IActionResult> GetProduct(uint id)
         {
             Product? product;
             try
@@ -54,7 +56,7 @@ namespace WireDev.Erp.V1.Api.Controllers
             {
                 string message = $"Product with the UUID {id} was not found!";
                 _logger.LogWarning(message, ex);
-                return NotFound(new Response(true, message));
+                return NotFound(new Response(false, message));
             }
         }
 
@@ -90,7 +92,7 @@ namespace WireDev.Erp.V1.Api.Controllers
 
         //[Authorize("PRODUCTS:RW")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> ModifyProduct(Guid id, [FromBody][Required(ErrorMessage = "To modify a product, you have to provide changes.")] Product product)
+        public async Task<IActionResult> ModifyProduct(uint id, [FromBody][Required(ErrorMessage = "To modify a product, you have to provide changes.")] Product product)
         {
             Product? p;
             try
@@ -124,7 +126,7 @@ namespace WireDev.Erp.V1.Api.Controllers
 
         //[Authorize("PRODUCTS:RW")]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProduct(Guid id)
+        public async Task<IActionResult> DeleteProduct(uint id)
         {
             Product? p;
             try
@@ -153,6 +155,73 @@ namespace WireDev.Erp.V1.Api.Controllers
             }
 
             return Ok(new Response(true, "Product was removed."));
+        }
+
+        //[Authorize("PURCHASE_SELL:RW")]
+        [HttpPost("transaction")]
+        public async Task<IActionResult> DoPurchase([FromBody][Required(ErrorMessage = "To do a transaction, you have to provide one.")] Purchase purchase)
+        {
+            try
+            {
+                _ = await _context2.Purchases.AddAsync(purchase);
+                _ = await _context2.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                string message = $"Could not save changes to database!";
+                _logger.LogError(message, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+            }
+            catch (Exception ex)
+            {
+                string message = $"Add purchase {purchase.Uuid} failed!";
+                _logger.LogError(message, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+            }
+
+            Product? product = null;
+            foreach (KeyValuePair<(uint productId, Guid priceId, TransactionType type), uint> kvp in purchase.Items)
+            {
+                try
+                {
+                    product = await _context.Products.FindAsync(kvp.Key.productId);
+                    if (product != null)
+                    {
+
+                        if (kvp.Key.type == TransactionType.Sell || kvp.Key.type == TransactionType.Withdraw || kvp.Key.type == TransactionType.Disposed)
+                        {
+                            product.Remove(kvp.Value);
+                        }
+                        else if (kvp.Key.type == TransactionType.Cancel || kvp.Key.type == TransactionType.Purchase)
+                        {
+                            product.Add(kvp.Value);
+                        }
+                        else
+                        {
+                            string message = "Unknown transacation type: " + kvp.Key.type.ToString();
+                            _logger.LogCritical(message);
+                            return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+                        }
+
+                        _context.Products.Update(product);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+                catch (DbUpdateException ex)
+                {
+                    string message = $"Could not save changes to database!";
+                    _logger.LogError(message, ex);
+                    return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+                }
+                catch (Exception ex)
+                {
+                    string message = $"Modifing product {product.Uuid} failed!";
+                    _logger.LogError(message, ex);
+                    return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+                }
+            }
+
+            return Ok(new Response(true, null, purchase.Uuid));
         }
     }
 }

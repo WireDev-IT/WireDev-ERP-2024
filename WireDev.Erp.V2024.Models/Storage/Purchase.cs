@@ -19,10 +19,10 @@ namespace WireDev.Erp.V1.Models.Storage
         [Column(TypeName = "decimal(5, 2)")]
         public decimal TotalPrice { get; private set; } = 0;
         public DateTime? DatePosted { get; private set; } = null;
-        public Dictionary<(Guid productId, Guid priceId, TransactionType type), uint> Items { get; private set; } = new();
+        public Dictionary<(uint productId, Guid priceId, TransactionType type), uint> Items { get; private set; } = new();
         public bool Posted { get; private set; } = false;
 
-        public bool TryAddItem(Guid productId, Guid priceId, TransactionType type, uint itemCount)
+        public bool TryAddItem(uint productId, Guid priceId, TransactionType type, uint itemCount)
         {
             if (!Posted)
             {

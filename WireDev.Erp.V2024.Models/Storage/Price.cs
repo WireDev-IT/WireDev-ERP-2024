@@ -13,7 +13,6 @@ namespace WireDev.Erp.V1.Models.Storage
             Uuid = Guid.NewGuid();
         }
 
-        [Key]
         public Guid Uuid { get; }
         public bool Archived { get; set; } = false;
 
