@@ -10,6 +10,7 @@ using WireDev.Erp.V1.Api.Context;
 using Microsoft.EntityFrameworkCore;
 using WireDev.Erp.V1.Models.Authentication;
 using WireDev.Erp.V1.Models.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace WireDev.Erp.V1.Api.Controllers
 {
@@ -19,11 +20,13 @@ namespace WireDev.Erp.V1.Api.Controllers
     public class PurchaseController : Controller
     {
         private readonly PurchaseDbContext _context;
+        private readonly ProductDbContext _context2;
         private readonly ILogger<PurchaseController> _logger;
 
-        public PurchaseController(PurchaseDbContext context, ILogger<PurchaseController> logger)
+        public PurchaseController(PurchaseDbContext context, ProductDbContext context2, ILogger<PurchaseController> logger)
         {
             _context = context;
+            _context2 = context2;
             _logger = logger;
         }
 
@@ -134,6 +137,73 @@ namespace WireDev.Erp.V1.Api.Controllers
         public async Task<IActionResult> WithdrawPurchase([FromBody] Purchase purchase)
         {
             return StatusCode(StatusCodes.Status501NotImplemented);
+        }
+
+        //[Authorize("PURCHASE_SELL:RW")]
+        [HttpPost("transaction")]
+        public async Task<IActionResult> DoPurchase([FromBody][Required(ErrorMessage = "To do a transaction, you have to provide one.")] Purchase purchase)
+        {
+            try
+            {
+                _ = await _context.Purchases.AddAsync(purchase);
+                _ = await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                string message = $"Could not save changes to database!";
+                _logger.LogError(message, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+            }
+            catch (Exception ex)
+            {
+                string message = $"Add purchase {purchase.Uuid} failed!";
+                _logger.LogError(message, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+            }
+
+            Product? product = null;
+            foreach (KeyValuePair<(uint productId, Guid priceId, TransactionType type), uint> kvp in purchase.Items)
+            {
+                try
+                {
+                    product = await _context2.Products.FindAsync(kvp.Key.productId);
+                    if (product != null)
+                    {
+
+                        if (kvp.Key.type == TransactionType.Sell || kvp.Key.type == TransactionType.Withdraw || kvp.Key.type == TransactionType.Disposed)
+                        {
+                            product.Remove(kvp.Value);
+                        }
+                        else if (kvp.Key.type == TransactionType.Cancel || kvp.Key.type == TransactionType.Purchase)
+                        {
+                            product.Add(kvp.Value);
+                        }
+                        else
+                        {
+                            string message = "Unknown transacation type: " + kvp.Key.type.ToString();
+                            _logger.LogCritical(message);
+                            return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+                        }
+
+                        _context2.Products.Update(product);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+                catch (DbUpdateException ex)
+                {
+                    string message = $"Could not save changes to database!";
+                    _logger.LogError(message, ex);
+                    return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+                }
+                catch (Exception ex)
+                {
+                    string message = $"Modifing product {product.Uuid} failed!";
+                    _logger.LogError(message, ex);
+                    return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+                }
+            }
+
+            return Ok(new Response(true, null, purchase.Uuid));
         }
     }
 }

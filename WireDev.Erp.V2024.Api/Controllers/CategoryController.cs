@@ -16,10 +16,10 @@ namespace WireDev.Erp.V1.Api.Controllers
     [Route("api/[controller]")]
     public class CategoryController : Controller
     {
-        private readonly CategoryDbContext _context;
+        private readonly ProductDbContext _context;
         private readonly ILogger<CategoryController> _logger;
 
-        public CategoryController(CategoryDbContext context, ILogger<CategoryController> logger)
+        public CategoryController(ProductDbContext context, ILogger<CategoryController> logger)
         {
             _logger = logger;
             _context = context;

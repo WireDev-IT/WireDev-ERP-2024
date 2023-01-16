@@ -16,6 +16,7 @@ namespace WireDev.Erp.V1.Api.Context
 
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<Group> Groups { get; set; }
+        public virtual DbSet<Category> Categories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -63,6 +64,9 @@ namespace WireDev.Erp.V1.Api.Context
 
             _ = builder.Entity<Group>().HasKey("Uuid");
             _ = builder.Entity<Group>().HasData(new Group(99) { Name = "Default_Group" }) ;
+
+            _ = builder.Entity<Category>().HasKey("Uuid");
+            _ = builder.Entity<Category>().HasData(new Category() { Description = "Default_Category" });
         }
     }
 }
