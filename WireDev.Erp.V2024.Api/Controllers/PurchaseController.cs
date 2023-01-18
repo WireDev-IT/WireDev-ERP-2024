@@ -65,13 +65,6 @@ namespace WireDev.Erp.V1.Api.Controllers
             }
         }
 
-        //[Authorize("PURCHASE_BUY:RW")]
-        [HttpPost("buy")]
-        public async Task<IActionResult> BuyPurchase([FromBody] Purchase purchase)
-        {
-            return StatusCode(StatusCodes.Status501NotImplemented);
-        }
-
         //[Authorize("PURCHASE_SELL:RW")]
         [HttpPost("sell")]
         public async Task<IActionResult> SellPurchase([FromBody] Purchase purchase)
@@ -123,20 +116,6 @@ namespace WireDev.Erp.V1.Api.Controllers
             }
 
             return Ok(new Response(true, null, purchase.Uuid));
-        }
-
-        //[Authorize("PURCHASE_CANCEL:RW")]
-        [HttpPost("cancel")]
-        public async Task<IActionResult> CancelPurchase([FromBody] Purchase purchase)
-        {
-            return StatusCode(StatusCodes.Status501NotImplemented);
-        }
-
-        //[Authorize("PURCHASE_WITHDRAW:RW")]
-        [HttpPost("withdraw")]
-        public async Task<IActionResult> WithdrawPurchase([FromBody] Purchase purchase)
-        {
-            return StatusCode(StatusCodes.Status501NotImplemented);
         }
 
         //[Authorize("PURCHASE_SELL:RW")]
