@@ -24,6 +24,7 @@ namespace WireDev.Erp.V1.Api.Context
             _ = builder.Entity<DayStats>().HasKey("Date");
             _ = builder.Entity<MonthStats>().HasKey("Date");
             _ = builder.Entity<YearStats>().HasKey("Date");
+            _ = builder.Entity<TotalStats>().HasKey("Date");
         }
     }
 }

@@ -3,6 +3,8 @@ namespace WireDev.Erp.V1.Models.Statistics
 {
     public class YearStats : TimeStats
     {
+        public YearStats() { }
+
         public YearStats(DateTime date) : base(date)
         {
 

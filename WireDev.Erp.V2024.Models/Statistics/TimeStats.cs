@@ -5,6 +5,8 @@ namespace WireDev.Erp.V1.Models.Statistics
 {
     public class TimeStats : ITimeStats
     {
+        public TimeStats() { }
+
         public TimeStats(DateTime date)
         {
             Date = date.Ticks;

@@ -20,7 +20,8 @@ namespace WireDev.Erp.V1.Models.Storage
 		[Required(AllowEmptyStrings = false, ErrorMessage = "Group needs a name!")]
 		public string? Name { get; set; }
 		public string? Description { get; set; }
-		public bool Used { get; private set; } = false;
+        public string? Color { get; set; }
+        public bool Used { get; private set; } = false;
 		public bool Use() => Used = true;
 	}
 }

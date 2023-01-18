@@ -3,6 +3,8 @@ namespace WireDev.Erp.V1.Models.Statistics
 {
     public class DayStats : TimeStats
     {
+        public DayStats() { }
+
         public DayStats(DateTime date) : base(date)
         {
 

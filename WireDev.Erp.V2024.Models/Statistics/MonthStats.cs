@@ -3,6 +3,8 @@ namespace WireDev.Erp.V1.Models.Statistics
 {
     public class MonthStats : TimeStats
     {
+        public MonthStats() { }
+
         public MonthStats(DateTime date) : base(date)
         {
 
