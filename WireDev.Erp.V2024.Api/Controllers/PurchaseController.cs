@@ -125,7 +125,21 @@ namespace WireDev.Erp.V1.Api.Controllers
             return Ok(new Response(true, null, purchase.Uuid));
         }
 
-        [Authorize("PURCHASE_SELL:RW")]
+        //[Authorize("PURCHASE_CANCEL:RW")]
+        [HttpPost("cancel")]
+        public async Task<IActionResult> CancelPurchase([FromBody] Purchase purchase)
+        {
+            return StatusCode(StatusCodes.Status501NotImplemented);
+        }
+
+        //[Authorize("PURCHASE_WITHDRAW:RW")]
+        [HttpPost("withdraw")]
+        public async Task<IActionResult> WithdrawPurchase([FromBody] Purchase purchase)
+        {
+            return StatusCode(StatusCodes.Status501NotImplemented);
+        }
+
+        //[Authorize("PURCHASE_SELL:RW")]
         [HttpPost("transaction")]
         public async Task<IActionResult> DoPurchase([FromBody][Required(ErrorMessage = "To do a transaction, you have to provide one.")] Purchase purchase)
         {
