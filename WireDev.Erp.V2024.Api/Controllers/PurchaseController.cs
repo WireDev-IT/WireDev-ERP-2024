@@ -13,6 +13,8 @@ using WireDev.Erp.V1.Models.Enums;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Text.Json;
+using WireDev.Erp.V1.Models.Statistics;
+using System.Data;
 
 namespace WireDev.Erp.V1.Api.Controllers
 {
@@ -73,51 +75,110 @@ namespace WireDev.Erp.V1.Api.Controllers
         [HttpPost("sell")]
         public async Task<IActionResult> SellPurchase([FromBody] Purchase purchase)
         {
-            foreach(TransactionItem item in purchase.Items)
+            if (purchase.Type != TransactionType.Sell)
             {
-                if (item.Type != TransactionType.Sell)
+                string message = $"Purchase has not the correct transaction type!";
+                _logger.LogWarning(message);
+                return StatusCode(StatusCodes.Status400BadRequest, new Response(false, message));
+            }
+
+            using IDbContextTransaction transaction = _context.Database.BeginTransaction(IsolationLevel.Serializable);
+            try
+            {
+                Product? p = await _context2.Products.FirstOrDefaultAsync();
+                purchase.TryAddItem(p.Uuid, p.Prices.First(), 3);
+                _ = await _context.Purchases.AddAsync(purchase);
+                _ = await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                string message = $"Could not save changes to database!";
+                _logger.LogError(message, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+            }
+            catch (Exception ex)
+            {
+                string message = $"Add purchase {purchase.Uuid} failed!";
+                _logger.LogError(message, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+            }
+            transaction.CreateSavepoint("BeforeProductModification");
+
+            Product? product = null;
+            foreach (TransactionItem item in purchase.Items)
+            {
+                try
                 {
-                    string message = $"Prodcut {item.ProductId} has no correct transaction type!";
-                    _logger.LogWarning(message);
-                    return StatusCode(StatusCodes.Status400BadRequest, new Response(false, message));
+                    product = await _context2.Products.FindAsync(item.ProductId);
+                    if (product != null)
+                    {
+                        product.Remove(item.Count);
+
+                        _context2.Products.Update(product);
+                        _ = await _context2.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        throw new ArgumentNullException($"Product {item.ProductId} was not found. Rolling back changes.");
+                    }
+                }
+                catch (DbUpdateException ex)
+                {
+                    await transaction.RollbackAsync();
+                    string message = $"Could not save changes to database! Rolling back changes.";
+                    _logger.LogError(message, ex);
+                    return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+                }
+                catch (ArgumentNullException ex)
+                {
+                    await transaction.RollbackAsync();
+                    _logger.LogError(ex.Message, ex);
+                    return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, ex.Message));
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    string message = $"Modifing product {product.Uuid} failed! Rolling back changes.";
+                    _logger.LogError(message, ex);
+                    return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
                 }
             }
+            transaction.CreateSavepoint("BeforeProductStatsModification");
 
-            try
+            foreach (TransactionItem item in purchase.Items)
             {
-                _ = await _context.Purchases.AddAsync(purchase);
-                _ = await _context.SaveChangesAsync();
+                try
+                {
+                    ProductStats? productStats = await _context3.ProductStats.FindAsync(item.ProductId);
+                    if (productStats == null)
+                    {
+                        productStats = new(item.ProductId);
+                        productStats.AddTransaction(item);
+                        await _context3.ProductStats.AddAsync(productStats);
+                    }
+                    else
+                    {
+                        productStats.AddTransaction(item);
+                        _context3.ProductStats.Update(productStats);
+                    }
+                    _=await _context3.SaveChangesAsync();
+                }
+                catch (DbUpdateException ex)
+                {
+                    await transaction.RollbackAsync();
+                    string message = $"Could not save changes to database! Rolling back changes.";
+                    _logger.LogError(message, ex);
+                    return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    string message = $"Modifing stats of product {product.Uuid} failed! Rolling back changes.";
+                    _logger.LogError(message, ex);
+                    return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+                }
             }
-            catch (DbUpdateException ex)
-            {
-                string message = $"Could not save changes to database!";
-                _logger.LogError(message, ex);
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
-            }
-            catch (Exception ex)
-            {
-                string message = $"Add purchase {purchase.Uuid} failed!";
-                _logger.LogError(message, ex);
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
-            }
-
-            try
-            {
-                _ = await _context.Purchases.AddAsync(purchase);
-                _ = await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException ex)
-            {
-                string message = $"Could not save changes to database!";
-                _logger.LogError(message, ex);
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
-            }
-            catch (Exception ex)
-            {
-                string message = $"Add purchase {purchase.Uuid} failed!";
-                _logger.LogError(message, ex);
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
-            }
+            await transaction.CommitAsync();
 
             return Ok(new Response(true, null, purchase.Uuid));
         }
@@ -126,79 +187,6 @@ namespace WireDev.Erp.V1.Api.Controllers
         public async Task<IActionResult> BuyPurchase([FromBody] Purchase purchase)
         {
             return StatusCode(StatusCodes.Status501NotImplemented);
-        }
-
-        //[Authorize("PURCHASE_SELL:RW")]
-        [HttpPost("transaction")]
-        public async Task<IActionResult> DoPurchase([FromBody][Required(ErrorMessage = "To do a transaction, you have to provide one.")] Purchase purchase)
-        {
-            using IDbContextTransaction purchaseTransaction = _context.Database.BeginTransaction();
-            try
-            {
-                purchase.TryAddItem(20000, Guid.NewGuid(), TransactionType.Sell, 3);
-                _ = await _context.Purchases.AddAsync(purchase);
-                _ = await _context.SaveChangesAsync();
-                await purchaseTransaction.CommitAsync();
-            }
-            catch (DbUpdateException ex)
-            {
-                string message = $"Could not save changes to database!";
-                _logger.LogError(message, ex);
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
-            }
-            catch (Exception ex)
-            {
-                string message = $"Add purchase {purchase.Uuid} failed!";
-                _logger.LogError(message, ex);
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
-            }
-
-            Product? product = null;
-            foreach (TransactionItem items in purchase.Items)
-            {
-                try
-                {
-                    //throw new Exception();
-                    product = await _context2.Products.FindAsync(items.ProductId);
-                    if (product != null)
-                    {
-
-                        if (items.Type == TransactionType.Sell || items.Type == TransactionType.Withdraw || items.Type == TransactionType.Disposed)
-                        {
-                            product.Remove(items.Count);
-                        }
-                        else if (items.Type == TransactionType.Cancel || items.Type == TransactionType.Purchase)
-                        {
-                            product.Add(items.Count);
-                        }
-                        else
-                        {
-                            string message = "Unknown transacation type: " + items.Type.ToString();
-                            _logger.LogCritical(message);
-                            return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
-                        }
-
-                        _context2.Products.Update(product);
-                        await _context.SaveChangesAsync();
-                    }
-                }
-                catch (DbUpdateException ex)
-                {
-                    await purchaseTransaction.RollbackAsync();
-                    string message = $"Could not save changes to database!";
-                    _logger.LogError(message, ex);
-                    return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
-                }
-                catch (Exception ex)
-                {
-                    await purchaseTransaction.RollbackAsync();
-                    string message = $"Modifing product {product.Uuid} failed!";
-                    _logger.LogError(message, ex);
-                    return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
-                }
-            }
-
-            return Ok(new Response(true, null, purchase.Uuid));
         }
     }
 }

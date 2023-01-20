@@ -47,6 +47,19 @@ namespace WireDev.Erp.V1.Api.Migrations.StatsDb
                 });
 
             migrationBuilder.CreateTable(
+                name: "ProductStats",
+                columns: table => new
+                {
+                    ProductId = table.Column<uint>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Transactions = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductStats", x => x.ProductId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "TotalStats",
                 columns: table => new
                 {
@@ -91,6 +104,9 @@ namespace WireDev.Erp.V1.Api.Migrations.StatsDb
 
             migrationBuilder.DropTable(
                 name: "MonthStats");
+
+            migrationBuilder.DropTable(
+                name: "ProductStats");
 
             migrationBuilder.DropTable(
                 name: "TotalStats");

@@ -86,7 +86,7 @@ namespace WireDev.Erp.V1.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
             }
 
-            return Ok(new Response(true, null, product.Uuid));
+            return StatusCode(StatusCodes.Status201Created, new Response(true, null, product.Uuid));
         }
 
         //[Authorize("PRODUCTS:RW")]

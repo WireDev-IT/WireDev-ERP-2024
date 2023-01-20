@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -12,20 +11,6 @@ namespace WireDev.Erp.V1.Api.Migrations.ProductDb
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Categories",
-                columns: table => new
-                {
-                    Uuid = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: true),
-                    Description = table.Column<string>(type: "TEXT", nullable: true),
-                    Color = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Categories", x => x.Uuid);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Groups",
                 columns: table => new
                 {
@@ -33,6 +18,7 @@ namespace WireDev.Erp.V1.Api.Migrations.ProductDb
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: true),
+                    Color = table.Column<string>(type: "TEXT", nullable: true),
                     Used = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
@@ -55,7 +41,6 @@ namespace WireDev.Erp.V1.Api.Migrations.ProductDb
                     Availible = table.Column<uint>(type: "INTEGER", nullable: false),
                     EAN = table.Column<string>(type: "TEXT", nullable: false),
                     Prices = table.Column<string>(type: "TEXT", nullable: false),
-                    Categories = table.Column<string>(type: "TEXT", nullable: false),
                     Properties = table.Column<string>(type: "TEXT", nullable: false),
                     Metadata = table.Column<string>(type: "TEXT", nullable: false)
                 },
@@ -65,27 +50,19 @@ namespace WireDev.Erp.V1.Api.Migrations.ProductDb
                 });
 
             migrationBuilder.InsertData(
-                table: "Categories",
-                columns: new[] { "Uuid", "Color", "Description", "Name" },
-                values: new object[] { new Guid("95630541-1eea-40c7-8754-4cf3fcbc4f2f"), null, "Default_Category", null });
-
-            migrationBuilder.InsertData(
                 table: "Groups",
-                columns: new[] { "Uuid", "Description", "Name", "Used" },
-                values: new object[] { 99, null, "Default_Group", false });
+                columns: new[] { "Uuid", "Color", "Description", "Name", "Used" },
+                values: new object[] { 99, null, null, "Default_Group", false });
 
             migrationBuilder.InsertData(
                 table: "Products",
-                columns: new[] { "Uuid", "Active", "Archived", "Availible", "Categories", "Description", "EAN", "Group", "Metadata", "Name", "Prices", "Properties", "Used" },
-                values: new object[] { 9999u, false, false, 0u, "[]", null, "[]", 100, "{}", "Default_Product", "[]", "{}", false });
+                columns: new[] { "Uuid", "Active", "Archived", "Availible", "Description", "EAN", "Group", "Metadata", "Name", "Prices", "Properties", "Used" },
+                values: new object[] { 9999u, false, false, 0u, null, "[]", 100, "{}", "Default_Product", "[{\"Uuid\":\"66adbf4e-3823-40fd-a26c-a1687d3136cf\",\"Archived\":false,\"Description\":\"Defaul_Price\",\"RetailValue\":10,\"SellValue\":15,\"Locked\":false}]", "{}", false });
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Categories");
-
             migrationBuilder.DropTable(
                 name: "Groups");
 

@@ -22,7 +22,10 @@ namespace WireDev.Erp.V1.Api.Context
             base.OnModelCreating(builder);
 
             _ = builder.Entity<Product>().HasKey("Uuid");
-            _ = builder.Entity<Product>().HasData(new Product(9999) { Name = "Default_Product" });
+
+            Product p = new(9999) { Name = "Default_Product", };
+            p.Prices.Add(new Price() { RetailValue = 10, SellValue = 15, Description = "Defaul_Price" });
+            _ = builder.Entity<Product>().HasData(p);
 
             _ = builder.Entity<Product>()
                 .Property(e => e.Metadata)

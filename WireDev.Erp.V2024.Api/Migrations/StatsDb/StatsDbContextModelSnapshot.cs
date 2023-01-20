@@ -74,6 +74,21 @@ namespace WireDev.Erp.V1.Api.Migrations.StatsDb
                     b.ToTable("MonthStats");
                 });
 
+            modelBuilder.Entity("WireDev.Erp.V1.Models.Statistics.ProductStats", b =>
+                {
+                    b.Property<uint>("ProductId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Transactions")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ProductId");
+
+                    b.ToTable("ProductStats");
+                });
+
             modelBuilder.Entity("WireDev.Erp.V1.Models.Statistics.TotalStats", b =>
                 {
                     b.Property<long>("Date")

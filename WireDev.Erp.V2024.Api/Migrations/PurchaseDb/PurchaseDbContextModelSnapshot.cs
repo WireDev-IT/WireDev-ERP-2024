@@ -36,6 +36,9 @@ namespace WireDev.Erp.V1.Api.Migrations.PurchaseDb
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(5, 2)");
 
+                    b.Property<int>("Type")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Uuid");
 
                     b.ToTable("Purchases");
@@ -43,11 +46,12 @@ namespace WireDev.Erp.V1.Api.Migrations.PurchaseDb
                     b.HasData(
                         new
                         {
-                            Uuid = new Guid("21b2c524-3ecf-457a-bbd8-4389d7131694"),
-                            DatePosted = new DateTime(2023, 1, 20, 12, 7, 50, 996, DateTimeKind.Utc).AddTicks(900),
+                            Uuid = new Guid("4dc6dae8-601b-430d-9d35-f966333f4adc"),
+                            DatePosted = new DateTime(2023, 1, 20, 21, 47, 20, 76, DateTimeKind.Utc).AddTicks(2480),
                             Items = "[]",
                             Posted = true,
-                            TotalPrice = 0m
+                            TotalPrice = 0m,
+                            Type = 0
                         });
                 });
 #pragma warning restore 612, 618

@@ -10,7 +10,7 @@ using WireDev.Erp.V1.Api.Context;
 namespace WireDev.Erp.V1.Api.Migrations.StatsDb
 {
     [DbContext(typeof(StatsDbContext))]
-    [Migration("20230117193934_sqlite")]
+    [Migration("20230120215102_sqlite")]
     partial class sqlite
     {
         /// <inheritdoc />
@@ -75,6 +75,21 @@ namespace WireDev.Erp.V1.Api.Migrations.StatsDb
                     b.HasKey("Date");
 
                     b.ToTable("MonthStats");
+                });
+
+            modelBuilder.Entity("WireDev.Erp.V1.Models.Statistics.ProductStats", b =>
+                {
+                    b.Property<uint>("ProductId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Transactions")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ProductId");
+
+                    b.ToTable("ProductStats");
                 });
 
             modelBuilder.Entity("WireDev.Erp.V1.Models.Statistics.TotalStats", b =>

@@ -11,31 +11,34 @@ namespace WireDev.Erp.V1.Models.Storage
     {
         public Purchase()
         {
-            Uuid = Guid.NewGuid();
+
+        }
+
+        public Purchase(TransactionType type)
+        {
+            Type = type;
         }
 
         [Key]
-        public Guid Uuid { get; }
+        public Guid Uuid { get; private set; }
         [Column(TypeName = "decimal(5, 2)")]
         public decimal TotalPrice { get; private set; } = 0;
         public DateTime? DatePosted { get; private set; } = null;
+        public TransactionType Type { get; set; }
         public List<TransactionItem> Items { get; private set; } = new();
         public bool Posted { get; private set; } = false;
 
-        public bool TryAddItem(uint productId, Guid priceId, TransactionType type, uint itemCount)
+        public bool TryAddItem(uint productId, Price price, uint itemCount)
         {
             if (!Posted)
             {
-                Items.Add(new TransactionItem(productId, priceId, type, itemCount));
+                Items.Add(new TransactionItem(productId, price.Uuid, itemCount));
 
-                //TODO: Find price
-                Price price = new();
-
-                if (type == TransactionType.Sell)
+                if (Type == TransactionType.Sell)
                 {
                     TotalPrice = decimal.Add(TotalPrice, price.SellValue);
                 }
-                else if (type == TransactionType.Disposed || type == TransactionType.Purchase)
+                else if (Type == TransactionType.Disposed || Type == TransactionType.Purchase)
                 {
                     TotalPrice = decimal.Subtract(TotalPrice, price.RetailValue);
                 }
@@ -48,11 +51,11 @@ namespace WireDev.Erp.V1.Models.Storage
             }
             return false;
         }
-
         public void Post()
         {
             Posted = true;
             DatePosted = DateTime.UtcNow;
+            Uuid = Guid.NewGuid();
         }
     }
 }
