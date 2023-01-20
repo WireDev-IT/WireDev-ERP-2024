@@ -11,14 +11,14 @@ using WireDev.Erp.V1.Api.Context;
 namespace WireDev.Erp.V1.Api.Migrations.PurchaseDb
 {
     [DbContext(typeof(PurchaseDbContext))]
-    [Migration("20230109121946_sqlite")]
+    [Migration("20230120120751_sqlite")]
     partial class sqlite
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "7.0.1");
+            modelBuilder.HasAnnotation("ProductVersion", "7.0.2");
 
             modelBuilder.Entity("WireDev.Erp.V1.Models.Storage.Purchase", b =>
                 {
@@ -46,9 +46,9 @@ namespace WireDev.Erp.V1.Api.Migrations.PurchaseDb
                     b.HasData(
                         new
                         {
-                            Uuid = new Guid("653b0539-5561-494f-bcc5-fb6df3258711"),
-                            DatePosted = new DateTime(2023, 1, 9, 12, 19, 46, 764, DateTimeKind.Utc).AddTicks(8460),
-                            Items = "{}",
+                            Uuid = new Guid("21b2c524-3ecf-457a-bbd8-4389d7131694"),
+                            DatePosted = new DateTime(2023, 1, 20, 12, 7, 50, 996, DateTimeKind.Utc).AddTicks(900),
+                            Items = "[]",
                             Posted = true,
                             TotalPrice = 0m
                         });

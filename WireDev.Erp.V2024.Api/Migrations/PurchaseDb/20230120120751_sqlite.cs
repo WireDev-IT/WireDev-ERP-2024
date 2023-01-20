@@ -29,7 +29,7 @@ namespace WireDev.Erp.V1.Api.Migrations.PurchaseDb
             migrationBuilder.InsertData(
                 table: "Purchases",
                 columns: new[] { "Uuid", "DatePosted", "Items", "Posted", "TotalPrice" },
-                values: new object[] { new Guid("653b0539-5561-494f-bcc5-fb6df3258711"), new DateTime(2023, 1, 9, 12, 19, 46, 764, DateTimeKind.Utc).AddTicks(8460), "{}", true, 0m });
+                values: new object[] { new Guid("21b2c524-3ecf-457a-bbd8-4389d7131694"), new DateTime(2023, 1, 20, 12, 7, 50, 996, DateTimeKind.Utc).AddTicks(900), "[]", true, 0m });
         }
 
         /// <inheritdoc />

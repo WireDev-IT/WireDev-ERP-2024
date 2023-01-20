@@ -19,7 +19,7 @@ namespace WireDev.Erp.V1.Api.Context
             base.OnModelCreating(builder);
 
             _ = builder.Entity<Settings>().HasKey("Uuid");
-            _ = builder.Entity<Price>().HasData(new Settings());
+            _ = builder.Entity<Settings>().HasData(new Settings());
         }
 
     }

@@ -7,7 +7,7 @@ using WireDev.Erp.V1.Models.Enums;
 
 namespace WireDev.Erp.V1.Models.Storage
 {
-    public class Purchase : IPurchase
+    public class Purchase
     {
         public Purchase()
         {
@@ -19,14 +19,14 @@ namespace WireDev.Erp.V1.Models.Storage
         [Column(TypeName = "decimal(5, 2)")]
         public decimal TotalPrice { get; private set; } = 0;
         public DateTime? DatePosted { get; private set; } = null;
-        public Dictionary<(uint productId, Guid priceId, TransactionType type), uint> Items { get; private set; } = new();
+        public List<TransactionItem> Items { get; private set; } = new();
         public bool Posted { get; private set; } = false;
 
         public bool TryAddItem(uint productId, Guid priceId, TransactionType type, uint itemCount)
         {
             if (!Posted)
             {
-                Items.Add((productId, priceId, type), itemCount);
+                Items.Add(new TransactionItem(productId, priceId, type, itemCount));
 
                 //TODO: Find price
                 Price price = new();

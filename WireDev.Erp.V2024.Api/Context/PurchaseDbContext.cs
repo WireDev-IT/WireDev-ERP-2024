@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using WireDev.Erp.V1.Models.Enums;
 using WireDev.Erp.V1.Models.Storage;
 
 namespace WireDev.Erp.V1.Api.Context
 {
-	public class PurchaseDbContext : DbContext
-	{
-		public PurchaseDbContext(DbContextOptions<PurchaseDbContext> options) : base(options)
+    public class PurchaseDbContext : DbContext
+    {
+        public PurchaseDbContext(DbContextOptions<PurchaseDbContext> options) : base(options)
         {
 
-		}
+        }
 
         public virtual DbSet<Purchase> Purchases { get; set; }
 
@@ -27,10 +28,12 @@ namespace WireDev.Erp.V1.Api.Context
             _ = builder.Entity<Purchase>()
                 .Property(e => e.Items)
                 .HasConversion(v => JsonSerializer.Serialize(v, null as JsonSerializerOptions),
-                   v => JsonSerializer.Deserialize<Dictionary<(uint productId, Guid priceId, TransactionType type), uint>>(v, null as JsonSerializerOptions));
+                   v => JsonSerializer.Deserialize<List<TransactionItem>>(v, null as JsonSerializerOptions),
+                   new ValueComparer<List<TransactionItem>>(
+                       (c1, c2) => c1.SequenceEqual(c2),
+                       c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                       c => c.ToList()));
 
         }
-
     }
 }
-
