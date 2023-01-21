@@ -82,7 +82,9 @@ namespace WireDev.Erp.V1.Api.Controllers
             try
             {
                 Product? p = await _context.Products.FirstOrDefaultAsync();
-                purchase.TryAddItem(p.Uuid, p.Prices.First(), 3);
+                Price? price = await _context.Prices.FirstOrDefaultAsync();
+                purchase.TryAddItem(p.Uuid, price, 3);
+                purchase.Post();
                 _ = await _context.Purchases.AddAsync(purchase);
                 _ = await _context.SaveChangesAsync();
             }

@@ -64,6 +64,22 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                 });
 
             migrationBuilder.CreateTable(
+                name: "Prices",
+                columns: table => new
+                {
+                    Uuid = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Archived = table.Column<bool>(type: "INTEGER", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: true),
+                    RetailValue = table.Column<decimal>(type: "decimal(5, 3)", nullable: false),
+                    SellValue = table.Column<decimal>(type: "decimal(5, 2)", nullable: false),
+                    Locked = table.Column<bool>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Prices", x => x.Uuid);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Products",
                 columns: table => new
                 {
@@ -170,19 +186,24 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                 values: new object[] { 99, null, null, "Default_Group", false });
 
             migrationBuilder.InsertData(
+                table: "Prices",
+                columns: new[] { "Uuid", "Archived", "Description", "Locked", "RetailValue", "SellValue" },
+                values: new object[] { new Guid("d6511f05-7898-4c5a-a145-1dd5ae35caa5"), false, "Defaul_Price", false, 10m, 15m });
+
+            migrationBuilder.InsertData(
                 table: "Products",
                 columns: new[] { "Uuid", "Active", "Archived", "Availible", "Description", "EAN", "Group", "Metadata", "Name", "Prices", "Properties", "Used" },
-                values: new object[] { 9999u, false, false, 0, null, "[]", 100, "{}", "Default_Product", "[{\"Uuid\":\"2b7bf118-f4b0-47b7-96ca-d99925a3d778\",\"Archived\":false,\"Description\":\"Defaul_Price\",\"RetailValue\":10,\"SellValue\":15,\"Locked\":false}]", "{}", false });
+                values: new object[] { 9999u, false, false, 0, null, "[]", 100, "{}", "Default_Product", "[\"d6511f05-7898-4c5a-a145-1dd5ae35caa5\"]", "{}", false });
 
             migrationBuilder.InsertData(
                 table: "Purchases",
                 columns: new[] { "Uuid", "DatePosted", "Items", "Posted", "TotalPrice", "Type" },
-                values: new object[] { new Guid("5c21e9c8-4c84-4787-bf12-c066399bfd0a"), new DateTime(2023, 1, 21, 13, 53, 55, 231, DateTimeKind.Utc).AddTicks(5630), "[]", true, 0m, 0 });
+                values: new object[] { new Guid("4a0126f3-7fa8-4558-b292-c93ba828b69e"), new DateTime(2023, 1, 21, 14, 40, 46, 831, DateTimeKind.Utc).AddTicks(4240), "[]", true, 0m, 0 });
 
             migrationBuilder.InsertData(
                 table: "Settings",
                 columns: new[] { "Uuid", "NextGroupNumber", "NextProductNumber" },
-                values: new object[] { new Guid("9ddda2b6-a24e-4894-bf0b-c0e3b39c5550"), 100, 10000u });
+                values: new object[] { new Guid("99318f06-3486-4c7b-b23e-d013c05573bd"), 100, 10000u });
         }
 
         /// <inheritdoc />
@@ -196,6 +217,9 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
 
             migrationBuilder.DropTable(
                 name: "MonthStats");
+
+            migrationBuilder.DropTable(
+                name: "Prices");
 
             migrationBuilder.DropTable(
                 name: "Products");

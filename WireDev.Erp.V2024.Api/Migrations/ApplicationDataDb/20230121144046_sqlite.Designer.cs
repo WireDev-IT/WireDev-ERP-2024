@@ -11,7 +11,7 @@ using WireDev.Erp.V1.Api.Context;
 namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
 {
     [DbContext(typeof(ApplicationDataDbContext))]
-    [Migration("20230121135355_sqlite")]
+    [Migration("20230121144046_sqlite")]
     partial class sqlite
     {
         /// <inheritdoc />
@@ -39,7 +39,7 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                     b.HasData(
                         new
                         {
-                            Uuid = new Guid("9ddda2b6-a24e-4894-bf0b-c0e3b39c5550"),
+                            Uuid = new Guid("99318f06-3486-4c7b-b23e-d013c05573bd"),
                             NextGroupNumber = 100,
                             NextProductNumber = 10000u
                         });
@@ -208,6 +208,43 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                         });
                 });
 
+            modelBuilder.Entity("WireDev.Erp.V1.Models.Storage.Price", b =>
+                {
+                    b.Property<Guid>("Uuid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("Archived")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("Locked")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("RetailValue")
+                        .HasColumnType("decimal(5, 3)");
+
+                    b.Property<decimal>("SellValue")
+                        .HasColumnType("decimal(5, 2)");
+
+                    b.HasKey("Uuid");
+
+                    b.ToTable("Prices");
+
+                    b.HasData(
+                        new
+                        {
+                            Uuid = new Guid("d6511f05-7898-4c5a-a145-1dd5ae35caa5"),
+                            Archived = false,
+                            Description = "Defaul_Price",
+                            Locked = false,
+                            RetailValue = 10m,
+                            SellValue = 15m
+                        });
+                });
+
             modelBuilder.Entity("WireDev.Erp.V1.Models.Storage.Product", b =>
                 {
                     b.Property<uint>("Uuid")
@@ -267,7 +304,7 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                             Group = 100,
                             Metadata = "{}",
                             Name = "Default_Product",
-                            Prices = "[{\"Uuid\":\"2b7bf118-f4b0-47b7-96ca-d99925a3d778\",\"Archived\":false,\"Description\":\"Defaul_Price\",\"RetailValue\":10,\"SellValue\":15,\"Locked\":false}]",
+                            Prices = "[\"d6511f05-7898-4c5a-a145-1dd5ae35caa5\"]",
                             Properties = "{}",
                             Used = false
                         });
@@ -302,8 +339,8 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                     b.HasData(
                         new
                         {
-                            Uuid = new Guid("5c21e9c8-4c84-4787-bf12-c066399bfd0a"),
-                            DatePosted = new DateTime(2023, 1, 21, 13, 53, 55, 231, DateTimeKind.Utc).AddTicks(5630),
+                            Uuid = new Guid("4a0126f3-7fa8-4558-b292-c93ba828b69e"),
+                            DatePosted = new DateTime(2023, 1, 21, 14, 40, 46, 831, DateTimeKind.Utc).AddTicks(4240),
                             Items = "[]",
                             Posted = true,
                             TotalPrice = 0m,

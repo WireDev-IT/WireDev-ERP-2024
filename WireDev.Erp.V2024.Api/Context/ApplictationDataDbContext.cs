@@ -27,6 +27,7 @@ namespace WireDev.Erp.V1.Api.Context
 
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<Group> Groups { get; set; }
+        public virtual DbSet<Price> Prices { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -57,8 +58,11 @@ namespace WireDev.Erp.V1.Api.Context
                        c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
                        c => c.ToList()));
 
-            Product product = new(9999) { Name = "Default_Product", };
-            product.Prices.Add(new Price() { RetailValue = 10, SellValue = 15, Description = "Defaul_Price" });
+            _ = builder.Entity<Price>().HasKey("Uuid");
+            Price price = new Price(Guid.NewGuid()) { RetailValue = 10, SellValue = 15, Description = "Defaul_Price" };
+            _ = builder.Entity<Price>().HasData(price);
+            _ = builder.Entity<Product>().HasKey("Uuid");
+            Product product = new(9999) { Name = "Default_Product", Prices = new() { price.Uuid } };
             _ = builder.Entity<Product>().HasData(product);
             _ = builder.Entity<Product>()
                 .Property(e => e.Metadata)
@@ -71,8 +75,8 @@ namespace WireDev.Erp.V1.Api.Context
             _ = builder.Entity<Product>()
                 .Property(e => e.Prices)
                 .HasConversion(v => JsonSerializer.Serialize(v, null as JsonSerializerOptions),
-                               v => JsonSerializer.Deserialize<List<Price>>(v, null as JsonSerializerOptions),
-                               new ValueComparer<List<Price>>(
+                               v => JsonSerializer.Deserialize<List<Guid>>(v, null as JsonSerializerOptions),
+                               new ValueComparer<List<Guid>>(
                                    (c1, c2) => c1.SequenceEqual(c2),
                                    c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
                                    c => c.ToList()));
