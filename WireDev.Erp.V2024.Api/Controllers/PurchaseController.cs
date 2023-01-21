@@ -23,16 +23,12 @@ namespace WireDev.Erp.V1.Api.Controllers
     [Route("api/[controller]")]
     public class PurchaseController : Controller
     {
-        private readonly PurchaseDbContext _context;
-        private readonly ProductDbContext _context2;
-        private readonly StatsDbContext _context3;
+        private readonly ApplicationDataDbContext _context;
         private readonly ILogger<PurchaseController> _logger;
 
-        public PurchaseController(PurchaseDbContext context, ProductDbContext context2, StatsDbContext context3, ILogger<PurchaseController> logger)
+        public PurchaseController(ApplicationDataDbContext context, ILogger<PurchaseController> logger)
         {
             _context = context;
-            _context2 = context2;
-            _context3 = context3;
             _logger = logger;
         }
 
@@ -82,10 +78,10 @@ namespace WireDev.Erp.V1.Api.Controllers
                 return StatusCode(StatusCodes.Status400BadRequest, new Response(false, message));
             }
 
-            using IDbContextTransaction transaction = _context.Database.BeginTransaction(IsolationLevel.Serializable);
+            using IDbContextTransaction transaction = _context.Database.BeginTransaction();
             try
             {
-                Product? p = await _context2.Products.FirstOrDefaultAsync();
+                Product? p = await _context.Products.FirstOrDefaultAsync();
                 purchase.TryAddItem(p.Uuid, p.Prices.First(), 3);
                 _ = await _context.Purchases.AddAsync(purchase);
                 _ = await _context.SaveChangesAsync();
@@ -109,13 +105,13 @@ namespace WireDev.Erp.V1.Api.Controllers
             {
                 try
                 {
-                    product = await _context2.Products.FindAsync(item.ProductId);
+                    product = await _context.Products.FindAsync(item.ProductId);
                     if (product != null)
                     {
                         product.Remove(item.Count);
 
-                        _context2.Products.Update(product);
-                        _ = await _context2.SaveChangesAsync();
+                        _context.Products.Update(product);
+                        _ = await _context.SaveChangesAsync();
                     }
                     else
                     {
@@ -149,19 +145,19 @@ namespace WireDev.Erp.V1.Api.Controllers
             {
                 try
                 {
-                    ProductStats? productStats = await _context3.ProductStats.FindAsync(item.ProductId);
+                    ProductStats? productStats = await _context.ProductStats.FindAsync(item.ProductId);
                     if (productStats == null)
                     {
                         productStats = new(item.ProductId);
                         productStats.AddTransaction(item);
-                        await _context3.ProductStats.AddAsync(productStats);
+                        await _context.ProductStats.AddAsync(productStats);
                     }
                     else
                     {
                         productStats.AddTransaction(item);
-                        _context3.ProductStats.Update(productStats);
+                        _context.ProductStats.Update(productStats);
                     }
-                    _=await _context3.SaveChangesAsync();
+                    _ = await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateException ex)
                 {

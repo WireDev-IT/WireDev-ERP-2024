@@ -11,14 +11,14 @@ using WireDev.Erp.V1.Api.Context;
 namespace WireDev.Erp.V1.Api.Migrations
 {
     [DbContext(typeof(ApplicationUserDbContext))]
-    [Migration("20230109121749_sqlite")]
+    [Migration("20230121134810_sqlite")]
     partial class sqlite
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "7.0.1");
+            modelBuilder.HasAnnotation("ProductVersion", "7.0.2");
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {

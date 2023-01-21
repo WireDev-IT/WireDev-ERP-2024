@@ -26,11 +26,8 @@ namespace WireDev.Erp.V1.Api
             //_ = services.AddDbContext<ApplicationUserDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("UserConnStr")));
             //_ = services.AddDbContext<ProductDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ProductConnStr")));
 
-            _ = services.AddDbContext<ApplicationUserDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("WebApiDatabase")));
-            _ = services.AddDbContext<ProductDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("WebApiDatabase")));
-            _ = services.AddDbContext<StatsDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("WebApiDatabase")));
-            _ = services.AddDbContext<PurchaseDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("WebApiDatabase")));
-            _ = services.AddDbContext<SettingsDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("WebApiDatabase")));
+            _ = services.AddDbContext<ApplicationUserDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("UserDatabase")));
+            _ = services.AddDbContext<ApplicationDataDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("DataDatabase")));
 
             // For Identity
             _ = services.AddIdentity<IdentityUser, IdentityRole>()
