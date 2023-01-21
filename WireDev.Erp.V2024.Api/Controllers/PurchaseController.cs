@@ -103,9 +103,9 @@ namespace WireDev.Erp.V1.Api.Controllers
             transaction.CreateSavepoint("BeforeProductModification");
 
             Product? product = null;
-            foreach (TransactionItem item in purchase.Items)
+            try
             {
-                try
+                foreach (TransactionItem item in purchase.Items)
                 {
                     product = await _context.Products.FindAsync(item.ProductId);
                     if (product != null)
@@ -113,39 +113,40 @@ namespace WireDev.Erp.V1.Api.Controllers
                         product.Remove(item.Count);
 
                         _context.Products.Update(product);
-                        _ = await _context.SaveChangesAsync();
                     }
                     else
                     {
                         throw new ArgumentNullException($"Product {item.ProductId} was not found. Rolling back changes.");
                     }
                 }
-                catch (DbUpdateException ex)
-                {
-                    await transaction.RollbackAsync();
-                    string message = $"Could not save changes to database! Rolling back changes.";
-                    _logger.LogError(message, ex);
-                    return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
-                }
-                catch (ArgumentNullException ex)
-                {
-                    await transaction.RollbackAsync();
-                    _logger.LogError(ex.Message, ex);
-                    return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, ex.Message));
-                }
-                catch (Exception ex)
-                {
-                    await transaction.RollbackAsync();
-                    string message = $"Modifing product {product.Uuid} failed! Rolling back changes.";
-                    _logger.LogError(message, ex);
-                    return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
-                }
+
+                _ = await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                await transaction.RollbackAsync();
+                string message = $"Could not save changes to database! Rolling back changes.";
+                _logger.LogError(message, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+            }
+            catch (ArgumentNullException ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex.Message, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, ex.Message));
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                string message = $"Modifing product {product.Uuid} failed! Rolling back changes.";
+                _logger.LogError(message, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
             }
             transaction.CreateSavepoint("BeforeProductStatsModification");
 
-            foreach (TransactionItem item in purchase.Items)
+            try
             {
-                try
+                foreach (TransactionItem item in purchase.Items)
                 {
                     ProductStats? productStats = await _context.ProductStats.FindAsync(item.ProductId);
                     if (productStats == null)
@@ -159,22 +160,88 @@ namespace WireDev.Erp.V1.Api.Controllers
                         productStats.AddTransaction(item);
                         _context.ProductStats.Update(productStats);
                     }
-                    _ = await _context.SaveChangesAsync();
                 }
-                catch (DbUpdateException ex)
+
+                _ = await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                await transaction.RollbackAsync();
+                string message = $"Could not save changes to database! Rolling back changes.";
+                _logger.LogError(message, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+                string message = $"Modifing stats of product {product.Uuid} failed! Rolling back changes.";
+                _logger.LogError(message, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+            }
+            transaction.CreateSavepoint("BeforeTimeStatsModification");
+
+            try
+            {
+                foreach (TransactionItem item in purchase.Items)
                 {
-                    await transaction.RollbackAsync();
-                    string message = $"Could not save changes to database! Rolling back changes.";
-                    _logger.LogError(message, ex);
-                    return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+                    Price? price = await _context.Prices.FindAsync(item.PriceId);
+
+                    TotalStats? totalStats = await _context.TotalStats.FirstOrDefaultAsync();
+                    if (totalStats == null)
+                    {
+                        totalStats = new(DateTime.UtcNow);
+                        await _context.TotalStats.AddAsync(totalStats);
+                    }
+                    totalStats.AddSells(item.Count);
+                    totalStats.AddRevenue(item.Count * price.SellValue);
+                    _context.TotalStats.Update(totalStats);
+
+                    YearStats? yearStats = await _context.YearStats.FindAsync(new DateTime((int)DateTime.UtcNow.Year, 1, 1).Ticks);
+                    if (yearStats == null)
+                    {
+                        yearStats = new(DateTime.UtcNow);
+                        await _context.YearStats.AddAsync(yearStats);
+                    }
+                    yearStats.AddSells(item.Count);
+                    yearStats.AddRevenue(item.Count * price.SellValue);
+                    _context.YearStats.Update(yearStats);
+
+                    MonthStats? monthStats = await _context.MonthStats.FindAsync(new DateTime((int)DateTime.UtcNow.Year, (int)DateTime.UtcNow.Month, 1).Ticks);
+                    if (monthStats == null)
+                    {
+                        monthStats = new(DateTime.UtcNow);
+                        await _context.MonthStats.AddAsync(monthStats);
+                    }
+                    monthStats.AddSells(item.Count);
+                    monthStats.AddRevenue(item.Count * price.SellValue);
+                    _context.MonthStats.Update(monthStats);
+
+                    DayStats? dayStats = await _context.DayStats.FindAsync(new DateTime((int)DateTime.UtcNow.Year, (int)DateTime.UtcNow.Month, (int)DateTime.UtcNow.Day).Ticks);
+                    if (dayStats == null)
+                    {
+                        dayStats = new(DateTime.UtcNow);
+                        await _context.DayStats.AddAsync(dayStats);
+                    }
+                    dayStats.AddSells(item.Count);
+                    dayStats.AddRevenue(item.Count * price.SellValue);
+                    _context.DayStats.Update(dayStats);
                 }
-                catch (Exception ex)
-                {
-                    transaction.Rollback();
-                    string message = $"Modifing stats of product {product.Uuid} failed! Rolling back changes.";
-                    _logger.LogError(message, ex);
-                    return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
-                }
+
+                _ = await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                await transaction.RollbackAsync();
+                string message = $"Could not save changes to database! Rolling back changes.";
+                _logger.LogError(message, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+                string message = $"Modifing stats of product {product.Uuid} failed! Rolling back changes.";
+                _logger.LogError(message, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
             }
             await transaction.CommitAsync();
 

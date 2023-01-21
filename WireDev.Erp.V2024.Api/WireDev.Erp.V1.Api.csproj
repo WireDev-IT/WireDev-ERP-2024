@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>639789bf-8666-4305-8336-5ec633ebe8cf</UserSecretsId>
     <ApplicationIcon>icon.ico</ApplicationIcon>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'WireDev.ERP.V2024.Api' " />

@@ -11,7 +11,7 @@ using WireDev.Erp.V1.Api.Context;
 namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
 {
     [DbContext(typeof(ApplicationDataDbContext))]
-    [Migration("20230121144046_sqlite")]
+    [Migration("20230121221015_sqlite")]
     partial class sqlite
     {
         /// <inheritdoc />
@@ -39,7 +39,7 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                     b.HasData(
                         new
                         {
-                            Uuid = new Guid("99318f06-3486-4c7b-b23e-d013c05573bd"),
+                            Uuid = new Guid("39175cc2-70ab-4cea-af79-4497019d9e77"),
                             NextGroupNumber = 100,
                             NextProductNumber = 10000u
                         });
@@ -236,7 +236,7 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                     b.HasData(
                         new
                         {
-                            Uuid = new Guid("d6511f05-7898-4c5a-a145-1dd5ae35caa5"),
+                            Uuid = new Guid("35d4a465-ad22-4551-9b32-5ac521dee089"),
                             Archived = false,
                             Description = "Defaul_Price",
                             Locked = false,
@@ -304,7 +304,7 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                             Group = 100,
                             Metadata = "{}",
                             Name = "Default_Product",
-                            Prices = "[\"d6511f05-7898-4c5a-a145-1dd5ae35caa5\"]",
+                            Prices = "[\"35d4a465-ad22-4551-9b32-5ac521dee089\"]",
                             Properties = "{}",
                             Used = false
                         });
@@ -339,8 +339,8 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                     b.HasData(
                         new
                         {
-                            Uuid = new Guid("4a0126f3-7fa8-4558-b292-c93ba828b69e"),
-                            DatePosted = new DateTime(2023, 1, 21, 14, 40, 46, 831, DateTimeKind.Utc).AddTicks(4240),
+                            Uuid = new Guid("8f60b08f-cb2e-4650-a289-e315e6e0638e"),
+                            DatePosted = new DateTime(2023, 1, 21, 22, 10, 15, 40, DateTimeKind.Utc).AddTicks(2380),
                             Items = "[]",
                             Posted = true,
                             TotalPrice = 0m,
