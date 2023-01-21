@@ -12,7 +12,7 @@ namespace WireDev.Erp.V1.Models.Statistics
             Date = date.Ticks;
         }
 
-        public long Date { get; }
+        public virtual long Date { get; }
         public decimal Revenue { get; private set; } = 0;
         public decimal Losses { get; private set; } = 0;
         public uint SoldItems { get; private set; } = 0;
@@ -27,7 +27,7 @@ namespace WireDev.Erp.V1.Models.Statistics
         public uint? AddRefundedItems(uint refunded_items) => refunded_items > 0 ? RefundedItemSells += refunded_items : null;
         public uint? AddDisposedItems(uint disposed_items) => disposed_items > 0 ? DisposedItems += disposed_items : null;
 
-        public DateTime GetDate()
+        public virtual DateTime GetDate()
         {
             return new DateTime(Date);
         }

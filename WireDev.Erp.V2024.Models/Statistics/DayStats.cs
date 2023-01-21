@@ -7,8 +7,10 @@ namespace WireDev.Erp.V1.Models.Statistics
 
         public DayStats(DateTime date) : base(date)
         {
-
+            Date = GetDate().Ticks;
         }
+
+        public override long Date { get; }
 
         public new DateTime GetDate()
         {
