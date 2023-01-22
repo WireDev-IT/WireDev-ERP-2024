@@ -79,7 +79,6 @@ namespace WireDev.Erp.V1.Api.Controllers
             await dayStats.AddTransaction(count, price, type);
         }
 
-
         private Task ProcessProductWithStats(TransactionItem item, TransactionType type)
         {
             Product? product;
@@ -113,52 +112,8 @@ namespace WireDev.Erp.V1.Api.Controllers
             return Task.CompletedTask;
         }
 
-        [HttpGet("all")]
-        public async Task<IActionResult> GetPurchases()
+        private async Task<ObjectResult> ProcessTransaction(Purchase purchase)
         {
-            List<Purchase>? list;
-            try
-            {
-                list = await _context.Purchases.ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                string message = $"List of purchases cannot be retrieved!";
-                _logger.LogError(message, ex);
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
-            }
-
-            return Ok(new Response(true, null, list));
-        }
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetPurchase(Guid id)
-        {
-            Purchase? purchase;
-            try
-            {
-                purchase = await _context.Purchases.FirstAsync(x => x.Uuid == id);
-                return Ok(new Response(true, null, purchase));
-            }
-            catch (Exception ex)
-            {
-                string message = $"Purchase with the UUID {id} was not found!";
-                _logger.LogWarning(message, ex);
-                return NotFound(new Response(true, message));
-            }
-        }
-
-        //[Authorize("PURCHASE_SELL:RW")]
-        [HttpPost("sell")]
-        public async Task<IActionResult> SellPurchase([FromBody] Purchase purchase)
-        {
-            if (purchase.Type != TransactionType.Sell)
-            {
-                string message = $"Purchase has not the correct transaction type!";
-                _logger.LogWarning(message);
-                return StatusCode(StatusCodes.Status400BadRequest, new Response(false, message));
-            }
-
             using IDbContextTransaction transaction = _context.Database.BeginTransaction();
             try
             {
@@ -253,10 +208,109 @@ namespace WireDev.Erp.V1.Api.Controllers
             return Ok(new Response(true, null, purchase.Uuid));
         }
 
+        [HttpGet("all")]
+        public async Task<IActionResult> GetPurchases()
+        {
+            List<Purchase>? list;
+            try
+            {
+                list = await _context.Purchases.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                string message = $"List of purchases cannot be retrieved!";
+                _logger.LogError(message, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+            }
+
+            return Ok(new Response(true, null, list));
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetPurchase(Guid id)
+        {
+            Purchase? purchase;
+            try
+            {
+                purchase = await _context.Purchases.FirstAsync(x => x.Uuid == id);
+                return Ok(new Response(true, null, purchase));
+            }
+            catch (Exception ex)
+            {
+                string message = $"Purchase with the UUID {id} was not found!";
+                _logger.LogWarning(message, ex);
+                return NotFound(new Response(true, message));
+            }
+        }
+
+        //[Authorize("PURCHASE_SELL:RW")]
+        [HttpPost("sell")]
+        public async Task<IActionResult> SellPurchase([FromBody] Purchase purchase)
+        {
+            if (purchase.Type != TransactionType.Sell)
+            {
+                string message = $"Purchase has not the correct transaction type!";
+                _logger.LogWarning(message);
+                return StatusCode(StatusCodes.Status400BadRequest, new Response(false, message));
+            }
+
+            return await ProcessTransaction(purchase);
+        }
+
+        //[Authorize("PURCHASE_BUY:RW")]
         [HttpPost("buy")]
         public async Task<IActionResult> BuyPurchase([FromBody] Purchase purchase)
         {
-            return StatusCode(StatusCodes.Status501NotImplemented);
+            if (purchase.Type != TransactionType.Purchase)
+            {
+                string message = $"Purchase has not the correct transaction type!";
+                _logger.LogWarning(message);
+                return StatusCode(StatusCodes.Status400BadRequest, new Response(false, message));
+            }
+
+            return await ProcessTransaction(purchase);
+        }
+
+        //[Authorize("PURCHASE_CANCEL:RW")]
+        [HttpPost("cancel")]
+        public async Task<IActionResult> CancelPurchase([FromBody] Purchase purchase)
+        {
+            if (purchase.Type != TransactionType.Cancel)
+            {
+                string message = $"Purchase has not the correct transaction type!";
+                _logger.LogWarning(message);
+                return StatusCode(StatusCodes.Status400BadRequest, new Response(false, message));
+            }
+
+            return await ProcessTransaction(purchase);
+        }
+
+        //[Authorize("PURCHASE_REFUND:RW")]
+        [HttpPost("refund")]
+        public async Task<IActionResult> RefundPurchase([FromBody] Purchase purchase)
+        {
+            if (purchase.Type != TransactionType.Refund)
+            {
+                string message = $"Purchase has not the correct transaction type!";
+                _logger.LogWarning(message);
+                return StatusCode(StatusCodes.Status400BadRequest, new Response(false, message));
+            }
+
+            return await ProcessTransaction(purchase);
+        }
+
+        //[Authorize("PURCHASE_DISPOSE:RW")]
+        [HttpPost("dispose")]
+        public async Task<IActionResult> DisposalPurchase([FromBody] Purchase purchase)
+        {
+            if (purchase.Type != TransactionType.Disposed)
+            {
+                string message = $"Purchase has not the correct transaction type!";
+                _logger.LogWarning(message);
+                return StatusCode(StatusCodes.Status400BadRequest, new Response(false, message));
+            }
+
+            return await ProcessTransaction(purchase);
         }
     }
 }

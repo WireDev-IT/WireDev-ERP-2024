@@ -118,7 +118,7 @@ namespace WireDev.Erp.V1.Api.Controllers
             MonthStats? stats;
             try
             {
-                stats = await _context.MonthStats.FindAsync(new DateTime(y, m, 1));
+                stats = await _context.MonthStats.FindAsync(new DateTime(y, m, 1).Ticks);
             }
             catch (Exception ex)
             {
@@ -173,7 +173,7 @@ namespace WireDev.Erp.V1.Api.Controllers
             DayStats? stats;
             try
             {
-                stats = await _context.DayStats.FindAsync(new DateTime(y, m, d));
+                stats = await _context.DayStats.FindAsync(new DateTime(y, m, d).Ticks);
             }
             catch (Exception ex)
             {
