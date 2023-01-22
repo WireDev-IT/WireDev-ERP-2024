@@ -13,7 +13,6 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace WireDev.Erp.V1.Models.Storage
 {
-    [PrimaryKey("Uuid")]
     public class Product
     {
         public Product()
@@ -40,14 +39,14 @@ namespace WireDev.Erp.V1.Models.Storage
         public string? Description { get; set; }
         public bool Active { get; set; } = false;
         public bool Archived { get; set; } = false;
-        public uint Availible { get; private set; } = 0;
+        public int Availible { get; private set; } = 0;
 
         public List<ulong> EAN { get; set; } = new();
-        public List<Price> Prices { get; set; } = new();
+        public List<Guid> Prices { get; set; } = new();
         public Dictionary<string, string> Properties { get; set; } = new();
         public Dictionary<string, string> Metadata { get; set; } = new();
 
-        public uint Add(uint add) => Availible += add;
-        public uint Remove(uint add) => Availible -= add;
+        public int Add(uint add) => Availible += (int)add;
+        public int Remove(uint add) => Availible -= (int)add;
     }
 }

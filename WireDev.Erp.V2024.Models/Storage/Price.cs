@@ -10,10 +10,16 @@ namespace WireDev.Erp.V1.Models.Storage
     {
         public Price()
         {
-            Uuid = Guid.NewGuid();
+
         }
 
-        public Guid Uuid { get; }
+        public Price(Guid guid)
+        {
+            Uuid = guid;
+        }
+
+        [Key]
+        public Guid Uuid { get; private set; }
         public bool Archived { get; set; } = false;
 
         private string? _description = null;

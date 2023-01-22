@@ -2,11 +2,10 @@
 {
 	public enum TransactionType
 	{
-		Sell,
-		Cancel,
-		Withdraw,
-		Disposed,
-		Purchase
+		Sell = 0,
+		Cancel = 1,
+		Refund = 2,
+		Disposed = 3,
+		Purchase = 4
 	}
 }
-

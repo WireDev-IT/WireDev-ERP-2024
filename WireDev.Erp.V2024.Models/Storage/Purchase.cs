@@ -7,52 +7,55 @@ using WireDev.Erp.V1.Models.Enums;
 
 namespace WireDev.Erp.V1.Models.Storage
 {
-    public class Purchase : IPurchase
+    public class Purchase
     {
         public Purchase()
         {
-            Uuid = Guid.NewGuid();
+
+        }
+
+        public Purchase(TransactionType type)
+        {
+            Type = type;
         }
 
         [Key]
-        public Guid Uuid { get; }
+        public Guid Uuid { get; private set; }
         [Column(TypeName = "decimal(5, 2)")]
         public decimal TotalPrice { get; private set; } = 0;
         public DateTime? DatePosted { get; private set; } = null;
-        public Dictionary<(uint productId, Guid priceId, TransactionType type), uint> Items { get; private set; } = new();
+        public TransactionType Type { get; set; }
+        public List<TransactionItem> Items { get; private set; } = new();
         public bool Posted { get; private set; } = false;
 
-        public bool TryAddItem(uint productId, Guid priceId, TransactionType type, uint itemCount)
+        public bool TryAddItem(uint productId, Price price, uint itemCount)
         {
             if (!Posted)
             {
-                Items.Add((productId, priceId, type), itemCount);
+                Items.Add(new TransactionItem(productId, price.Uuid, itemCount));
 
-                //TODO: Find price
-                Price price = new();
-
-                if (type == TransactionType.Sell)
+                if (Type == TransactionType.Sell)
                 {
-                    TotalPrice = decimal.Add(TotalPrice, price.SellValue);
+                    TotalPrice = decimal.Add(TotalPrice, price.SellValue * itemCount);
                 }
-                else if (type == TransactionType.Disposed || type == TransactionType.Purchase)
+                else if (Type == TransactionType.Disposed || Type == TransactionType.Purchase)
                 {
-                    TotalPrice = decimal.Subtract(TotalPrice, price.RetailValue);
+                    TotalPrice = decimal.Subtract(TotalPrice, price.RetailValue * itemCount);
                 }
                 else
                 {
-                    TotalPrice = decimal.Subtract(TotalPrice, price.SellValue);
+                    TotalPrice = decimal.Subtract(TotalPrice, price.SellValue * itemCount);
                 }
 
                 return true;
             }
             return false;
         }
-
         public void Post()
         {
             Posted = true;
             DatePosted = DateTime.UtcNow;
+            Uuid = Guid.NewGuid();
         }
     }
 }

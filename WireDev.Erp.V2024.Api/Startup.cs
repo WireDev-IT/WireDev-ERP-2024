@@ -1,7 +1,10 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Text;
 using WireDev.Erp.V1.Api.Context;
 
@@ -19,18 +22,29 @@ namespace WireDev.Erp.V1.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            _ = services.AddControllers();
-            _ = services.AddSwaggerGen();
+            _ = services.AddControllers(options =>
+            {
+                options.Filters.Add(new ProducesAttribute("application/json"));
+            });
+            _ = services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1",
+                    new OpenApiInfo
+                    {
+                        Title = "WireDev ERP 2024",
+                        Version = "v1"
+                    }
+                 );
+                c.IncludeXmlComments(Path.Combine(System.AppContext.BaseDirectory, "WireDev.Erp.V1.Api.xml"));
+            });
 
             // For Entity Framework
             //_ = services.AddDbContext<ApplicationUserDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("UserConnStr")));
             //_ = services.AddDbContext<ProductDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ProductConnStr")));
 
-            _ = services.AddDbContext<ApplicationUserDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("WebApiDatabase")));
-            _ = services.AddDbContext<ProductDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("WebApiDatabase")));
-            _ = services.AddDbContext<StatsDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("WebApiDatabase")));
-            _ = services.AddDbContext<PurchaseDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("WebApiDatabase")));
-            //_ = services.AddDbContext<PriceDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("WebApiDatabase")));
+            _ = services.AddDbContext<ApplicationUserDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("UserDatabase")));
+            _ = services.AddDbContext<ApplicationDataDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("DataDatabase")));
+
 
             // For Identity
             _ = services.AddIdentity<IdentityUser, IdentityRole>()

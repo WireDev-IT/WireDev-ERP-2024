@@ -7,7 +7,7 @@ namespace WireDev.Erp.V1.Models.Interfaces
         /// <summary>
         /// The UUID of the product that was transacted.
         /// </summary>
-        Guid ProductId { get; }
+        uint ProductId { get; }
 
         /// <summary>
         /// The UUID of the price at which this product was transacted.
