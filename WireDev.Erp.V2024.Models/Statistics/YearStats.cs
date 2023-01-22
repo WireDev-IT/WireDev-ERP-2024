@@ -5,17 +5,12 @@ namespace WireDev.Erp.V1.Models.Statistics
     {
         public YearStats() { }
 
-        public YearStats(DateTime date) : base(date)
+        public YearStats(DateTime date)
         {
-            Date = GetDate().Ticks;
+            DateTime t = new(date.Year, 1, 1);
+            this.Date = t.Ticks;
         }
 
         public override long Date { get; }
-
-        public new DateTime GetDate()
-        {
-            DateTime t = new(Date);
-            return t.AddHours(-t.Hour).AddMinutes(-t.Minute).AddSeconds(-t.Second).AddMonths(-t.Month+1).AddDays(-t.Day+1);
-        }
     }
 }

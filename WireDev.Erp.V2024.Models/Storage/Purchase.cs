@@ -36,15 +36,15 @@ namespace WireDev.Erp.V1.Models.Storage
 
                 if (Type == TransactionType.Sell)
                 {
-                    TotalPrice = decimal.Add(TotalPrice, price.SellValue);
+                    TotalPrice = decimal.Add(TotalPrice, price.SellValue * itemCount);
                 }
                 else if (Type == TransactionType.Disposed || Type == TransactionType.Purchase)
                 {
-                    TotalPrice = decimal.Subtract(TotalPrice, price.RetailValue);
+                    TotalPrice = decimal.Subtract(TotalPrice, price.RetailValue * itemCount);
                 }
                 else
                 {
-                    TotalPrice = decimal.Subtract(TotalPrice, price.SellValue);
+                    TotalPrice = decimal.Subtract(TotalPrice, price.SellValue * itemCount);
                 }
 
                 return true;

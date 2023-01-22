@@ -4,7 +4,7 @@
 	{
 		Sell = 0,
 		Cancel = 1,
-		Withdraw = 2,
+		Refund = 2,
 		Disposed = 3,
 		Purchase = 4
 	}

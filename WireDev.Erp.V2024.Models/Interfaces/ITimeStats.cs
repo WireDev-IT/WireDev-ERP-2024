@@ -1,22 +1,21 @@
-﻿using System;
-namespace WireDev.Erp.V1.Models.Interfaces
+﻿using WireDev.Erp.V1.Models.Enums;
+using WireDev.Erp.V1.Models.Storage;
+
+namespace WireDev.Erp.V1.Models.Enums
 {
-	public interface ITimeStats
-	{
+    public interface ITimeStats
+    {
         long Date { get; }
+        decimal Expenses { get; }
         decimal Revenue { get; }
         decimal Losses { get; }
         uint SoldItems { get; }
-        uint CanceledItemSells { get; }
-        uint RefundedItemSells { get; }
+        uint PurchasedItems { get; }
+        uint CanceledItems { get; }
+        uint RefundedItems { get; }
         uint DisposedItems { get; }
 
-        uint? AddCanceledItems(uint canceled_items);
-        uint? AddDisposedItems(uint disposed_items);
-        decimal? AddLosses(decimal losses);
-        uint? AddRefundedItems(uint refunded_items);
-        decimal? AddRevenue(decimal revenue);
-        uint? AddSells(uint sells);
+        Task AddTransaction(uint count, Price price, TransactionType type);
         DateTime GetDate();
     }
 }

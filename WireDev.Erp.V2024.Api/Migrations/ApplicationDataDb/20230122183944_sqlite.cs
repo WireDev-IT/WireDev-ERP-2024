@@ -17,11 +17,13 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                 {
                     Date = table.Column<long>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    Expenses = table.Column<decimal>(type: "TEXT", nullable: false),
                     Revenue = table.Column<decimal>(type: "TEXT", nullable: false),
                     Losses = table.Column<decimal>(type: "TEXT", nullable: false),
                     SoldItems = table.Column<uint>(type: "INTEGER", nullable: false),
-                    CanceledItemSells = table.Column<uint>(type: "INTEGER", nullable: false),
-                    RefundedItemSells = table.Column<uint>(type: "INTEGER", nullable: false),
+                    PurchasedItems = table.Column<uint>(type: "INTEGER", nullable: false),
+                    CanceledItems = table.Column<uint>(type: "INTEGER", nullable: false),
+                    RefundedItems = table.Column<uint>(type: "INTEGER", nullable: false),
                     DisposedItems = table.Column<uint>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
@@ -51,11 +53,13 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                 {
                     Date = table.Column<long>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    Expenses = table.Column<decimal>(type: "TEXT", nullable: false),
                     Revenue = table.Column<decimal>(type: "TEXT", nullable: false),
                     Losses = table.Column<decimal>(type: "TEXT", nullable: false),
                     SoldItems = table.Column<uint>(type: "INTEGER", nullable: false),
-                    CanceledItemSells = table.Column<uint>(type: "INTEGER", nullable: false),
-                    RefundedItemSells = table.Column<uint>(type: "INTEGER", nullable: false),
+                    PurchasedItems = table.Column<uint>(type: "INTEGER", nullable: false),
+                    CanceledItems = table.Column<uint>(type: "INTEGER", nullable: false),
+                    RefundedItems = table.Column<uint>(type: "INTEGER", nullable: false),
                     DisposedItems = table.Column<uint>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
@@ -150,11 +154,13 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                 {
                     Date = table.Column<long>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    Expenses = table.Column<decimal>(type: "TEXT", nullable: false),
                     Revenue = table.Column<decimal>(type: "TEXT", nullable: false),
                     Losses = table.Column<decimal>(type: "TEXT", nullable: false),
                     SoldItems = table.Column<uint>(type: "INTEGER", nullable: false),
-                    CanceledItemSells = table.Column<uint>(type: "INTEGER", nullable: false),
-                    RefundedItemSells = table.Column<uint>(type: "INTEGER", nullable: false),
+                    PurchasedItems = table.Column<uint>(type: "INTEGER", nullable: false),
+                    CanceledItems = table.Column<uint>(type: "INTEGER", nullable: false),
+                    RefundedItems = table.Column<uint>(type: "INTEGER", nullable: false),
                     DisposedItems = table.Column<uint>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
@@ -168,11 +174,13 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                 {
                     Date = table.Column<long>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    Expenses = table.Column<decimal>(type: "TEXT", nullable: false),
                     Revenue = table.Column<decimal>(type: "TEXT", nullable: false),
                     Losses = table.Column<decimal>(type: "TEXT", nullable: false),
                     SoldItems = table.Column<uint>(type: "INTEGER", nullable: false),
-                    CanceledItemSells = table.Column<uint>(type: "INTEGER", nullable: false),
-                    RefundedItemSells = table.Column<uint>(type: "INTEGER", nullable: false),
+                    PurchasedItems = table.Column<uint>(type: "INTEGER", nullable: false),
+                    CanceledItems = table.Column<uint>(type: "INTEGER", nullable: false),
+                    RefundedItems = table.Column<uint>(type: "INTEGER", nullable: false),
                     DisposedItems = table.Column<uint>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
@@ -188,22 +196,22 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
             migrationBuilder.InsertData(
                 table: "Prices",
                 columns: new[] { "Uuid", "Archived", "Description", "Locked", "RetailValue", "SellValue" },
-                values: new object[] { new Guid("35d4a465-ad22-4551-9b32-5ac521dee089"), false, "Defaul_Price", false, 10m, 15m });
+                values: new object[] { new Guid("fd29a134-570b-4d55-90eb-17d0aa76a376"), false, "Defaul_Price", false, 10m, 15m });
 
             migrationBuilder.InsertData(
                 table: "Products",
                 columns: new[] { "Uuid", "Active", "Archived", "Availible", "Description", "EAN", "Group", "Metadata", "Name", "Prices", "Properties", "Used" },
-                values: new object[] { 9999u, false, false, 0, null, "[]", 100, "{}", "Default_Product", "[\"35d4a465-ad22-4551-9b32-5ac521dee089\"]", "{}", false });
+                values: new object[] { 9999u, false, false, 0, null, "[]", 100, "{}", "Default_Product", "[\"fd29a134-570b-4d55-90eb-17d0aa76a376\"]", "{}", false });
 
             migrationBuilder.InsertData(
                 table: "Purchases",
                 columns: new[] { "Uuid", "DatePosted", "Items", "Posted", "TotalPrice", "Type" },
-                values: new object[] { new Guid("8f60b08f-cb2e-4650-a289-e315e6e0638e"), new DateTime(2023, 1, 21, 22, 10, 15, 40, DateTimeKind.Utc).AddTicks(2380), "[]", true, 0m, 0 });
+                values: new object[] { new Guid("45ae0228-0d38-44f2-a57a-b228b6254ca8"), new DateTime(2023, 1, 22, 18, 39, 43, 982, DateTimeKind.Utc).AddTicks(8940), "[]", true, 0m, 0 });
 
             migrationBuilder.InsertData(
                 table: "Settings",
                 columns: new[] { "Uuid", "NextGroupNumber", "NextProductNumber" },
-                values: new object[] { new Guid("39175cc2-70ab-4cea-af79-4497019d9e77"), 100, 10000u });
+                values: new object[] { new Guid("0d556b34-5876-4410-a5d7-632076f9d59a"), 100, 10000u });
         }
 
         /// <inheritdoc />

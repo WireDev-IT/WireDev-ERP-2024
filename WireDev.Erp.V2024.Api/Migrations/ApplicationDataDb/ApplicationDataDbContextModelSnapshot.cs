@@ -36,7 +36,7 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                     b.HasData(
                         new
                         {
-                            Uuid = new Guid("39175cc2-70ab-4cea-af79-4497019d9e77"),
+                            Uuid = new Guid("0d556b34-5876-4410-a5d7-632076f9d59a"),
                             NextGroupNumber = 100,
                             NextProductNumber = 10000u
                         });
@@ -48,16 +48,22 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<uint>("CanceledItemSells")
+                    b.Property<uint>("CanceledItems")
                         .HasColumnType("INTEGER");
 
                     b.Property<uint>("DisposedItems")
                         .HasColumnType("INTEGER");
 
+                    b.Property<decimal>("Expenses")
+                        .HasColumnType("TEXT");
+
                     b.Property<decimal>("Losses")
                         .HasColumnType("TEXT");
 
-                    b.Property<uint>("RefundedItemSells")
+                    b.Property<uint>("PurchasedItems")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<uint>("RefundedItems")
                         .HasColumnType("INTEGER");
 
                     b.Property<decimal>("Revenue")
@@ -77,16 +83,22 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<uint>("CanceledItemSells")
+                    b.Property<uint>("CanceledItems")
                         .HasColumnType("INTEGER");
 
                     b.Property<uint>("DisposedItems")
                         .HasColumnType("INTEGER");
 
+                    b.Property<decimal>("Expenses")
+                        .HasColumnType("TEXT");
+
                     b.Property<decimal>("Losses")
                         .HasColumnType("TEXT");
 
-                    b.Property<uint>("RefundedItemSells")
+                    b.Property<uint>("PurchasedItems")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<uint>("RefundedItems")
                         .HasColumnType("INTEGER");
 
                     b.Property<decimal>("Revenue")
@@ -121,16 +133,22 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<uint>("CanceledItemSells")
+                    b.Property<uint>("CanceledItems")
                         .HasColumnType("INTEGER");
 
                     b.Property<uint>("DisposedItems")
                         .HasColumnType("INTEGER");
 
+                    b.Property<decimal>("Expenses")
+                        .HasColumnType("TEXT");
+
                     b.Property<decimal>("Losses")
                         .HasColumnType("TEXT");
 
-                    b.Property<uint>("RefundedItemSells")
+                    b.Property<uint>("PurchasedItems")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<uint>("RefundedItems")
                         .HasColumnType("INTEGER");
 
                     b.Property<decimal>("Revenue")
@@ -150,16 +168,22 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<uint>("CanceledItemSells")
+                    b.Property<uint>("CanceledItems")
                         .HasColumnType("INTEGER");
 
                     b.Property<uint>("DisposedItems")
                         .HasColumnType("INTEGER");
 
+                    b.Property<decimal>("Expenses")
+                        .HasColumnType("TEXT");
+
                     b.Property<decimal>("Losses")
                         .HasColumnType("TEXT");
 
-                    b.Property<uint>("RefundedItemSells")
+                    b.Property<uint>("PurchasedItems")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<uint>("RefundedItems")
                         .HasColumnType("INTEGER");
 
                     b.Property<decimal>("Revenue")
@@ -233,7 +257,7 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                     b.HasData(
                         new
                         {
-                            Uuid = new Guid("35d4a465-ad22-4551-9b32-5ac521dee089"),
+                            Uuid = new Guid("fd29a134-570b-4d55-90eb-17d0aa76a376"),
                             Archived = false,
                             Description = "Defaul_Price",
                             Locked = false,
@@ -301,7 +325,7 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                             Group = 100,
                             Metadata = "{}",
                             Name = "Default_Product",
-                            Prices = "[\"35d4a465-ad22-4551-9b32-5ac521dee089\"]",
+                            Prices = "[\"fd29a134-570b-4d55-90eb-17d0aa76a376\"]",
                             Properties = "{}",
                             Used = false
                         });
@@ -336,8 +360,8 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                     b.HasData(
                         new
                         {
-                            Uuid = new Guid("8f60b08f-cb2e-4650-a289-e315e6e0638e"),
-                            DatePosted = new DateTime(2023, 1, 21, 22, 10, 15, 40, DateTimeKind.Utc).AddTicks(2380),
+                            Uuid = new Guid("45ae0228-0d38-44f2-a57a-b228b6254ca8"),
+                            DatePosted = new DateTime(2023, 1, 22, 18, 39, 43, 982, DateTimeKind.Utc).AddTicks(8940),
                             Items = "[]",
                             Posted = true,
                             TotalPrice = 0m,

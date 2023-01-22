@@ -3,6 +3,7 @@ using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using WireDev.Erp.V1.Models;
+using WireDev.Erp.V1.Models.Enums;
 using WireDev.Erp.V1.Models.Statistics;
 using WireDev.Erp.V1.Models.Storage;
 
@@ -44,7 +45,7 @@ namespace WireDev.Erp.V1.Api.Context
             _ = builder.Entity<ProductStats>()
                 .Property(e => e.Transactions)
                 .HasConversion(v => JsonSerializer.Serialize(v, null as JsonSerializerOptions),
-                   v => JsonSerializer.Deserialize<Dictionary<long, TransactionItem>>(v, null as JsonSerializerOptions));
+                   v => JsonSerializer.Deserialize<Dictionary<long, (TransactionItem, TransactionType)>>(v, null as JsonSerializerOptions));
 
             _ = builder.Entity<Purchase>().HasKey("Uuid");
             Purchase purchase = new(); purchase.Post();
