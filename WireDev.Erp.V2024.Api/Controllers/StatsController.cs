@@ -45,7 +45,7 @@ namespace WireDev.Erp.V1.Api.Controllers
             catch (Exception ex)
             {
                 string message = $"List of total statistics cannot be retrieved!";
-                _logger.LogError(message, ex);
+                _logger.LogError(ex, message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
             }
 
@@ -68,7 +68,7 @@ namespace WireDev.Erp.V1.Api.Controllers
             catch (Exception ex)
             {
                 string message = $"Statistics for year {i} cannot be retrieved!";
-                _logger.LogError(message, ex);
+                _logger.LogError(ex, message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
             }
 
@@ -105,7 +105,7 @@ namespace WireDev.Erp.V1.Api.Controllers
             catch (Exception ex)
             {
                 string message = $"List of year stats cannot be retrieved!";
-                _logger.LogError(message, ex);
+                _logger.LogError(ex, message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
             }
 
@@ -123,7 +123,7 @@ namespace WireDev.Erp.V1.Api.Controllers
             catch (Exception ex)
             {
                 string message = $"Statistics for month {y}/{m} cannot be retrieved!";
-                _logger.LogError(message, ex);
+                _logger.LogError(ex, message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
             }
 
@@ -160,7 +160,7 @@ namespace WireDev.Erp.V1.Api.Controllers
             catch (Exception ex)
             {
                 string message = $"List of month stats cannot be retrieved!";
-                _logger.LogError(message, ex);
+                _logger.LogError(ex, message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
             }
 
@@ -178,7 +178,7 @@ namespace WireDev.Erp.V1.Api.Controllers
             catch (Exception ex)
             {
                 string message = $"Statistics for day {y}/{m}/{d} cannot be retrieved!";
-                _logger.LogError(message, ex);
+                _logger.LogError(ex, message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
             }
 
@@ -215,7 +215,7 @@ namespace WireDev.Erp.V1.Api.Controllers
             catch (Exception ex)
             {
                 string message = $"List of day stats cannot be retrieved!";
-                _logger.LogError(message, ex);
+                _logger.LogError(ex, message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
             }
 
@@ -233,7 +233,7 @@ namespace WireDev.Erp.V1.Api.Controllers
             catch (Exception ex)
             {
                 string message = $"Statistics for product {id} cannot be retrieved!";
-                _logger.LogError(message, ex);
+                _logger.LogError(ex, message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
             }
 

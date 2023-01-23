@@ -35,7 +35,7 @@ namespace WireDev.Erp.V1.Api.Controllers
             catch (Exception ex)
             {
                 string message = $"List of products cannot be retrieved!";
-                _logger.LogError(message, ex);
+                _logger.LogError(ex, message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
             }
 
@@ -76,13 +76,13 @@ namespace WireDev.Erp.V1.Api.Controllers
             catch (DbUpdateException ex)
             {
                 string message = $"Could not save changes to database!";
-                _logger.LogError(message, ex);
+                _logger.LogError(ex, message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
             }
             catch (Exception ex)
             {
                 string message = $"Add product {product.Uuid} failed!";
-                _logger.LogError(message, ex);
+                _logger.LogError(ex, message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
             }
 
@@ -104,19 +104,19 @@ namespace WireDev.Erp.V1.Api.Controllers
             catch (DbUpdateException ex)
             {
                 string message = $"Could not save changes to database!";
-                _logger.LogError(message, ex);
+                _logger.LogError(ex, message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
             }
             catch (ArgumentNullException ex)
             {
                 string message = $"Product with the UUID {id} was not found!";
-                _logger.LogError(message, ex);
+                _logger.LogError(ex, message);
                 return NotFound(new Response(false, message));
             }
             catch (Exception ex)
             {
                 string message = $"Edit product {id} failed!";
-                _logger.LogError(message, ex);
+                _logger.LogError(ex, message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
             }
 
@@ -143,13 +143,13 @@ namespace WireDev.Erp.V1.Api.Controllers
             catch (DbUpdateException ex)
             {
                 string message = $"Could not save changes to database!";
-                _logger.LogError(message, ex);
+                _logger.LogError(ex, message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
             }
             catch (Exception ex)
             {
                 string message = $"Product with the UUID {id} could not be removed!";
-                _logger.LogError(message, ex);
+                _logger.LogError(ex, message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
             }
 
