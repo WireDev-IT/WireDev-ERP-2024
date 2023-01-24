@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WireDev.Erp.V1.Api", "WireD
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WireDev.Erp.V1.Models", "WireDev.Erp.V2024.Models\WireDev.Erp.V1.Models.csproj", "{5473B302-8361-4F0E-B831-EB92C065E738}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WireDev.Erp.V1.Client", "WireDev.Erp.V1.Client\WireDev.Erp.V1.Client.csproj", "{04A95F40-E3AE-41BA-9F3B-9C883D27EB01}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WireDev.Erp.V1.Client", "WireDev.Erp.V1.Client\WireDev.Erp.V1.Client.csproj", "{04A95F40-E3AE-41BA-9F3B-9C883D27EB01}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,6 +25,7 @@ Global
 		{5473B302-8361-4F0E-B831-EB92C065E738}.Release|Any CPU.Build.0 = Release|Any CPU
 		{04A95F40-E3AE-41BA-9F3B-9C883D27EB01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{04A95F40-E3AE-41BA-9F3B-9C883D27EB01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04A95F40-E3AE-41BA-9F3B-9C883D27EB01}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{04A95F40-E3AE-41BA-9F3B-9C883D27EB01}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04A95F40-E3AE-41BA-9F3B-9C883D27EB01}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
