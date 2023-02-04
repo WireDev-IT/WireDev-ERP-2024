@@ -5,8 +5,8 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>639789bf-8666-4305-8336-5ec633ebe8cf</UserSecretsId>
-    <ApplicationIcon>icon.ico</ApplicationIcon>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <ApplicationIcon>icon_transparent.ico</ApplicationIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'WireDev.ERP.V2024.Api' " />
@@ -15,9 +15,6 @@
     <Compile Remove="Migrations\20230108184042_Init.Designer.cs" />
     <Compile Remove="Migrations\20230108184316_Init.Designer.cs" />
     <Compile Remove="Migrations\ProductDbContextModelSnapshot.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="icon.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -45,5 +42,9 @@
 
   <ItemGroup>
     <None Remove="Microsoft.EntityFrameworkCore.Sqlite" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="icon_transparent.ico" />
   </ItemGroup>
 </Project>
