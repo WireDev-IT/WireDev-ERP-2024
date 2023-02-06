@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WireDev.Erp.V1.Client.Windows" xmlns:hc="https://handyorg.github.io/handycontrol"
         mc:Ignorable="d"
-        Title="WireDev ERP 2024" Width="700" FontFamily="./Fonts/#Cera Pro" Height="644" ResizeMode="NoResize" WindowStyle="ThreeDBorderWindow">
+        Title="Login" Width="550" FontFamily="./Fonts/#Cera Pro" Height="650" ResizeMode="NoResize" WindowStyle="ThreeDBorderWindow" hc:GlobalShortcut.Host="True" FontSize="15" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <Storyboard x:Key="LoginPanelFocus">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="CredentialsPanel" Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.Opacity)">
@@ -31,31 +31,115 @@
                 <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0"/>
             </DoubleAnimationUsingKeyFrames>
         </Storyboard>
+        <Storyboard x:Key="LoginSubmit">
+            <BooleanAnimationUsingKeyFrames Storyboard.TargetName="CredentialsPanel" Storyboard.TargetProperty="(UIElement.IsEnabled)">
+                <DiscreteBooleanKeyFrame KeyTime="00:00:00" Value="False"/>
+            </BooleanAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="LoginForm" Storyboard.TargetProperty="(UIElement.Effect).(BlurEffect.Radius)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="20"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="LoginReset">
+            <BooleanAnimationUsingKeyFrames Storyboard.TargetName="CredentialsPanel" Storyboard.TargetProperty="(UIElement.IsEnabled)">
+                <DiscreteBooleanKeyFrame KeyTime="00:00:00" Value="True"/>
+            </BooleanAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="LoginForm" Storyboard.TargetProperty="(UIElement.Effect).(BlurEffect.Radius)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="20"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
     </Window.Resources>
     <Grid>
-        <!--<hc:WaveProgressBar HorizontalAlignment="Center" VerticalAlignment="Center" Height="882" Width="1024" Margin="0,-183,0,0" Text="50" Value="50" Opacity="0.2" />-->
         <StackPanel Focusable="True">
-            <ProgressBar IsIndeterminate="True" Height="5" Margin="-3,0"/>
-            <TextBlock Text="Login into your Account" FontSize="50" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20"/>
-            <hc:Gravatar Id="{Binding Text, ElementName=textBox}"/>
-            <Border x:Name="CredentialsPanel" CornerRadius="4" Margin="0,20" Padding="10" Width="310" Background="White" GotFocus="CredentialsPanel_GotFocus" LostFocus="CredentialsPanel_LostFocus">
-                <Border.Effect>
-                    <DropShadowEffect x:Name="CredentialsPanelEffect" BlurRadius="30" ShadowDepth="20" Opacity="0"/>
-                </Border.Effect>
-                <StackPanel>
-                    <hc:TextBox x:Name="textBox" hc:TitleElement.Title="Username" Margin="10,0"/>
-                    <hc:PasswordBox Password="" hc:TitleElement.Title="Password" ShowClearButton="True" Margin="10,0"/>
-                    <Grid Margin="10">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Button Content="Login" HorizontalAlignment="Left"/>
-                        <Button Content="Trouble with credentials?" HorizontalAlignment="Right" Grid.Column="1"/>
-                    </Grid>
-                </StackPanel>
-            </Border>
-            <hc:AnimationPath Height="100" Width="100" Data="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" Stroke="#FFFF4242" Duration="00:00:05"/>
+            <TextBlock Text="WireDev ERP 2024" FontSize="50" FontWeight="Medium" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0"/>
+            <Separator Margin="50,20"/>
+            <TextBlock x:Name="SubtitleTxt" Text="Login into your Account" FontSize="30" FontWeight="Light" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+            <Grid x:Name="Form">
+                <Border x:Name="CredentialsPanel" IsEnabled="true" CornerRadius="4" Margin="0,20" Padding="10" Width="310" Background="White" GotFocus="CredentialsPanel_GotFocus" LostFocus="CredentialsPanel_LostFocus">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="30" ShadowDepth="20" Opacity="0"/>
+                    </Border.Effect>
+                    <StackPanel x:Name="LoginForm">
+                        <StackPanel.Effect>
+                            <BlurEffect KernelType="Gaussian" Radius="0"/>
+                        </StackPanel.Effect>
+                        <hc:Gravatar Id="{Binding Text, ElementName=UsernameInput}" Margin="0,10,0,20"/>
+                        <hc:TextBox x:Name="UsernameInput" hc:TitleElement.Title="Username" Margin="10,0"/>
+                        <hc:PasswordBox x:Name="PasswordInput" hc:TitleElement.Title="Password" Margin="10,0" ShowEyeButton="True"/>
+                        <Grid Margin="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button x:Name="LoginBtn" Content="Login" HorizontalAlignment="Left" Click="LoginBtn_Click"/>
+                            <Button x:Name="TroubleBtn" Content="Trouble with credentials?" HorizontalAlignment="Right" Grid.Column="1" Click="TroubleBtn_Click"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </Grid>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Opacity="0.4" Margin="0,50,0,0">
+                <Rectangle Width="50" Height="50">
+                    <Rectangle.Fill>
+                        <DrawingBrush>
+                            <DrawingBrush.Drawing>
+                                <DrawingGroup ClipGeometry="M0,0 V404 H485 V0 H0 Z">
+                                    <DrawingGroup.Transform>
+                                        <TranslateTransform X="0.5" Y="0.5" />
+                                    </DrawingGroup.Transform>
+                                    <DrawingGroup Opacity="1">
+                                        <GeometryDrawing Brush="#FF5F7680" Geometry="F0 M485,404z M0,0z M175.5,-0.5C175.833,-0.5 176.167,-0.5 176.5,-0.5 177.167,0.833333 177.833,0.833333 178.5,-0.5 178.833,-0.5 179.167,-0.5 179.5,-0.5 180.167,0.833333 180.833,0.833333 181.5,-0.5 181.833,-0.5 182.167,-0.5 182.5,-0.5 183.167,0.833333 183.833,0.833333 184.5,-0.5 184.833,-0.5 185.167,-0.5 185.5,-0.5 186.167,0.833333 186.833,0.833333 187.5,-0.5 187.833,-0.5 188.167,-0.5 188.5,-0.5 189.167,0.833333 189.833,0.833333 190.5,-0.5 190.833,-0.5 191.167,-0.5 191.5,-0.5 192.167,0.833333 192.833,0.833333 193.5,-0.5 193.833,-0.5 194.167,-0.5 194.5,-0.5 195.167,0.833333 195.833,0.833333 196.5,-0.5 196.833,-0.5 197.167,-0.5 197.5,-0.5 198.167,0.833333 198.833,0.833333 199.5,-0.5 199.833,-0.5 200.167,-0.5 200.5,-0.5 201.167,0.833333 201.833,0.833333 202.5,-0.5 202.833,-0.5 203.167,-0.5 203.5,-0.5 204.167,0.833333 204.833,0.833333 205.5,-0.5 205.833,-0.5 206.167,-0.5 206.5,-0.5 207.167,0.833333 207.833,0.833333 208.5,-0.5 208.833,-0.5 209.167,-0.5 209.5,-0.5 210.167,0.833333 210.833,0.833333 211.5,-0.5 211.833,-0.5 212.167,-0.5 212.5,-0.5 213.167,0.833333 213.833,0.833333 214.5,-0.5 214.833,-0.5 215.167,-0.5 215.5,-0.5 216.167,0.833333 216.833,0.833333 217.5,-0.5 217.833,-0.5 218.167,-0.5 218.5,-0.5 219.167,0.833333 219.833,0.833333 220.5,-0.5 220.833,-0.5 221.167,-0.5 221.5,-0.5 222.167,0.833333 222.833,0.833333 223.5,-0.5 223.833,-0.5 224.167,-0.5 224.5,-0.5 225.167,0.833333 225.833,0.833333 226.5,-0.5 226.833,-0.5 227.167,-0.5 227.5,-0.5 228.167,0.833333 228.833,0.833333 229.5,-0.5 229.833,-0.5 230.167,-0.5 230.5,-0.5 231.167,0.833333 231.833,0.833333 232.5,-0.5 232.833,-0.5 233.167,-0.5 233.5,-0.5 234.167,0.833333 234.833,0.833333 235.5,-0.5 235.833,-0.5 236.167,-0.5 236.5,-0.5 237.167,0.833333 237.833,0.833333 238.5,-0.5 238.833,-0.5 239.167,-0.5 239.5,-0.5 240.167,0.833333 240.833,0.833333 241.5,-0.5 241.833,-0.5 242.167,-0.5 242.5,-0.5 243.167,0.833333 243.833,0.833333 244.5,-0.5 244.833,-0.5 245.167,-0.5 245.5,-0.5 246.167,0.833333 246.833,0.833333 247.5,-0.5 247.833,-0.5 248.167,-0.5 248.5,-0.5 249.167,0.833333 249.833,0.833333 250.5,-0.5 250.833,-0.5 251.167,-0.5 251.5,-0.5 252.167,0.833333 252.833,0.833333 253.5,-0.5 253.833,-0.5 254.167,-0.5 254.5,-0.5 255.167,0.833333 255.833,0.833333 256.5,-0.5 256.833,-0.5 257.167,-0.5 257.5,-0.5 258.167,0.833333 258.833,0.833333 259.5,-0.5 259.833,-0.5 260.167,-0.5 260.5,-0.5 261.167,0.833333 261.833,0.833333 262.5,-0.5 262.833,-0.5 263.167,-0.5 263.5,-0.5 264.167,0.833333 264.833,0.833333 265.5,-0.5 265.833,-0.5 266.167,-0.5 266.5,-0.5 267.167,0.833333 267.833,0.833333 268.5,-0.5 268.833,-0.5 269.167,-0.5 269.5,-0.5 270.167,0.833333 270.833,0.833333 271.5,-0.5 271.833,-0.5 272.167,-0.5 272.5,-0.5 273.167,0.833333 273.833,0.833333 274.5,-0.5 274.833,-0.5 275.167,-0.5 275.5,-0.5 276.167,0.833333 276.833,0.833333 277.5,-0.5 277.833,-0.5 278.167,-0.5 278.5,-0.5 279.167,0.833333 279.833,0.833333 280.5,-0.5 280.833,-0.5 281.167,-0.5 281.5,-0.5 282.167,0.833333 282.833,0.833333 283.5,-0.5 283.833,-0.5 284.167,-0.5 284.5,-0.5 285.167,0.833333 285.833,0.833333 286.5,-0.5 286.833,-0.5 287.167,-0.5 287.5,-0.5 288.167,0.833333 288.833,0.833333 289.5,-0.5 289.833,-0.5 290.167,-0.5 290.5,-0.5 291.167,0.833333 291.833,0.833333 292.5,-0.5 292.833,-0.5 293.167,-0.5 293.5,-0.5 294.167,0.833333 294.833,0.833333 295.5,-0.5 295.833,-0.5 296.167,-0.5 296.5,-0.5 297.167,0.833333 297.833,0.833333 298.5,-0.5 298.833,-0.5 299.167,-0.5 299.5,-0.5 300.167,0.833333 300.833,0.833333 301.5,-0.5 301.833,-0.5 302.167,-0.5 302.5,-0.5 303.167,0.833333 303.833,0.833333 304.5,-0.5 304.833,-0.5 305.167,-0.5 305.5,-0.5 306.167,0.833333 306.833,0.833333 307.5,-0.5 307.833,-0.5 308.167,-0.5 308.5,-0.5 308.918,0.221579 309.584,0.721579 310.5,1 287.599,23.7359 264.599,46.2359 241.5,68.5 218.115,46.4585 195.115,23.9585 172.5,1 173.737,0.76791 174.737,0.26791 175.5,-0.5z" />
+                                    </DrawingGroup>
+                                    <DrawingGroup Opacity="1">
+                                        <GeometryDrawing Brush="#FF6FABB0" Geometry="F0 M485,404z M0,0z M483.5,403.5C458.833,403.5 434.167,403.5 409.5,403.5 408.336,293.903 408.169,184.236 409,74.5 433.667,49.8333 458.333,25.1667 483,0.5 483.5,134.833 483.667,269.166 483.5,403.5z" />
+                                    </DrawingGroup>
+                                    <DrawingGroup Opacity="1">
+                                        <GeometryDrawing Brush="#FF59606D" Geometry="F0 M485,404z M0,0z M-0.5,0.5C24.4653,24.9651 49.2986,49.6318 74,74.5 74.6667,176.167 74.6667,277.833 74,379.5 65.9642,387.368 58.1309,395.368 50.5,403.5 33.5,403.5 16.5,403.5 -0.5,403.5 -0.5,269.167 -0.5,134.833 -0.5,0.5z" />
+                                    </DrawingGroup>
+                                    <DrawingGroup Opacity="1">
+                                        <GeometryDrawing Brush="#FF595F6D" Geometry="F0 M485,404z M0,0z M101.5,104.5C125.827,128.66 150.327,152.66 175,176.5 176.151,191.077 176.651,205.744 176.5,220.5 176.333,234.5 176.167,248.5 176,262.5 151.333,287.167 126.667,311.833 102,336.5 101.5,259.167 101.333,181.834 101.5,104.5z" />
+                                    </DrawingGroup>
+                                    <DrawingGroup Opacity="1">
+                                        <GeometryDrawing Brush="#FF6FABB0" Geometry="F0 M485,404z M0,0z M381.5,403.5C356.833,403.5 332.167,403.5 307.5,403.5 306.337,333.237 306.17,262.904 307,192.5 331.474,167.938 356.14,143.605 381,119.5 381.5,214.166 381.667,308.833 381.5,403.5z" />
+                                    </DrawingGroup>
+                                    <DrawingGroup Opacity="1">
+                                        <GeometryDrawing Brush="#FF596370" Geometry="F0 M485,404z M0,0z M203.5,192.5C211.298,199.798 218.965,207.298 226.5,215 219,222.5 211.5,230 204,237.5 203.5,222.504 203.333,207.504 203.5,192.5z" />
+                                    </DrawingGroup>
+                                    <DrawingGroup Opacity="1">
+                                        <GeometryDrawing Brush="#FF70ACB0" Geometry="F0 M485,404z M0,0z M279.5,403.5C279.167,403.5 278.833,403.5 278.5,403.5 278.167,402.167 277.833,402.167 277.5,403.5 277.167,403.5 276.833,403.5 276.5,403.5 275.833,402.167 275.167,402.167 274.5,403.5 274.167,403.5 273.833,403.5 273.5,403.5 272.833,402.167 272.167,402.167 271.5,403.5 271.167,403.5 270.833,403.5 270.5,403.5 269.833,402.167 269.167,402.167 268.5,403.5 268.167,403.5 267.833,403.5 267.5,403.5 266.833,402.167 266.167,402.167 265.5,403.5 265.167,403.5 264.833,403.5 264.5,403.5 263.833,402.167 263.167,402.167 262.5,403.5 262.167,403.5 261.833,403.5 261.5,403.5 260.833,402.167 260.167,402.167 259.5,403.5 259.167,403.5 258.833,403.5 258.5,403.5 257.833,402.167 257.167,402.167 256.5,403.5 256.167,403.5 255.833,403.5 255.5,403.5 254.833,402.167 254.167,402.167 253.5,403.5 253.167,403.5 252.833,403.5 252.5,403.5 251.833,402.167 251.167,402.167 250.5,403.5 250.167,403.5 249.833,403.5 249.5,403.5 248.833,402.167 248.167,402.167 247.5,403.5 247.167,403.5 246.833,403.5 246.5,403.5 245.833,402.167 245.167,402.167 244.5,403.5 244.167,403.5 243.833,403.5 243.5,403.5 242.833,402.167 242.167,402.167 241.5,403.5 241.167,403.5 240.833,403.5 240.5,403.5 239.833,402.167 239.167,402.167 238.5,403.5 238.167,403.5 237.833,403.5 237.5,403.5 236.833,402.167 236.167,402.167 235.5,403.5 235.167,403.5 234.833,403.5 234.5,403.5 233.833,402.167 233.167,402.167 232.5,403.5 232.167,403.5 231.833,403.5 231.5,403.5 230.833,402.167 230.167,402.167 229.5,403.5 229.167,403.5 228.833,403.5 228.5,403.5 227.833,402.167 227.167,402.167 226.5,403.5 226.167,403.5 225.833,403.5 225.5,403.5 224.833,402.167 224.167,402.167 223.5,403.5 223.167,403.5 222.833,403.5 222.5,403.5 221.833,402.167 221.167,402.167 220.5,403.5 220.167,403.5 219.833,403.5 219.5,403.5 218.833,402.167 218.167,402.167 217.5,403.5 217.167,403.5 216.833,403.5 216.5,403.5 215.833,402.167 215.167,402.167 214.5,403.5 214.167,403.5 213.833,403.5 213.5,403.5 212.833,402.167 212.167,402.167 211.5,403.5 211.167,403.5 210.833,403.5 210.5,403.5 209.833,402.167 209.167,402.167 208.5,403.5 208.167,403.5 207.833,403.5 207.5,403.5 206.602,402.842 205.602,402.176 204.5,401.5 205.081,360.876 205.081,320.043 204.5,279 229.333,254.167 254.167,229.333 279,204.5 279.5,270.832 279.667,337.166 279.5,403.5z" />
+                                    </DrawingGroup>
+                                    <DrawingGroup Opacity="1">
+                                        <GeometryDrawing Brush="#FF5D6F7A" Geometry="F0 M485,404z M0,0z M177.5,402.5C144.663,402.063 112.329,402.063 80.5,402.5 112.465,370.035 144.632,337.701 177,305.5 177.5,337.832 177.667,370.165 177.5,402.5z" />
+                                    </DrawingGroup>
+                                    <DrawingGroup Opacity="1">
+                                        <GeometryDrawing Brush="#FF596370" Geometry="F0 M485,404z M0,0z M177.5,402.5C177.5,402.833 177.5,403.167 177.5,403.5 144.833,403.5 112.167,403.5 79.5,403.5 79.5,402.833 79.8333,402.5 80.5,402.5 112.329,402.063 144.663,402.063 177.5,402.5z" />
+                                    </DrawingGroup>
+                                </DrawingGroup>
+                            </DrawingBrush.Drawing>
+                        </DrawingBrush>
+                    </Rectangle.Fill>
+                </Rectangle>
+                <Rectangle Width="20" Height="50" Margin="20,0">
+                    <Rectangle.Fill>
+                        <DrawingBrush>
+                            <DrawingBrush.Drawing>
+                                <DrawingGroup ClipGeometry="M0,0 V480 H640 V0 H0 Z">
+                                    <DrawingGroup Transform="0.29,0,0,0.1,50,50">
+                                        <GeometryDrawing>
+                                            <GeometryDrawing.Pen>
+                                                <Pen Brush="Gray" Thickness="20" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter" />
+                                            </GeometryDrawing.Pen>
+                                            <GeometryDrawing.Geometry>
+                                                <LineGeometry StartPoint="0,200" EndPoint="160,-200" />
+                                            </GeometryDrawing.Geometry>
+                                        </GeometryDrawing>
+                                    </DrawingGroup>
+                                </DrawingGroup>
+                            </DrawingBrush.Drawing>
+                        </DrawingBrush>
+                    </Rectangle.Fill>
+                </Rectangle>
+                <Image Source="/Resources/wiredev_colorfull.png" Height="35"/>
+            </StackPanel>
         </StackPanel>
+        <TextBlock Text="Version 0.0.0" VerticalAlignment="Bottom" FontSize="12" Margin="5,0"/>
     </Grid>
 </Window>

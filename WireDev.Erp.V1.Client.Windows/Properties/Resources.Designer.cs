@@ -69,5 +69,35 @@ namespace WireDev.Erp.V1.Client.Windows.Properties {
                 return ((byte[])(obj));
             }
         }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Byte[].
+        /// </summary>
+        internal static byte[] icon_transparent1 {
+            get {
+                object obj = ResourceManager.GetObject("icon_transparent1", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Byte[].
+        /// </summary>
+        internal static byte[] logo_seperator {
+            get {
+                object obj = ResourceManager.GetObject("logo_seperator", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Byte[].
+        /// </summary>
+        internal static byte[] wiredev_colorfull {
+            get {
+                object obj = ResourceManager.GetObject("wiredev_colorfull", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }

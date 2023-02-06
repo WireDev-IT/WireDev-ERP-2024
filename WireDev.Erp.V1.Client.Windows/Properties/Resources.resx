@@ -121,4 +121,13 @@
   <data name="icon_transparent" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\icon_transparent.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="icon_transparent1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_transparent.svg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="logo_seperator" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\logo_seperator.svg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="wiredev_colorfull" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\wiredev_colorfull.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>
