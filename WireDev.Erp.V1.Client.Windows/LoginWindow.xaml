@@ -44,7 +44,7 @@
                 <DiscreteBooleanKeyFrame KeyTime="00:00:00" Value="True"/>
             </BooleanAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="LoginForm" Storyboard.TargetProperty="(UIElement.Effect).(BlurEffect.Radius)">
-                <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="20"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0"/>
             </DoubleAnimationUsingKeyFrames>
         </Storyboard>
     </Window.Resources>
@@ -58,7 +58,7 @@
                 <TextBlock x:Name="SubtitleTxt" Text="Login into your Account" FontSize="30" FontWeight="Light" HorizontalAlignment="Center" VerticalAlignment="Top"/>
             </hc:TransitioningContentControl>
             <hc:TransitioningContentControl TransitionMode="Bottom2TopWithFade">
-                <Grid x:Name="Form">
+                <Grid x:Name="FormPanel">
                     <Border x:Name="CredentialsPanel" IsEnabled="true" CornerRadius="4" Margin="0,20" Padding="10" Width="310" Background="White" GotFocus="CredentialsPanel_GotFocus" LostFocus="CredentialsPanel_LostFocus">
                         <Border.Effect>
                             <DropShadowEffect BlurRadius="30" ShadowDepth="20" Opacity="0"/>
@@ -67,9 +67,9 @@
                             <StackPanel.Effect>
                                 <BlurEffect KernelType="Gaussian" Radius="0"/>
                             </StackPanel.Effect>
-                            <hc:Gravatar Id="{Binding Text, ElementName=UsernameInput}" Margin="0,10,0,20"/>
-                            <hc:TextBox x:Name="UsernameInput" hc:TitleElement.Title="Username" Margin="10,0"/>
-                            <hc:PasswordBox x:Name="PasswordInput" hc:TitleElement.Title="Password" Margin="10,0" ShowEyeButton="True"/>
+                            <hc:Gravatar Id="{Binding Password, ElementName=UsernameInput}" Margin="0,10,0,20"/>
+                            <hc:PasswordBox x:Name="UsernameInput" hc:TitleElement.Title="Username" Margin="10,0" IsSafeEnabled="False" ShowPassword="True" TextInput="UsernameInput_TextInput"/>
+                            <hc:PasswordBox x:Name="PasswordInput" hc:TitleElement.Title="Password" Margin="10,0" ShowEyeButton="True" TextInput="PasswordInput_TextInput"/>
                             <Grid Margin="10">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>

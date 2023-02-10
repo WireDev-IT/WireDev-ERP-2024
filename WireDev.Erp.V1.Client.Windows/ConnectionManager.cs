@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 
 namespace WireDev.Erp.V1.Client.Windows
@@ -28,8 +26,12 @@ namespace WireDev.Erp.V1.Client.Windows
 
         public async Task<bool> IsOnline()
         {
-            HttpResponseMessage response = await Client.GetAsync("ping");
-            return response.IsSuccessStatusCode;
+            try
+            {
+                HttpResponseMessage response = await Client.GetAsync("ping");
+                return response.IsSuccessStatusCode;
+            }
+            catch { return false; }
         }
     }
 }

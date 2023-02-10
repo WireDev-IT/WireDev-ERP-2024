@@ -1,5 +1,6 @@
 ﻿using HandyControl.Controls;
 using System;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -62,20 +63,45 @@ namespace WireDev.Erp.V1.Client.Windows
         {
             Storyboard? sb = FindResource("LoginSubmit") as Storyboard;
             sb.Begin();
-            _ = Form.Children.Add(LoadingAnimation);
+            _ = FormPanel.Children.Add(LoadingAnimation);
             await SetSubtitel("Connecting to server...");
 
             if (!await connection.IsOnline())
             {
-                _ = MessageBox.Show("The server refused to connect! We can not log you in.", "Connection error", MessageBoxButton.OK, MessageBoxImage.Error);
+                await SetSubtitel("Connection error");
+                _ = MessageBox.Show("The server refused to connect! We can not log you in. Try again later.", "Connection error", MessageBoxButton.OK, MessageBoxImage.Error);
+                
+                Storyboard? sb2 = FindResource("LoginReset") as Storyboard;
+                sb2.Begin();
+                FormPanel.Children.Remove(LoadingAnimation);
+                await SetSubtitel("Login into your Account");
             }
             else
             {
                 await SetSubtitel("Loggin in...");
-                HttpResponseMessage response = await connection.Client.PostAsJsonAsync<LoginModel>("api/Authenticate/login",
-                    new() { Username = UsernameInput.Text, Password = PasswordInput.Password });
-                _ = response.EnsureSuccessStatusCode();
-                connection.SetToken((await response.Content.ReadFromJsonAsync<Response>()).Data.ToString());
+                try
+                {
+                    HttpResponseMessage response = await connection.Client.PostAsJsonAsync<LoginModel>("api/Authenticate/login",
+                        new() { Username = UsernameInput.Password, Password = PasswordInput.Password });
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        connection.SetToken((await response.Content.ReadFromJsonAsync<Response>()).Data.ToString());
+                    }
+                    else
+                    {
+                        _ = MessageBox.Show("Either username or password is incorrect!", "Authentication", MessageBoxButton.OK, MessageBoxImage.Error);
+                        UsernameInput.IsError = true;
+                        PasswordInput.IsError = true;
+                    }
+                }
+                catch (HttpRequestException ex)
+                {
+                    _ = MessageBox.Show("It was not possible to send your credentials to the server for validation. Try again later.", "Connection error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                catch (Exception ex)
+                {
+                    _ = MessageBox.Show($"An unexpected error occured: {ex.Message}\n\nContact your administrator if this happens more than two times.", "Unknown error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
 
                 SubtitleTxt.Text = "Retrieving data...";
                 MainWindow window = new(connection);
@@ -86,7 +112,17 @@ namespace WireDev.Erp.V1.Client.Windows
 
         private void TroubleBtn_Click(object sender, RoutedEventArgs e)
         {
+            _ = MessageBox.Show("Send a request to your administrator to regain access to your account.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
 
+        private void UsernameInput_TextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
+        {
+            UsernameInput.IsError = false;
+        }
+
+        private void PasswordInput_TextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
+        {
+            PasswordInput.IsError = false;
         }
 
         private Task SetSubtitel(string text)
