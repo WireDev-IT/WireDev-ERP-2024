@@ -1,20 +1,14 @@
 ﻿using HandyControl.Controls;
-using HandyControl.Tools.Command;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Effects;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using WireDev.Erp.V1.Models.Authentication;
+using MessageBox = HandyControl.Controls.MessageBox;
 using Window = System.Windows.Window;
 
 namespace WireDev.Erp.V1.Client.Windows
@@ -24,7 +18,8 @@ namespace WireDev.Erp.V1.Client.Windows
     /// </summary>
     public partial class LoginWindow : Window
     {
-        AnimationPath LoadingAnimation;
+        private readonly AnimationPath LoadingAnimation;
+        private readonly ConnectionManager connection;
 
         public LoginWindow()
         {
@@ -42,12 +37,13 @@ namespace WireDev.Erp.V1.Client.Windows
                     "M 177.5,402.5 C 144.663,402.063 112.329,402.063 80.5,402.5C 112.465,370.035 144.632,337.701 177,305.5C 177.5,337.832 177.667,370.165 177.5,402.5 Z"),
                 Duration = new Duration(TimeSpan.FromSeconds(4)),
                 Height = 100,
-                Stroke = (Brush)new BrushConverter().ConvertFromString("#FF59606D"),
+                Stroke = (Brush?)new BrushConverter().ConvertFromString("#FF59606D"),
                 StrokeThickness = 2,
                 IsPlaying = true,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center
             };
+            connection = new(new Uri("https://127.0.0.1:7216/"), new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
         private void CredentialsPanel_GotFocus(object sender, RoutedEventArgs e)
@@ -62,17 +58,43 @@ namespace WireDev.Erp.V1.Client.Windows
             sb.Begin();
         }
 
-        private void LoginBtn_Click(object sender, RoutedEventArgs e)
+        private async void LoginBtn_Click(object sender, RoutedEventArgs e)
         {
             Storyboard? sb = FindResource("LoginSubmit") as Storyboard;
             sb.Begin();
-            Form.Children.Add(LoadingAnimation);
-            SubtitleTxt.Text = "Connecting to server...";
+            _ = Form.Children.Add(LoadingAnimation);
+            await SetSubtitel("Connecting to server...");
+
+            if (!await connection.IsOnline())
+            {
+                _ = MessageBox.Show("The server refused to connect! We can not log you in.", "Connection error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            else
+            {
+                await SetSubtitel("Loggin in...");
+                HttpResponseMessage response = await connection.Client.PostAsJsonAsync<LoginModel>("api/Authenticate/login",
+                    new() { Username = UsernameInput.Text, Password = PasswordInput.Password });
+                _ = response.EnsureSuccessStatusCode();
+                connection.SetToken((await response.Content.ReadFromJsonAsync<Response>()).Data.ToString());
+
+                SubtitleTxt.Text = "Retrieving data...";
+                MainWindow window = new(connection);
+                window.Show();
+                Close();
+            }
         }
 
         private void TroubleBtn_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private Task SetSubtitel(string text)
+        {
+            SubtitelTransition.Visibility = Visibility.Collapsed;
+            SubtitleTxt.Text = text;
+            SubtitelTransition.Visibility = Visibility.Visible;
+            return Task.CompletedTask;
         }
     }
 }

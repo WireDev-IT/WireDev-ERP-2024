@@ -136,7 +136,7 @@ namespace WireDev.Erp.V1.Api.Controllers
         }
 
         [HttpGet("month/all")]
-        public async Task<IActionResult> GetAllMonthStats()
+        public async Task<IActionResult> GetAllMonthStats([FromQuery] ushort year = 0, [FromQuery] ushort minYear = 0, [FromQuery] ushort maxYear = 0)
         {
             List<long>? list;
             List<DateTime>? months = new();
