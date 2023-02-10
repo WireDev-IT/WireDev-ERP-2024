@@ -1,0 +1,116 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%   LaTeX-Arbeitsvorlage, Version 5.15                 	  	%
+%   Autor: 		Mirco Lukas <http://mircol.de>              %
+%   Lizenz: 	The MIT License (MIT)						%
+%   Updates: 	https://github.com/MircoL/LatexTemplateDE   %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\dokumentTyp{Skript} 		% oder
+%\def\dokumentTyp{Thesis}	% oder
+%\def\dokumentTyp{Mitschrift}	% oder
+%\def\dokumentTyp{Buch} 			% oder
+%\def\dokumentTyp{Praesentation}
+
+\def\hauptsprache{ngerman}
+%\def\andereSprachen{english}
+
+
+\input{mircol-v5}
+
+% ===========================================================================
+
+% Die voreingestellten Werte werden verwendet, wenn sie hier nicht explizit überschrieben werden.
+% Alle überflüssigen Zeilen können gelöscht werden.
+\pgfqkeys{/VorlageVersion5}{
+	all/Autoren						= {Tom Mohr},
+	all/Titel	 					= {},
+	all/Untertitel 					= {},
+	all/VersionPraefix 				= {1.0.0},
+	all/Version 					= {false},
+	all/Icon/Breite					= {.7},
+	all/Icon/URL					= {},
+	all/Index/Boxen/blau/titel 		= {Liste der Sätze und Definitionen},
+	all/Index/Boxen/blau/zeigen 	= {false},
+	all/Index/Boxen/gelb/titel 		= {Liste der Beispiele},
+	all/Index/Boxen/gelb/zeigen 	= {false},
+	all/Index/Boxen/gruen/titel 	= {Liste der Fragen},
+	all/Index/Boxen/gruen/zeigen 	= {false},
+	all/Index/Begriffe/titel 		= {Index},
+	all/Index/Begriffe/zeigen 		= {true},
+	all/Index/Literatur/titel 		= {Literaturverzeichnis},
+	all/Index/Literatur/zeigen 		= {true}, 
+%
+	% Zusätzlich für Skripte
+	Skript/AnmerkungenTitelseite 	= {},
+%
+	% Zusätzlich für Mitschriften
+	Mitschriften/Vorlesungsname 	= {},
+	Mitschriften/Typ 				= {\"Ubung},
+	Mitschriften/LfdNr 				= {},
+	Mitschriften/Gruppe 			= {},
+	Mitschriften/Headerhoehe		= {42pt},
+%
+	% Zusätzlich für Bücher
+	Buecher/Widmung					= {},
+	Buecher/Modus					= {rl},
+%
+	% Zusätzlich für Präsentationen
+	Praesentationen/TitelKurz		= {},
+	Praesentationen/Institut/lang	= {},
+	Praesentationen/Institut/kurz	= {},
+%
+	% Zusätzlich für Abschlussarbeiten
+	Thesis/AkademischerGrad/kurz	= {},
+	Thesis/AkademischerGrad/lang	= {},
+	Thesis/Fach/Nominativ			= {},
+	Thesis/Fach/Genitiv				= {},
+	Thesis/UniName/lang				= {},
+	Thesis/UniName/kurz				= {},
+	Thesis/EingereichtBei			= {},
+	Thesis/BetreuungDurch			= {},
+	Thesis/Abgabedatum				= {},
+	Thesis/Versicherung/zeigen		= {false},
+	Thesis/Versicherung/ort			= {},
+	Thesis/Versicherung/text		= {}
+}
+
+% ===========================================================================
+%      Hier eigene Packages einbinden und eigene Befehle definieren
+
+
+% ===========================================================================
+
+
+\begin{document}
+
+
+
+\section*{Zusammenfassung}	
+\addcontentsline{toc}{chapter}{Zusammenfassung}
+\lipsum
+
+\chapter{Projektbeschreibung}
+\input{beschreibung}
+
+\chapter{Authentifizierung}
+\section{HTTP-Authentifizierung}
+\section{JSON-Web-Token}
+
+\chapter{REST-API}
+Erklären, Aufbau, Endpoints
+
+\chapter{Back-End}
+Datenbank, Schnittstellen
+
+\chapter{Front-End}
+Technologien, Aufbau
+
+\chapter{Reflexion}
+Auswertung des Endprodukts
+
+\chapter{Einführung}
+
+\input{intro}
+
+
+\end{document}
