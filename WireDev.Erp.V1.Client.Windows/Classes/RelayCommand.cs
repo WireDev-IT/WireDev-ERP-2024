@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Windows.Input;
 
-namespace WireDev.Erp.V1.Client.Windows.ViewModels
+namespace WireDev.Erp.V1.Client.Windows.Classes
 {
     public class RelayCommand : ICommand
     {

@@ -25,7 +25,7 @@
                 <Button Command="{Binding GetProductsCommand, Mode=OneWay}" Content="list"/>
                 <Button Command="{Binding GetProductsDataCommand, Mode=OneWay}" Content="data"/>
             </StackPanel>
-            <ListView x:Name="ProductsView" Grid.Column="1" ItemsSource="{Binding Products.Values}" SelectionChanged="{Binding ProductsView_SelectionChanged}">
+            <ListView x:Name="ProductsView" Grid.Column="1" ItemsSource="{Binding Products.Values}" SelectedItem="{Binding SelectedProduct}">
                 <ListView.View>
                     <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="Employee Information">
                         <GridViewColumn Header="Status">

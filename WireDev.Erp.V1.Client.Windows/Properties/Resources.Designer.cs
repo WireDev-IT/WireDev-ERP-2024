@@ -93,6 +93,16 @@ namespace WireDev.Erp.V1.Client.Windows.Properties {
         /// <summary>
         ///   Sucht eine lokalisierte Ressource vom Typ System.Byte[].
         /// </summary>
+        internal static byte[] logo_transparent {
+            get {
+                object obj = ResourceManager.GetObject("logo_transparent", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Byte[].
+        /// </summary>
         internal static byte[] wiredev_colorfull {
             get {
                 object obj = ResourceManager.GetObject("wiredev_colorfull", resourceCulture);

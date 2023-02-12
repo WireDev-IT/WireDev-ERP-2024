@@ -1,12 +1,14 @@
 ﻿using HandyControl.Controls;
+using HandyControl.Tools.Extension;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using System.Windows.Controls;
 using System.Windows.Input;
+using WireDev.Erp.V1.Client.Windows.Classes;
 using WireDev.Erp.V1.Models.Authentication;
 using WireDev.Erp.V1.Models.Storage;
 
@@ -28,8 +30,8 @@ namespace WireDev.Erp.V1.Client.Windows.ViewModels
             }
         }
 
-        private Dictionary<uint, Product>? _products = null;
-        public Dictionary<uint, Product> Products
+        private Dictionary<uint, Product?>? _products = null;
+        public Dictionary<uint, Product?> Products
         {
             get => _products;
             set
@@ -43,7 +45,7 @@ namespace WireDev.Erp.V1.Client.Windows.ViewModels
         }
 
         private Product? _selectedProduct = null;
-        public Product SelectedProduct
+        public Product? SelectedProduct
         {
             get => _selectedProduct;
             set
@@ -63,11 +65,13 @@ namespace WireDev.Erp.V1.Client.Windows.ViewModels
             {
                 { 9999, new Product(9999) { Active = true, Name = "Test_Product" } }
             };
+            SelectedProduct = Products.Values.ToList()[0];
         }
 
         private bool CanGetProducts = true;
         private ICommand? _getProductsCommand;
         public ICommand GetProductsCommand => _getProductsCommand ??= new RelayCommand(param => GetProducts().ConfigureAwait(true), param => CanGetProducts);
+
         private readonly bool CanGetProductsData = true;
         private ICommand? _getProductsDataCommand;
         public ICommand GetProductsDataCommand => _getProductsDataCommand ??= new RelayCommand(param => GetProducts().ConfigureAwait(true), param => CanGetProductsData);
@@ -111,7 +115,7 @@ namespace WireDev.Erp.V1.Client.Windows.ViewModels
             finally { CanGetProducts = true; }
         }
 
-        private async Task<Product> GetProduct(uint id)
+        private async Task<Product> GetProductAsync(uint id)
         {
             HttpResponseMessage response = await ApiConnection.Client.GetAsync($"api/Products/{id}");
             Response? r = await response.Content.ReadFromJsonAsync<Response>();
@@ -119,29 +123,73 @@ namespace WireDev.Erp.V1.Client.Windows.ViewModels
             return response.IsSuccessStatusCode && (r.Data is Product p) ? p : throw new ArgumentNullException("Respose is not as expected!");
         }
 
-        private async Task GetProductsData(uint startId = uint.MinValue, uint endId = uint.MaxValue)
+        private async Task GetProductsDataAsync(uint startId = uint.MinValue, uint endId = uint.MaxValue)
         {
+            List<uint> errorList = new();
             for (uint id = startId; id <= endId; id++)
             {
                 if (ProductIds.Contains(id))
                 {
                     try
                     {
-                        Products.Add(id, await GetProduct(id));
+                        Products.Add(id, await GetProductAsync(id));
                     }
                     catch (Exception)
                     {
-
+                        errorList.Add(id);
                     }
                 }
             }
         }
 
-        public void ProductsView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async Task CreateProductAsync(Product? product)
         {
-            if (sender is ListView lv)
+            HttpResponseMessage response = await ApiConnection.Client.PostAsJsonAsync("api/Products/add", product);
+            if (response.IsSuccessStatusCode)
             {
-                SelectedProduct = (Product)lv.SelectedItem;
+                Response? r = await response.Content.ReadFromJsonAsync<Response>();
+                product = r.Data as Product;
+                Products.Add(product.Uuid, product);
+            }
+            else
+            {
+
+            }
+        }
+
+        private async Task UpdateProductAsync(uint uuid, Product product)
+        {
+            HttpResponseMessage response = await ApiConnection.Client.PutAsJsonAsync($"api/Products/{uuid}", product);
+            if (response.IsSuccessStatusCode)
+            {
+                if (Products.ContainsKey(product.Uuid))
+                {
+                    Products.Update(product.Uuid, (Product?)(await response.Content.ReadFromJsonAsync<Response>()).Data);
+                }
+                else
+                {
+                    Products.Add(product.Uuid, (Product?)(await response.Content.ReadFromJsonAsync<Response>()).Data);
+                }
+            }
+            else
+            {
+
+            }
+        }
+
+        private async Task DeleteProductAsync(uint id)
+        {
+            HttpResponseMessage response = await ApiConnection.Client.DeleteAsync($"api/Products/{id}");
+            if (response.IsSuccessStatusCode)
+            {
+                if (Products.ContainsKey(id))
+                {
+                    _ = Products.Remove(id);
+                }
+            }
+            else
+            {
+
             }
         }
     }

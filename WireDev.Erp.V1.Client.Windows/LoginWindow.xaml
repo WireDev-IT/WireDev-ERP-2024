@@ -68,8 +68,8 @@
                                 <BlurEffect KernelType="Gaussian" Radius="0"/>
                             </StackPanel.Effect>
                             <hc:Gravatar Id="{Binding Password, ElementName=UsernameInput}" Margin="0,10,0,20"/>
-                            <hc:PasswordBox x:Name="UsernameInput" hc:TitleElement.Title="Username" Margin="10,0" IsSafeEnabled="False" ShowPassword="True" TextInput="UsernameInput_TextInput"/>
-                            <hc:PasswordBox x:Name="PasswordInput" hc:TitleElement.Title="Password" Margin="10,0" ShowEyeButton="True" TextInput="PasswordInput_TextInput"/>
+                            <hc:PasswordBox x:Name="UsernameInput" hc:TitleElement.Title="Username" Margin="10,0" ShowPassword="True" TextInput="UsernameInput_TextInput" ShowClearButton="True"/>
+                            <hc:PasswordBox x:Name="PasswordInput" hc:TitleElement.Title="Password" Margin="10,0" ShowEyeButton="True" TextInput="PasswordInput_TextInput" ShowClearButton="True"/>
                             <Grid Margin="10">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
@@ -151,7 +151,7 @@
         <hc:TransitioningContentControl TransitionMode="Left2RightWithFade" VerticalAlignment="Bottom">
             <StackPanel Orientation="Horizontal">
                 <hc:Shield Subject="Version" Status="0.0.0" Color="#1182c3" Margin="5"/>
-                <hc:Shield Subject="Server" Status="Online" Color="#FF1FC311" Margin="5"/>
+                <hc:Shield x:Name="ServerShield" Subject="Server" Status="Online" Color="#FF1FC311" Margin="5"/>
             </StackPanel>
         </hc:TransitioningContentControl>
     </Grid>

@@ -63,7 +63,7 @@ namespace WireDev.Erp.V1.Api.Controllers
         /// 
         /// </summary>
         /// <param name="product"></param>
-        /// <returns>The UUID of the added product.</returns>
+        /// <returns>The added product.</returns>
         //[Authorize("PRODUCTS:RW")]
         [HttpPost("add")]
         public async Task<IActionResult> AddProduct([FromBody][Required(ErrorMessage = "To add a product, you have to provide one.")] Product product)
@@ -86,7 +86,7 @@ namespace WireDev.Erp.V1.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
             }
 
-            return StatusCode(StatusCodes.Status201Created, new Response(true, null, product.Uuid));
+            return StatusCode(StatusCodes.Status201Created, new Response(true, null, product));
         }
 
         //[Authorize("PRODUCTS:RW")]
