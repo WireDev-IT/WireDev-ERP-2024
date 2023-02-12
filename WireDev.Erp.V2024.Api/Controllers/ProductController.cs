@@ -27,10 +27,10 @@ namespace WireDev.Erp.V1.Api.Controllers
         [HttpGet("all")]
         public async Task<IActionResult> GetProducts()
         {
-            List<Product>? list;
+            List<uint>? list;
             try
             {
-                list = await _context.Products.ToListAsync();
+                list = await _context.Products.Select(x => x.Uuid).ToListAsync();
             }
             catch (Exception ex)
             {
@@ -54,7 +54,7 @@ namespace WireDev.Erp.V1.Api.Controllers
             catch (Exception ex)
             {
                 string message = $"Product with the UUID {id} was not found!";
-                _logger.LogWarning(message, ex);
+                _logger.LogWarning(ex, message);
                 return NotFound(new Response(false, message));
             }
         }
@@ -137,7 +137,7 @@ namespace WireDev.Erp.V1.Api.Controllers
             catch (ArgumentNullException ex)
             {
                 string message = $"Product with the UUID {id} was not found!";
-                _logger.LogWarning(message, ex);
+                _logger.LogWarning(ex, message);
                 return NotFound(new Response(false, message));
             }
             catch (DbUpdateException ex)

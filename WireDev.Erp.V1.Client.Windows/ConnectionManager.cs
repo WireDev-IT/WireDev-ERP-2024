@@ -1,37 +1,1 @@
-﻿using System;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
-
-namespace WireDev.Erp.V1.Client.Windows
-{
-    public class ConnectionManager
-    {
-        public HttpClient Client { get; set; }
-
-        public ConnectionManager(Uri url, MediaTypeWithQualityHeaderValue mediaType)
-        {
-            Client = new()
-            {
-                BaseAddress = url
-            };
-            Client.DefaultRequestHeaders.Accept.Clear();
-            Client.DefaultRequestHeaders.Accept.Add(mediaType);
-        }
-
-        public void SetToken(string token)
-        {
-            Client.DefaultRequestHeaders.Authorization = new("Bearer", token);
-        }
-
-        public async Task<bool> IsOnline()
-        {
-            try
-            {
-                HttpResponseMessage response = await Client.GetAsync("ping");
-                return response.IsSuccessStatusCode;
-            }
-            catch { return false; }
-        }
-    }
-}
+﻿using System;using System.Net.Http;using System.Net.Http.Headers;using System.Threading.Tasks;namespace WireDev.Erp.V1.Client.Windows{    public static class ApiConnection    {        public static HttpClient? Client { get; set; }        public static void SetClient(Uri url, MediaTypeWithQualityHeaderValue mediaType)        {            Client = new()            {                BaseAddress = url            };            Client.DefaultRequestHeaders.Accept.Clear();            Client.DefaultRequestHeaders.Accept.Add(mediaType);        }                public static void SetToken(string token)        {            Client.DefaultRequestHeaders.Authorization = new("Bearer", token);        }        public static async Task<bool> IsOnline()        {            try            {                HttpResponseMessage response = await Client.GetAsync("ping");                return response.IsSuccessStatusCode;            }            catch { return false; }        }    }}

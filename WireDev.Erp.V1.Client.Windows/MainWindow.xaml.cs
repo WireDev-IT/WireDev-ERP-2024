@@ -22,8 +22,7 @@ namespace WireDev.Erp.V1.Client.Windows
     /// </summary>
     public partial class MainWindow
     {
-        ConnectionManager _connection;
-        public MainWindow(ConnectionManager connection)
+        public MainWindow()
         {
             InitializeComponent();
         }

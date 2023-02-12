@@ -49,8 +49,8 @@
             </hc:SideMenuItem>
         </hc:SideMenu>
         <hc:TabControl x:Name="MainTabControl" Grid.Column="1" IsAnimationEnabled="True" IsDraggable="True" IsScrollable="True" ShowCloseButton="True" ShowScrollButton="True" Background="{x:Null}">
-            <TabItem>
-                <Frame></Frame>
+            <TabItem Header="Products">
+                <Frame Source="/Views/ProductsPage.xaml"></Frame>
             </TabItem>
         </hc:TabControl>
     </Grid>
