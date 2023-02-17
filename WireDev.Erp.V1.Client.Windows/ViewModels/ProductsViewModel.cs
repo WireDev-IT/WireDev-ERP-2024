@@ -1,4 +1,5 @@
 ﻿using HandyControl.Controls;
+using HandyControl.Tools.Command;
 using HandyControl.Tools.Extension;
 using System;
 using System.Collections.Generic;
@@ -70,11 +71,11 @@ namespace WireDev.Erp.V1.Client.Windows.ViewModels
 
         private bool CanGetProducts = true;
         private ICommand? _getProductsCommand;
-        public ICommand GetProductsCommand => _getProductsCommand ??= new RelayCommand(param => GetProducts().ConfigureAwait(true), param => CanGetProducts);
+        public ICommand GetProductsCommand => _getProductsCommand ??= new RelayCommand(param => GetProductsAsync().ConfigureAwait(true), param => CanGetProducts);
 
         private readonly bool CanGetProductsData = true;
         private ICommand? _getProductsDataCommand;
-        public ICommand GetProductsDataCommand => _getProductsDataCommand ??= new RelayCommand(param => GetProducts().ConfigureAwait(true), param => CanGetProductsData);
+        public ICommand GetProductsDataCommand => _getProductsDataCommand ??= new RelayCommand(param => GetProductsDataAsync().ConfigureAwait(true), param => CanGetProductsData);
 
         private Task StatusCodeHandler(HttpStatusCode code, string caption)
         {
@@ -89,13 +90,13 @@ namespace WireDev.Erp.V1.Client.Windows.ViewModels
             return Task.CompletedTask;
         }
 
-        private async Task<List<uint>> GetProducts()
+        private async Task<List<uint>> GetProductsAsync()
         {
             CanGetProducts = false;
 
             try
             {
-                HttpResponseMessage response = await ApiConnection.Client.GetAsync($"api/Products/all");
+                using HttpResponseMessage response = await ApiConnection.Client.GetAsync($"api/Products/all");
                 Response? r = await response.Content.ReadFromJsonAsync<Response>();
 
                 if (response.StatusCode == HttpStatusCode.OK)
@@ -117,7 +118,7 @@ namespace WireDev.Erp.V1.Client.Windows.ViewModels
 
         private async Task<Product> GetProductAsync(uint id)
         {
-            HttpResponseMessage response = await ApiConnection.Client.GetAsync($"api/Products/{id}");
+            using HttpResponseMessage response = await ApiConnection.Client.GetAsync($"api/Products/{id}");
             Response? r = await response.Content.ReadFromJsonAsync<Response>();
 
             return response.IsSuccessStatusCode && (r.Data is Product p) ? p : throw new ArgumentNullException("Respose is not as expected!");
@@ -144,7 +145,8 @@ namespace WireDev.Erp.V1.Client.Windows.ViewModels
 
         private async Task CreateProductAsync(Product? product)
         {
-            HttpResponseMessage response = await ApiConnection.Client.PostAsJsonAsync("api/Products/add", product);
+
+            using HttpResponseMessage response = await ApiConnection.Client.PostAsJsonAsync("api/Products/add", product);
             if (response.IsSuccessStatusCode)
             {
                 Response? r = await response.Content.ReadFromJsonAsync<Response>();
@@ -159,7 +161,7 @@ namespace WireDev.Erp.V1.Client.Windows.ViewModels
 
         private async Task UpdateProductAsync(uint uuid, Product product)
         {
-            HttpResponseMessage response = await ApiConnection.Client.PutAsJsonAsync($"api/Products/{uuid}", product);
+            using HttpResponseMessage response = await ApiConnection.Client.PutAsJsonAsync($"api/Products/{uuid}", product);
             if (response.IsSuccessStatusCode)
             {
                 if (Products.ContainsKey(product.Uuid))
@@ -179,7 +181,7 @@ namespace WireDev.Erp.V1.Client.Windows.ViewModels
 
         private async Task DeleteProductAsync(uint id)
         {
-            HttpResponseMessage response = await ApiConnection.Client.DeleteAsync($"api/Products/{id}");
+            using HttpResponseMessage response = await ApiConnection.Client.DeleteAsync($"api/Products/{id}");
             if (response.IsSuccessStatusCode)
             {
                 if (Products.ContainsKey(id))
