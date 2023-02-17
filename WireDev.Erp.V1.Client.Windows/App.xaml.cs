@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -35,6 +36,10 @@ namespace WireDev.Erp.V1.Client.Windows
                 //return false;
                 //TODO: Load file
                 ApiConnection.SetClient(new Uri("https://127.0.0.1:7216/"), new MediaTypeWithQualityHeaderValue("application/json"));
+
+                //TODO: Localization
+                CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
+                CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en-US");
             }
             catch (Exception ex)
             {

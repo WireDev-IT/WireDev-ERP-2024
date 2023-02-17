@@ -7,10 +7,12 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using WireDev.Erp.V1.Client.Windows.Classes;
 using WireDev.Erp.V1.Models.Authentication;
+using WireDev.Erp.V1.Models.Interfaces;
 using WireDev.Erp.V1.Models.Storage;
 
 namespace WireDev.Erp.V1.Client.Windows.ViewModels
@@ -32,7 +34,7 @@ namespace WireDev.Erp.V1.Client.Windows.ViewModels
         }
 
         private Dictionary<uint, Product?>? _products = null;
-        public Dictionary<uint, Product?> Products
+        public Dictionary<uint, Product?>? Products
         {
             get => _products;
             set
@@ -40,7 +42,7 @@ namespace WireDev.Erp.V1.Client.Windows.ViewModels
                 if (_products != value)
                 {
                     _products = value;
-                    base.OnPropertyChanged(nameof(ProductIds));
+                    base.OnPropertyChanged(nameof(Products));
                 }
             }
         }
@@ -55,6 +57,20 @@ namespace WireDev.Erp.V1.Client.Windows.ViewModels
                 {
                     _selectedProduct = value;
                     base.OnPropertyChanged(nameof(SelectedProduct));
+                }
+            }
+        }
+
+        private Dictionary<Guid, Price?> _prices = new();
+        public Dictionary<Guid, Price?> Prices
+        {
+            get => _prices;
+            set
+            {
+                if (_prices != value)
+                {
+                    _prices = value;
+                    base.OnPropertyChanged(nameof(Prices));
                 }
             }
         }
@@ -76,6 +92,8 @@ namespace WireDev.Erp.V1.Client.Windows.ViewModels
         private readonly bool CanGetProductsData = true;
         private ICommand? _getProductsDataCommand;
         public ICommand GetProductsDataCommand => _getProductsDataCommand ??= new RelayCommand(param => GetProductsDataAsync().ConfigureAwait(true), param => CanGetProductsData);
+
+        public CancellationTokenSource? priceLoadCts = null;
 
         private Task StatusCodeHandler(HttpStatusCode code, string caption)
         {
@@ -101,7 +119,7 @@ namespace WireDev.Erp.V1.Client.Windows.ViewModels
 
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    return ProductIds = r.Data is List<uint> list ? list : throw new ArgumentNullException("Respose is not as expected!");
+                    return ProductIds = r.Data is List<uint> list ? list : throw new ArgumentNullException("Response is not as expected!");
                 }
                 else
                 {
@@ -120,8 +138,7 @@ namespace WireDev.Erp.V1.Client.Windows.ViewModels
         {
             using HttpResponseMessage response = await ApiConnection.Client.GetAsync($"api/Products/{id}");
             Response? r = await response.Content.ReadFromJsonAsync<Response>();
-
-            return response.IsSuccessStatusCode && (r.Data is Product p) ? p : throw new ArgumentNullException("Respose is not as expected!");
+            return response.IsSuccessStatusCode && r.Data is Product p ? p : throw new ArgumentNullException(nameof(GetProductAsync), "Response is not as expected!");
         }
 
         private async Task GetProductsDataAsync(uint startId = uint.MinValue, uint endId = uint.MaxValue)
@@ -193,6 +210,48 @@ namespace WireDev.Erp.V1.Client.Windows.ViewModels
             {
 
             }
+        }
+
+        private async Task<Dictionary<Guid, Exception>> LoadPricesOfProduct(uint productId)
+        {
+            Dictionary<Guid, Exception>? errors = new();
+            if (Products.TryGetValue(productId, out Product? product) && product != null)
+            {
+                using (priceLoadCts = new())
+                {
+                    foreach (Guid price in product.Prices)
+                    {
+                        priceLoadCts.Token.ThrowIfCancellationRequested();
+                        try
+                        {
+                            using HttpResponseMessage response = await ApiConnection.Client.GetAsync($"api/Prices/{price}", priceLoadCts.Token);
+                            Response? r = await response.Content.ReadFromJsonAsync<Response>();
+                            priceLoadCts.Token.ThrowIfCancellationRequested();
+                            if (response.IsSuccessStatusCode && r.Data is Price p)
+                            {
+                                if (!Prices.ContainsKey(price)) { Prices.Add(price, null); }
+                                else { Prices[price] = p; }
+                            }
+                            else
+                            {
+                                throw new ArgumentNullException(nameof(GetProductAsync), "Response is not as expected!");
+                            }
+                        }
+                        catch (OperationCanceledException ex)
+                        {
+                            errors.Add(price, ex);
+                            break;
+                        }
+                        catch (Exception ex)
+                        {
+                            errors.Add(price, ex);
+                        }
+                    }
+                }
+            }
+
+            if (errors.Count == 0) errors = null;
+            return errors;
         }
     }
 }

@@ -214,10 +214,10 @@ namespace WireDev.Erp.V1.Api.Controllers
         [HttpGet("all")]
         public async Task<IActionResult> GetPurchases()
         {
-            List<Purchase>? list;
+            List<Guid>? list;
             try
             {
-                list = await _context.Purchases.ToListAsync();
+                list = await _context.Purchases.Select(x => x.Uuid).ToListAsync();
             }
             catch (Exception ex)
             {

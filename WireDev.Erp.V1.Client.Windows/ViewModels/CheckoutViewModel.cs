@@ -41,7 +41,7 @@ namespace WireDev.Erp.V1.Client.Windows.ViewModels
                     tokens.Add(id, cts);
                     using HttpResponseMessage response = await ApiConnection.Client.GetAsync($"api/Products/{id}", cts.Token);
                     Response? r = await response.Content.ReadFromJsonAsync<Response>();
-                    return response.IsSuccessStatusCode && (r.Data is Product p) ? p : throw new ArgumentNullException(nameof(GetProductAsync), "Respose is not as expected!");
+                    return response.IsSuccessStatusCode && (r.Data is Product p) ? p : throw new ArgumentNullException(nameof(GetProductAsync), "Response is not as expected!");
                 }
                 catch (ArgumentNullException)
                 {
