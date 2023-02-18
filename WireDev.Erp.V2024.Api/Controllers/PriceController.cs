@@ -71,7 +71,7 @@ namespace WireDev.Erp.V1.Api.Controllers
             try
             {
                 _ = await _context.Prices.AddAsync(price);
-                _ = await _context.SaveChangesAsync();
+                _ = _context.SaveChanges(User.Identity.Name);
             }
             catch (DbUpdateException ex)
             {
@@ -109,7 +109,7 @@ namespace WireDev.Erp.V1.Api.Controllers
                 {
                     await temp_price.ModifyProperties(price);
                     _ = _context.Prices.Update(temp_price);
-                    _ = _context.SaveChanges();
+                    _ = _context.SaveChanges(User.Identity.Name);
                 }
             }
             catch (DbUpdateException ex)
@@ -150,7 +150,7 @@ namespace WireDev.Erp.V1.Api.Controllers
                 if (c.Locked) throw new BadHttpRequestException($"Price {c.Uuid} is locked and can not be deleted! Try to archive it.");
 
                 _ = _context.Prices.Remove(c);
-                _ = _context.SaveChanges();
+                _ = _context.SaveChanges(User.Identity.Name);
             }
             catch (ArgumentNullException ex)
             {

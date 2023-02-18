@@ -71,7 +71,7 @@ namespace WireDev.Erp.V1.Api.Controllers
             try
             {
                 _ = await _context.Groups.AddAsync(group);
-                _ = await _context.SaveChangesAsync();
+                _ = _context.SaveChanges(User.Identity.Name);
             }
             catch (DbUpdateException ex)
             {
@@ -105,7 +105,7 @@ namespace WireDev.Erp.V1.Api.Controllers
                 {
                     await temp_group.ModifyProperties(group);
                     _ = _context.Groups.Update(temp_group);
-                    _ = _context.SaveChanges();
+                    _ = _context.SaveChanges(User.Identity.Name);
                 }
             }
             catch (DbUpdateException ex)
@@ -141,7 +141,7 @@ namespace WireDev.Erp.V1.Api.Controllers
                 if (c.Used) throw new BadHttpRequestException($"Group {c.Uuid} is locked and can not be deleted! Try to archive it.");
 
                 _ = _context.Groups.Remove(c);
-                _ = _context.SaveChanges();
+                _ = _context.SaveChanges(User.Identity.Name);
             }
             catch (ArgumentNullException ex)
             {

@@ -128,7 +128,7 @@ namespace WireDev.Erp.V1.Api.Controllers
                     _logger.LogError(ex, message);
                     return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
                 }
-                _ = await _context.SaveChangesAsync();
+                _ = _context.SaveChanges(User.Identity.Name);
                 transaction.CreateSavepoint("BeforeStaticsPreparation");
 
                 TotalStats? totalStats;
@@ -145,7 +145,7 @@ namespace WireDev.Erp.V1.Api.Controllers
                     _logger.LogError(ex, message);
                     return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
                 }
-                _ = await _context.SaveChangesAsync();
+                _ = _context.SaveChanges(User.Identity.Name);
                 transaction.CreateSavepoint("BeforeProductModification");
 
                 Product? product = null;
@@ -190,7 +190,7 @@ namespace WireDev.Erp.V1.Api.Controllers
                     _logger.LogError(ex, message);
                     return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
                 }
-                _ = await _context.SaveChangesAsync();
+                _ = _context.SaveChanges(User.Identity.Name);
             }
             catch (DbUpdateException ex)
             {

@@ -12,6 +12,25 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Audit",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    AuditDateTimeUtc = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    AuditType = table.Column<string>(type: "TEXT", nullable: true),
+                    AuditUser = table.Column<string>(type: "TEXT", nullable: true),
+                    TableName = table.Column<string>(type: "TEXT", nullable: true),
+                    KeyValues = table.Column<string>(type: "TEXT", nullable: true),
+                    OldValues = table.Column<string>(type: "TEXT", nullable: true),
+                    NewValues = table.Column<string>(type: "TEXT", nullable: true),
+                    ChangedColumns = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Audit", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "DayStats",
                 columns: table => new
                 {
@@ -136,6 +155,20 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                 });
 
             migrationBuilder.CreateTable(
+                name: "Role",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    name = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    details = table.Column<string>(type: "TEXT", maxLength: 150, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Role", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Settings",
                 columns: table => new
                 {
@@ -196,27 +229,30 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
             migrationBuilder.InsertData(
                 table: "Prices",
                 columns: new[] { "Uuid", "Archived", "Description", "Locked", "RetailValue", "SellValue" },
-                values: new object[] { new Guid("263c8922-2ee5-4080-bfcb-4669f938605b"), false, "Defaul_Price", false, 10m, 15m });
+                values: new object[] { new Guid("302c51c4-4808-4fc9-ae8d-a29c9c1703e5"), false, "Defaul_Price", false, 10m, 15m });
 
             migrationBuilder.InsertData(
                 table: "Products",
                 columns: new[] { "Uuid", "Active", "Archived", "Availible", "Description", "EAN", "Group", "Metadata", "Name", "Prices", "Properties", "Used" },
-                values: new object[] { 9999u, false, false, 0, null, "[]", 100, "{}", "Default_Product", "[\"263c8922-2ee5-4080-bfcb-4669f938605b\"]", "{}", false });
+                values: new object[] { 9999u, false, false, 0, null, "[]", 100, "{}", "Default_Product", "[\"302c51c4-4808-4fc9-ae8d-a29c9c1703e5\"]", "{}", false });
 
             migrationBuilder.InsertData(
                 table: "Purchases",
                 columns: new[] { "Uuid", "DatePosted", "Items", "Posted", "TotalPrice", "Type" },
-                values: new object[] { new Guid("37f3d770-bb11-49d5-8cdd-3bedc2043b9b"), new DateTime(2023, 1, 23, 15, 0, 30, 753, DateTimeKind.Utc).AddTicks(3750), "[]", true, 0m, 0 });
+                values: new object[] { new Guid("6261e751-be55-4f07-9b11-fc388b2b269f"), new DateTime(2023, 2, 18, 13, 47, 9, 131, DateTimeKind.Utc).AddTicks(4210), "[]", true, 0m, 0 });
 
             migrationBuilder.InsertData(
                 table: "Settings",
                 columns: new[] { "Uuid", "NextGroupNumber", "NextProductNumber" },
-                values: new object[] { new Guid("53afa4a5-5334-41c6-b631-d3da6e9fee8f"), 100, 10000u });
+                values: new object[] { new Guid("95531a40-8af5-4588-91f3-5a94f5d1053d"), 100, 10000u });
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Audit");
+
             migrationBuilder.DropTable(
                 name: "DayStats");
 
@@ -237,6 +273,9 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
 
             migrationBuilder.DropTable(
                 name: "Purchases");
+
+            migrationBuilder.DropTable(
+                name: "Role");
 
             migrationBuilder.DropTable(
                 name: "Settings");

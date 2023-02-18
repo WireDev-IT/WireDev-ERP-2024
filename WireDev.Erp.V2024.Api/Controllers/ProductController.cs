@@ -7,6 +7,7 @@ using WireDev.Erp.V1.Api.Context;
 using WireDev.Erp.V1.Models.Authentication;
 using WireDev.Erp.V1.Models.Enums;
 using WireDev.Erp.V1.Models.Storage;
+using Microsoft.AspNetCore.Identity;
 
 namespace WireDev.Erp.V1.Api.Controllers
 {
@@ -71,7 +72,7 @@ namespace WireDev.Erp.V1.Api.Controllers
             try
             {
                 _ = await _context.Products.AddAsync(product);
-                _ = await _context.SaveChangesAsync();
+                _ = _context.SaveChanges(User.Identity.Name);
             }
             catch (DbUpdateException ex)
             {
@@ -99,7 +100,7 @@ namespace WireDev.Erp.V1.Api.Controllers
                 p = await _context.Products.FirstAsync(x => x.Uuid == id);
                 p = product;
                 _ = _context.Update(p);
-                _ = _context.SaveChanges();
+                _ = _context.SaveChanges(User.Identity.Name);
             }
             catch (DbUpdateException ex)
             {
@@ -132,7 +133,7 @@ namespace WireDev.Erp.V1.Api.Controllers
             {
                 p = await _context.Products.FirstAsync(x => x.Uuid == id);
                 _ = _context.Products.Remove(p);
-                _ = _context.SaveChanges();
+                _ = _context.SaveChanges(User.Identity.Name);
             }
             catch (ArgumentNullException ex)
             {

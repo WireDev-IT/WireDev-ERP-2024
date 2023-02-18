@@ -1,20 +1,25 @@
-﻿using System;
-using System.Text.Json;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System.Text.Json;
 using WireDev.Erp.V1.Models;
+using WireDev.Erp.V1.Models.AuditLog.Contract;
+using WireDev.Erp.V1.Models.AuditLog.Models;
+using WireDev.Erp.V1.Models.AuditLog.Trail;
 using WireDev.Erp.V1.Models.Enums;
 using WireDev.Erp.V1.Models.Statistics;
 using WireDev.Erp.V1.Models.Storage;
 
 namespace WireDev.Erp.V1.Api.Context
 {
-	public class ApplicationDataDbContext : DbContext
-	{
-		public ApplicationDataDbContext(DbContextOptions<ApplicationDataDbContext> options) : base(options)
+    public class ApplicationDataDbContext : DbContext, IMopDbContext
+    {
+        public ApplicationDataDbContext(DbContextOptions<ApplicationDataDbContext> options) : base(options)
         {
 
-		}
+        }
+
+        public virtual DbSet<Audit> Audit { get; set; }
+        public virtual DbSet<Role> Role { get; set; }
 
         public virtual DbSet<Settings> Settings { get; set; }
 
@@ -30,11 +35,28 @@ namespace WireDev.Erp.V1.Api.Context
         public virtual DbSet<Group> Groups { get; set; }
         public virtual DbSet<Price> Prices { get; set; }
 
+        public virtual int SaveChanges(string userName)
+        {
+            new AuditHelper(this).AddAuditLogs(userName);
+            return SaveChanges();
+        }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
-            _ = builder.Entity<Settings>().HasKey("Uuid");
+            _ = builder.Entity<Audit>().HasKey(e => e.Id);
+
+            _ = builder.Entity<Role>().Property(e => e.Id).HasColumnName("id");
+            _ = builder.Entity<Role>().Property(e => e.Name)
+                .IsRequired()
+                .HasColumnName("name")
+                .HasMaxLength(50);
+            _ = builder.Entity<Role>().Property(e => e.Details)
+                .HasColumnName("details")
+                .HasMaxLength(150);
+
+            _ = builder.Entity<Settings>().HasKey(e => e.Uuid);
             _ = builder.Entity<Settings>().HasData(new Settings());
 
             _ = builder.Entity<DayStats>().HasKey("Date");
@@ -60,7 +82,7 @@ namespace WireDev.Erp.V1.Api.Context
                        c => c.ToList()));
 
             _ = builder.Entity<Price>().HasKey("Uuid");
-            Price price = new Price(Guid.NewGuid()) { RetailValue = 10, SellValue = 15, Description = "Defaul_Price" };
+            Price price = new(Guid.NewGuid()) { RetailValue = 10, SellValue = 15, Description = "Defaul_Price" };
             _ = builder.Entity<Price>().HasData(price);
             _ = builder.Entity<Product>().HasKey("Uuid");
             Product product = new(9999) { Name = "Default_Product", Prices = new() { price.Uuid } };
