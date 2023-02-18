@@ -31,10 +31,10 @@ namespace WireDev.Erp.V1.Api.Controllers
         [HttpGet("all")]
         public async Task<IActionResult> GetGroups()
         {
-            List<Group>? list;
+            List<int>? list;
             try
             {
-                list = await _context.Groups.ToListAsync();
+                list = await _context.Groups.Select(x => x.Uuid).ToListAsync();
             }
             catch (Exception ex)
             {
@@ -171,4 +171,3 @@ namespace WireDev.Erp.V1.Api.Controllers
         }
     }
 }
-

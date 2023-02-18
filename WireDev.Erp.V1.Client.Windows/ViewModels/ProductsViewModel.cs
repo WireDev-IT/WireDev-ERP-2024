@@ -225,8 +225,7 @@ namespace WireDev.Erp.V1.Client.Windows.ViewModels
                         try
                         {
                             using HttpResponseMessage response = await ApiConnection.Client.GetAsync($"api/Prices/{price}", priceLoadCts.Token);
-                            Response? r = await response.Content.ReadFromJsonAsync<Response>();
-                            priceLoadCts.Token.ThrowIfCancellationRequested();
+                            Response? r = await response.Content.ReadFromJsonAsync<Response>(cancellationToken: priceLoadCts.Token);
                             if (response.IsSuccessStatusCode && r.Data is Price p)
                             {
                                 if (!Prices.ContainsKey(price)) { Prices.Add(price, null); }
@@ -234,7 +233,7 @@ namespace WireDev.Erp.V1.Client.Windows.ViewModels
                             }
                             else
                             {
-                                throw new ArgumentNullException(nameof(GetProductAsync), "Response is not as expected!");
+                                throw new ArgumentNullException(nameof(LoadPricesOfProduct), "Response is not as expected!");
                             }
                         }
                         catch (OperationCanceledException ex)
@@ -252,6 +251,88 @@ namespace WireDev.Erp.V1.Client.Windows.ViewModels
 
             if (errors.Count == 0) errors = null;
             return errors;
+        }
+
+        private async Task<Guid> AddPriceAsync(Price price, CancellationToken token)
+        {
+            try
+            {
+                using HttpResponseMessage response = await ApiConnection.Client.PutAsJsonAsync($"api/Prices/add", price, token);
+                Response? r = await response.Content.ReadFromJsonAsync<Response>(cancellationToken: token);
+                if (response.IsSuccessStatusCode && r.Data is Price p)
+                {
+                    if (!Prices.ContainsKey(p.Uuid)) { Prices.Add(p.Uuid, p); }
+                    else { Prices[p.Uuid] = p; }
+                    return p.Uuid;
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(AddPriceAsync), "Response is not as expected!");
+                }
+            }
+            catch (OperationCanceledException ex)
+            {
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return Guid.Empty;
+        }
+
+        private async Task<Price> UpdatePriceAsync(Price price, CancellationToken token)
+        {
+            try
+            {
+                using HttpResponseMessage response = await ApiConnection.Client.PutAsJsonAsync($"api/Prices/{price.Uuid}", price, token);
+                Response? r = await response.Content.ReadFromJsonAsync<Response>(cancellationToken: token);
+                if (response.IsSuccessStatusCode && r.Data is Price p)
+                {
+                    if (!Prices.ContainsKey(p.Uuid)) { Prices.Add(p.Uuid, p); }
+                    else { Prices[p.Uuid] = p; }
+                    return p;
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(UpdatePriceAsync), "Response is not as expected!");
+                }
+            }
+            catch (OperationCanceledException ex)
+            {
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return null;
+        }
+
+        private async Task<bool> DeletePriceAsync(Guid id, CancellationToken token)
+        {
+            try
+            {
+                using HttpResponseMessage response = await ApiConnection.Client.PutAsJsonAsync($"api/Prices/{id}", token);
+                if (response.IsSuccessStatusCode)
+                {
+                    if (Prices.ContainsKey(id)) { Prices.Remove(id); }
+                    return true;
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(DeletePriceAsync), "Response is not as expected!");
+                }
+            }
+            catch (OperationCanceledException ex)
+            {
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return false;
         }
     }
 }
