@@ -27,7 +27,7 @@ namespace WireDev.Erp.V1.Api.Controllers
         /// Retrieves a list of all total statistics
         /// </summary>
         /// <response code="200">Retrieving total stats succeded</response>
-        /// <response code="204">There are no statisticts</response>
+        /// <response code="204">There are no statistics</response>
         /// <response code="500">Oops! List of total statistics cannot be retrieved</response>
         [HttpGet("total")]
         [ProducesResponseType(200)][ProducesResponseType(204)][ProducesResponseType(500)]
@@ -40,7 +40,7 @@ namespace WireDev.Erp.V1.Api.Controllers
             }
             catch (ArgumentNullException)
             {
-                return StatusCode(StatusCodes.Status204NoContent, new Response(true, "There are no statisticts."));
+                return StatusCode(StatusCodes.Status204NoContent, new Response(true, "There are no statistics."));
             }
             catch (Exception ex)
             {
@@ -95,12 +95,12 @@ namespace WireDev.Erp.V1.Api.Controllers
 
                 foreach (long l in list)
                 {
-                    years.Add(((ushort)new DateTime(l).Year));
+                    years.Add((ushort)new DateTime(l).Year);
                 }
             }
             catch (ArgumentNullException)
             {
-                return StatusCode(StatusCodes.Status204NoContent, new Response(true, "There are no statisticts."));
+                return StatusCode(StatusCodes.Status204NoContent, new Response(true, "There are no statistics."));
             }
             catch (Exception ex)
             {
@@ -136,13 +136,13 @@ namespace WireDev.Erp.V1.Api.Controllers
         }
 
         [HttpGet("month/all")]
-        public async Task<IActionResult> GetAllMonthStats()
+        public async Task<IActionResult> GetAllMonthStats([FromQuery] ushort minYear = ushort.MinValue, [FromQuery] ushort maxYear = ushort.MaxValue)
         {
             List<long>? list;
             List<DateTime>? months = new();
             try
             {
-                list = await _context.MonthStats.Select(x => x.Date).ToListAsync();
+                list = await _context.MonthStats.Select(x => x.Date).Where(y => new DateTime(y).Year >= minYear && new DateTime(y).Year <= maxYear).ToListAsync();
                 if (list.Count == 0)
                 {
                     return StatusCode(StatusCodes.Status204NoContent, new Response(false, "There are no statistics."));
@@ -155,7 +155,7 @@ namespace WireDev.Erp.V1.Api.Controllers
             }
             catch (ArgumentNullException)
             {
-                return StatusCode(StatusCodes.Status204NoContent, new Response(true, "There are no statisticts."));
+                return StatusCode(StatusCodes.Status204NoContent, new Response(true, "There are no statistics."));
             }
             catch (Exception ex)
             {
@@ -210,7 +210,7 @@ namespace WireDev.Erp.V1.Api.Controllers
             }
             catch (ArgumentNullException)
             {
-                return StatusCode(StatusCodes.Status204NoContent, new Response(true, "There are no statisticts."));
+                return StatusCode(StatusCodes.Status204NoContent, new Response(true, "There are no statistics."));
             }
             catch (Exception ex)
             {

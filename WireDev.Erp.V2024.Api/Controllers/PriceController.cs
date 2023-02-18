@@ -14,14 +14,14 @@ using WireDev.Erp.V1.Models.Storage;
 namespace WireDev.Erp.V1.Api.Controllers
 {
     [ApiController]
-    //[Authorize("GROUPS:RO")]
+    //[Authorize("PRICES:RO,PRICES:RW")]
     [Route("api/[controller]")]
-    public class GroupController : Controller
+    public class PriceController : Controller
     {
         private readonly ApplicationDataDbContext _context;
-        private readonly ILogger<GroupController> _logger;
+        private readonly ILogger<PriceController> _logger;
 
-        public GroupController(ApplicationDataDbContext context, ILogger<GroupController> logger)
+        public PriceController(ApplicationDataDbContext context, ILogger<PriceController> logger)
         {
             _logger = logger;
             _context = context;
@@ -29,16 +29,16 @@ namespace WireDev.Erp.V1.Api.Controllers
 
         //[Authorize(Roles = "Administrator")]
         [HttpGet("all")]
-        public async Task<IActionResult> GetGroups()
+        public async Task<IActionResult> GetPrices()
         {
-            List<Group>? list;
+            List<Price>? list;
             try
             {
-                list = await _context.Groups.ToListAsync();
+                list = await _context.Prices.ToListAsync();
             }
             catch (Exception ex)
             {
-                string message = $"List of groups cannot be retrieved!";
+                string message = $"List of prices cannot be retrieved!";
                 _logger.LogError(ex, message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
             }
@@ -46,31 +46,31 @@ namespace WireDev.Erp.V1.Api.Controllers
             return Ok(new Response(true, null, list));
         }
 
-        //[Authorize("GROUPS:RO")]
+        //[Authorize("PRICES:RO")]
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetGroup(uint id)
+        public async Task<IActionResult> GetPrice(Guid id)
         {
-            Group? group;
+            Price? price;
             try
             {
-                group = await _context.Groups.FirstAsync(x => x.Uuid == id);
-                return Ok(new Response(true, null, group));
+                price = await _context.Prices.FirstAsync(x => x.Uuid == id);
+                return Ok(new Response(true, null, price));
             }
             catch (Exception ex)
             {
-                string message = $"Group with the UUID {id} was not found!";
+                string message = $"Price with the UUID {id} was not found!";
                 _logger.LogWarning(message, ex);
                 return NotFound(new Response(true, message));
             }
         }
 
-        //[Authorize("GROUPS:RW")]
+        //[Authorize("PRICES:RW")]
         [HttpPost("add")]
-        public async Task<IActionResult> AddGroup([FromBody][Required(ErrorMessage = "To add a group, you have to provide one.")] Group group)
+        public async Task<IActionResult> AddPrice([FromBody][Required(ErrorMessage = "To add a price, you have to provide one.")] Price price)
         {
             try
             {
-                _ = await _context.Groups.AddAsync(group);
+                _ = await _context.Prices.AddAsync(price);
                 _ = await _context.SaveChangesAsync();
             }
             catch (DbUpdateException ex)
@@ -81,30 +81,34 @@ namespace WireDev.Erp.V1.Api.Controllers
             }
             catch (Exception ex)
             {
-                string message = $"Add group {group.Uuid} failed!";
+                string message = $"Add price {price.Uuid} failed!";
                 _logger.LogError(ex, message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
             }
 
-            return Ok(new Response(true, null, group.Uuid));
+            return Ok(new Response(true, null, price.Uuid));
         }
 
-        //[Authorize("GROUPS:RW")]
+        //[Authorize("PRICES:RW")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> ModifyGroup(uint id, [FromBody][Required(ErrorMessage = "To modify a group, you have to provide changes.")] Group group)
+        public async Task<IActionResult> ModifyPrice(Guid id, [FromBody][Required(ErrorMessage = "To modify a price, you have to provide changes.")] Price price)
         {
-            Group? temp_group;
+            Price? temp_price;
             try
             {
-                temp_group = await _context.Groups.FirstAsync(x => x.Uuid == id);
-                if (temp_group == null)
+                temp_price = await _context.Prices.FirstAsync(x => x.Uuid == id);
+                if (temp_price == null)
                 {
-                    throw new ArgumentNullException($"Group {id} was not found!");
+                    throw new ArgumentNullException($"Price {id} was not found!");
+                }
+                else if (temp_price.Locked)
+                {
+                    throw new UnauthorizedAccessException($"Price {id} is locked and can not be modified!");
                 }
                 else
                 {
-                    await temp_group.ModifyProperties(group);
-                    _ = _context.Groups.Update(temp_group);
+                    await temp_price.ModifyProperties(price);
+                    _ = _context.Prices.Update(temp_price);
                     _ = _context.SaveChanges();
                 }
             }
@@ -119,33 +123,38 @@ namespace WireDev.Erp.V1.Api.Controllers
                 _logger.LogError(ex, ex.Message);
                 return NotFound(new Response(false, ex.Message));
             }
+            catch (UnauthorizedAccessException ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(StatusCodes.Status403Forbidden, new Response(false, ex.Message));
+            }
             catch (Exception ex)
             {
-                string message = $"Edit group {id} failed!";
+                string message = $"Edit price {id} failed!";
                 _logger.LogError(ex, message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
             }
 
-            return Ok(new Response(true, null, temp_group));
+            return Ok(new Response(true, null, temp_price));
         }
 
-        //[Authorize("GROUPS:RW")]
+        //[Authorize("PRICES:RW")]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteGroup(uint id)
+        public async Task<IActionResult> DeletePrice(Guid id)
         {
-            Group? c;
+            Price? c;
             try
             {
-                c = await _context.Groups.FirstAsync(x => x.Uuid == id);
+                c = await _context.Prices.FirstAsync(x => x.Uuid == id);
 
-                if (c.Used) throw new BadHttpRequestException($"Group {c.Uuid} is locked and can not be deleted! Try to archive it.");
+                if (c.Locked) throw new BadHttpRequestException($"Price {c.Uuid} is locked and can not be deleted! Try to archive it.");
 
-                _ = _context.Groups.Remove(c);
+                _ = _context.Prices.Remove(c);
                 _ = _context.SaveChanges();
             }
             catch (ArgumentNullException ex)
             {
-                string message = $"Group with the UUID {id} was not found!";
+                string message = $"Price with the UUID {id} was not found!";
                 _logger.LogWarning(message, ex);
                 return NotFound(new Response(false, message));
             }
@@ -162,13 +171,12 @@ namespace WireDev.Erp.V1.Api.Controllers
             }
             catch (Exception ex)
             {
-                string message = $"Group with the UUID {id} could not be removed!";
+                string message = $"Price with the UUID {id} could not be removed!";
                 _logger.LogError(ex, message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
             }
 
-            return Ok(new Response(true, "Group was removed."));
+            return Ok(new Response(true, "Price was removed."));
         }
     }
 }
-

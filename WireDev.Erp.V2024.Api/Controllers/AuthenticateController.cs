@@ -58,11 +58,7 @@ namespace WireDev.Erp.V1.Api.Controllers
                     signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                     );
 
-                return Ok(new
-                {
-                    token = new JwtSecurityTokenHandler().WriteToken(token),
-                    expiration = token.ValidTo
-                });
+                return Ok(new Response(true, token.ValidTo.ToString(), new JwtSecurityTokenHandler().WriteToken(token)));
             }
             return Unauthorized();
         }
@@ -82,6 +78,7 @@ namespace WireDev.Erp.V1.Api.Controllers
                 SecurityStamp = Guid.NewGuid().ToString(),
                 UserName = model.Username
             };
+
             IdentityResult result = await userManager.CreateAsync(user, model.Password);
             return !result.Succeeded
                 ? StatusCode(StatusCodes.Status500InternalServerError, new Response(false, "User creation failed! Please check user details and try again."))

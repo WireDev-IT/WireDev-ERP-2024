@@ -1,0 +1,158 @@
+﻿<Window x:Name="window" x:Class="WireDev.Erp.V1.Client.Windows.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WireDev.Erp.V1.Client.Windows" xmlns:hc="https://handyorg.github.io/handycontrol"
+        mc:Ignorable="d"
+        Title="Login" Width="550" FontFamily="./Fonts/#Cera Pro" Height="700" ResizeMode="NoResize" WindowStyle="ThreeDBorderWindow" hc:GlobalShortcut.Host="True" FontSize="15" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <Storyboard x:Key="LoginPanelFocus">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="CredentialsPanel" Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.Opacity)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0.3">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <QuadraticEase EasingMode="EaseOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="CredentialsPanel" Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.ShadowDepth)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="10"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="LoginPanelDefocus">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="CredentialsPanel" Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.Opacity)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <QuadraticEase EasingMode="EaseOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="CredentialsPanel" Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.ShadowDepth)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="LoginSubmit">
+            <BooleanAnimationUsingKeyFrames Storyboard.TargetName="CredentialsPanel" Storyboard.TargetProperty="(UIElement.IsEnabled)">
+                <DiscreteBooleanKeyFrame KeyTime="00:00:00" Value="False"/>
+            </BooleanAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="LoginForm" Storyboard.TargetProperty="(UIElement.Effect).(BlurEffect.Radius)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="20"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="LoginReset">
+            <BooleanAnimationUsingKeyFrames Storyboard.TargetName="CredentialsPanel" Storyboard.TargetProperty="(UIElement.IsEnabled)">
+                <DiscreteBooleanKeyFrame KeyTime="00:00:00" Value="True"/>
+            </BooleanAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="LoginForm" Storyboard.TargetProperty="(UIElement.Effect).(BlurEffect.Radius)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+    </Window.Resources>
+    <Grid>
+        <StackPanel Focusable="True">
+            <hc:TransitioningContentControl x:Name="TitelTransition" TransitionMode="Top2BottomWithFade">
+                <TextBlock Text="WireDev ERP 2024" FontSize="50" FontWeight="Medium" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0"/>
+            </hc:TransitioningContentControl>
+            <Separator Margin="50,20"/>
+            <hc:TransitioningContentControl x:Name="SubtitelTransition" TransitionMode="Bottom2TopWithFade">
+                <TextBlock x:Name="SubtitleTxt" Text="Login into your Account" FontSize="30" FontWeight="Light" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+            </hc:TransitioningContentControl>
+            <hc:TransitioningContentControl TransitionMode="Bottom2TopWithFade">
+                <Grid x:Name="FormPanel">
+                    <Border x:Name="CredentialsPanel" IsEnabled="true" CornerRadius="4" Margin="0,20" Padding="10" Width="310" Background="White" GotFocus="CredentialsPanel_GotFocus" LostFocus="CredentialsPanel_LostFocus">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="30" ShadowDepth="20" Opacity="0"/>
+                        </Border.Effect>
+                        <StackPanel x:Name="LoginForm">
+                            <StackPanel.Effect>
+                                <BlurEffect KernelType="Gaussian" Radius="0"/>
+                            </StackPanel.Effect>
+                            <hc:Gravatar Id="{Binding Password, ElementName=UsernameInput}" Margin="0,10,0,20"/>
+                            <hc:PasswordBox x:Name="UsernameInput" hc:TitleElement.Title="Username" Margin="10,0" ShowPassword="True" TextInput="UsernameInput_TextInput" ShowClearButton="True"/>
+                            <hc:PasswordBox x:Name="PasswordInput" hc:TitleElement.Title="Password" Margin="10,0" ShowEyeButton="True" TextInput="PasswordInput_TextInput" ShowClearButton="True"/>
+                            <Grid Margin="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Button x:Name="LoginBtn" Content="Login" HorizontalAlignment="Left" Click="LoginBtn_Click"/>
+                                <Button x:Name="TroubleBtn" Content="Trouble with credentials?" HorizontalAlignment="Right" Grid.Column="1" Click="TroubleBtn_Click"/>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </hc:TransitioningContentControl>
+            <hc:TransitioningContentControl TransitionMode="Bottom2TopWithFade">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Opacity="0.4" Margin="0,50,0,0">
+                    <Rectangle Width="50" Height="50">
+                        <Rectangle.Fill>
+                            <DrawingBrush>
+                                <DrawingBrush.Drawing>
+                                    <DrawingGroup ClipGeometry="M0,0 V404 H485 V0 H0 Z">
+                                        <DrawingGroup.Transform>
+                                            <TranslateTransform X="0.5" Y="0.5" />
+                                        </DrawingGroup.Transform>
+                                        <DrawingGroup Opacity="1">
+                                            <GeometryDrawing Brush="#FF5F7680" Geometry="F0 M485,404z M0,0z M175.5,-0.5C175.833,-0.5 176.167,-0.5 176.5,-0.5 177.167,0.833333 177.833,0.833333 178.5,-0.5 178.833,-0.5 179.167,-0.5 179.5,-0.5 180.167,0.833333 180.833,0.833333 181.5,-0.5 181.833,-0.5 182.167,-0.5 182.5,-0.5 183.167,0.833333 183.833,0.833333 184.5,-0.5 184.833,-0.5 185.167,-0.5 185.5,-0.5 186.167,0.833333 186.833,0.833333 187.5,-0.5 187.833,-0.5 188.167,-0.5 188.5,-0.5 189.167,0.833333 189.833,0.833333 190.5,-0.5 190.833,-0.5 191.167,-0.5 191.5,-0.5 192.167,0.833333 192.833,0.833333 193.5,-0.5 193.833,-0.5 194.167,-0.5 194.5,-0.5 195.167,0.833333 195.833,0.833333 196.5,-0.5 196.833,-0.5 197.167,-0.5 197.5,-0.5 198.167,0.833333 198.833,0.833333 199.5,-0.5 199.833,-0.5 200.167,-0.5 200.5,-0.5 201.167,0.833333 201.833,0.833333 202.5,-0.5 202.833,-0.5 203.167,-0.5 203.5,-0.5 204.167,0.833333 204.833,0.833333 205.5,-0.5 205.833,-0.5 206.167,-0.5 206.5,-0.5 207.167,0.833333 207.833,0.833333 208.5,-0.5 208.833,-0.5 209.167,-0.5 209.5,-0.5 210.167,0.833333 210.833,0.833333 211.5,-0.5 211.833,-0.5 212.167,-0.5 212.5,-0.5 213.167,0.833333 213.833,0.833333 214.5,-0.5 214.833,-0.5 215.167,-0.5 215.5,-0.5 216.167,0.833333 216.833,0.833333 217.5,-0.5 217.833,-0.5 218.167,-0.5 218.5,-0.5 219.167,0.833333 219.833,0.833333 220.5,-0.5 220.833,-0.5 221.167,-0.5 221.5,-0.5 222.167,0.833333 222.833,0.833333 223.5,-0.5 223.833,-0.5 224.167,-0.5 224.5,-0.5 225.167,0.833333 225.833,0.833333 226.5,-0.5 226.833,-0.5 227.167,-0.5 227.5,-0.5 228.167,0.833333 228.833,0.833333 229.5,-0.5 229.833,-0.5 230.167,-0.5 230.5,-0.5 231.167,0.833333 231.833,0.833333 232.5,-0.5 232.833,-0.5 233.167,-0.5 233.5,-0.5 234.167,0.833333 234.833,0.833333 235.5,-0.5 235.833,-0.5 236.167,-0.5 236.5,-0.5 237.167,0.833333 237.833,0.833333 238.5,-0.5 238.833,-0.5 239.167,-0.5 239.5,-0.5 240.167,0.833333 240.833,0.833333 241.5,-0.5 241.833,-0.5 242.167,-0.5 242.5,-0.5 243.167,0.833333 243.833,0.833333 244.5,-0.5 244.833,-0.5 245.167,-0.5 245.5,-0.5 246.167,0.833333 246.833,0.833333 247.5,-0.5 247.833,-0.5 248.167,-0.5 248.5,-0.5 249.167,0.833333 249.833,0.833333 250.5,-0.5 250.833,-0.5 251.167,-0.5 251.5,-0.5 252.167,0.833333 252.833,0.833333 253.5,-0.5 253.833,-0.5 254.167,-0.5 254.5,-0.5 255.167,0.833333 255.833,0.833333 256.5,-0.5 256.833,-0.5 257.167,-0.5 257.5,-0.5 258.167,0.833333 258.833,0.833333 259.5,-0.5 259.833,-0.5 260.167,-0.5 260.5,-0.5 261.167,0.833333 261.833,0.833333 262.5,-0.5 262.833,-0.5 263.167,-0.5 263.5,-0.5 264.167,0.833333 264.833,0.833333 265.5,-0.5 265.833,-0.5 266.167,-0.5 266.5,-0.5 267.167,0.833333 267.833,0.833333 268.5,-0.5 268.833,-0.5 269.167,-0.5 269.5,-0.5 270.167,0.833333 270.833,0.833333 271.5,-0.5 271.833,-0.5 272.167,-0.5 272.5,-0.5 273.167,0.833333 273.833,0.833333 274.5,-0.5 274.833,-0.5 275.167,-0.5 275.5,-0.5 276.167,0.833333 276.833,0.833333 277.5,-0.5 277.833,-0.5 278.167,-0.5 278.5,-0.5 279.167,0.833333 279.833,0.833333 280.5,-0.5 280.833,-0.5 281.167,-0.5 281.5,-0.5 282.167,0.833333 282.833,0.833333 283.5,-0.5 283.833,-0.5 284.167,-0.5 284.5,-0.5 285.167,0.833333 285.833,0.833333 286.5,-0.5 286.833,-0.5 287.167,-0.5 287.5,-0.5 288.167,0.833333 288.833,0.833333 289.5,-0.5 289.833,-0.5 290.167,-0.5 290.5,-0.5 291.167,0.833333 291.833,0.833333 292.5,-0.5 292.833,-0.5 293.167,-0.5 293.5,-0.5 294.167,0.833333 294.833,0.833333 295.5,-0.5 295.833,-0.5 296.167,-0.5 296.5,-0.5 297.167,0.833333 297.833,0.833333 298.5,-0.5 298.833,-0.5 299.167,-0.5 299.5,-0.5 300.167,0.833333 300.833,0.833333 301.5,-0.5 301.833,-0.5 302.167,-0.5 302.5,-0.5 303.167,0.833333 303.833,0.833333 304.5,-0.5 304.833,-0.5 305.167,-0.5 305.5,-0.5 306.167,0.833333 306.833,0.833333 307.5,-0.5 307.833,-0.5 308.167,-0.5 308.5,-0.5 308.918,0.221579 309.584,0.721579 310.5,1 287.599,23.7359 264.599,46.2359 241.5,68.5 218.115,46.4585 195.115,23.9585 172.5,1 173.737,0.76791 174.737,0.26791 175.5,-0.5z" />
+                                        </DrawingGroup>
+                                        <DrawingGroup Opacity="1">
+                                            <GeometryDrawing Brush="#FF6FABB0" Geometry="F0 M485,404z M0,0z M483.5,403.5C458.833,403.5 434.167,403.5 409.5,403.5 408.336,293.903 408.169,184.236 409,74.5 433.667,49.8333 458.333,25.1667 483,0.5 483.5,134.833 483.667,269.166 483.5,403.5z" />
+                                        </DrawingGroup>
+                                        <DrawingGroup Opacity="1">
+                                            <GeometryDrawing Brush="#FF59606D" Geometry="F0 M485,404z M0,0z M-0.5,0.5C24.4653,24.9651 49.2986,49.6318 74,74.5 74.6667,176.167 74.6667,277.833 74,379.5 65.9642,387.368 58.1309,395.368 50.5,403.5 33.5,403.5 16.5,403.5 -0.5,403.5 -0.5,269.167 -0.5,134.833 -0.5,0.5z" />
+                                        </DrawingGroup>
+                                        <DrawingGroup Opacity="1">
+                                            <GeometryDrawing Brush="#FF595F6D" Geometry="F0 M485,404z M0,0z M101.5,104.5C125.827,128.66 150.327,152.66 175,176.5 176.151,191.077 176.651,205.744 176.5,220.5 176.333,234.5 176.167,248.5 176,262.5 151.333,287.167 126.667,311.833 102,336.5 101.5,259.167 101.333,181.834 101.5,104.5z" />
+                                        </DrawingGroup>
+                                        <DrawingGroup Opacity="1">
+                                            <GeometryDrawing Brush="#FF6FABB0" Geometry="F0 M485,404z M0,0z M381.5,403.5C356.833,403.5 332.167,403.5 307.5,403.5 306.337,333.237 306.17,262.904 307,192.5 331.474,167.938 356.14,143.605 381,119.5 381.5,214.166 381.667,308.833 381.5,403.5z" />
+                                        </DrawingGroup>
+                                        <DrawingGroup Opacity="1">
+                                            <GeometryDrawing Brush="#FF596370" Geometry="F0 M485,404z M0,0z M203.5,192.5C211.298,199.798 218.965,207.298 226.5,215 219,222.5 211.5,230 204,237.5 203.5,222.504 203.333,207.504 203.5,192.5z" />
+                                        </DrawingGroup>
+                                        <DrawingGroup Opacity="1">
+                                            <GeometryDrawing Brush="#FF70ACB0" Geometry="F0 M485,404z M0,0z M279.5,403.5C279.167,403.5 278.833,403.5 278.5,403.5 278.167,402.167 277.833,402.167 277.5,403.5 277.167,403.5 276.833,403.5 276.5,403.5 275.833,402.167 275.167,402.167 274.5,403.5 274.167,403.5 273.833,403.5 273.5,403.5 272.833,402.167 272.167,402.167 271.5,403.5 271.167,403.5 270.833,403.5 270.5,403.5 269.833,402.167 269.167,402.167 268.5,403.5 268.167,403.5 267.833,403.5 267.5,403.5 266.833,402.167 266.167,402.167 265.5,403.5 265.167,403.5 264.833,403.5 264.5,403.5 263.833,402.167 263.167,402.167 262.5,403.5 262.167,403.5 261.833,403.5 261.5,403.5 260.833,402.167 260.167,402.167 259.5,403.5 259.167,403.5 258.833,403.5 258.5,403.5 257.833,402.167 257.167,402.167 256.5,403.5 256.167,403.5 255.833,403.5 255.5,403.5 254.833,402.167 254.167,402.167 253.5,403.5 253.167,403.5 252.833,403.5 252.5,403.5 251.833,402.167 251.167,402.167 250.5,403.5 250.167,403.5 249.833,403.5 249.5,403.5 248.833,402.167 248.167,402.167 247.5,403.5 247.167,403.5 246.833,403.5 246.5,403.5 245.833,402.167 245.167,402.167 244.5,403.5 244.167,403.5 243.833,403.5 243.5,403.5 242.833,402.167 242.167,402.167 241.5,403.5 241.167,403.5 240.833,403.5 240.5,403.5 239.833,402.167 239.167,402.167 238.5,403.5 238.167,403.5 237.833,403.5 237.5,403.5 236.833,402.167 236.167,402.167 235.5,403.5 235.167,403.5 234.833,403.5 234.5,403.5 233.833,402.167 233.167,402.167 232.5,403.5 232.167,403.5 231.833,403.5 231.5,403.5 230.833,402.167 230.167,402.167 229.5,403.5 229.167,403.5 228.833,403.5 228.5,403.5 227.833,402.167 227.167,402.167 226.5,403.5 226.167,403.5 225.833,403.5 225.5,403.5 224.833,402.167 224.167,402.167 223.5,403.5 223.167,403.5 222.833,403.5 222.5,403.5 221.833,402.167 221.167,402.167 220.5,403.5 220.167,403.5 219.833,403.5 219.5,403.5 218.833,402.167 218.167,402.167 217.5,403.5 217.167,403.5 216.833,403.5 216.5,403.5 215.833,402.167 215.167,402.167 214.5,403.5 214.167,403.5 213.833,403.5 213.5,403.5 212.833,402.167 212.167,402.167 211.5,403.5 211.167,403.5 210.833,403.5 210.5,403.5 209.833,402.167 209.167,402.167 208.5,403.5 208.167,403.5 207.833,403.5 207.5,403.5 206.602,402.842 205.602,402.176 204.5,401.5 205.081,360.876 205.081,320.043 204.5,279 229.333,254.167 254.167,229.333 279,204.5 279.5,270.832 279.667,337.166 279.5,403.5z" />
+                                        </DrawingGroup>
+                                        <DrawingGroup Opacity="1">
+                                            <GeometryDrawing Brush="#FF5D6F7A" Geometry="F0 M485,404z M0,0z M177.5,402.5C144.663,402.063 112.329,402.063 80.5,402.5 112.465,370.035 144.632,337.701 177,305.5 177.5,337.832 177.667,370.165 177.5,402.5z" />
+                                        </DrawingGroup>
+                                        <DrawingGroup Opacity="1">
+                                            <GeometryDrawing Brush="#FF596370" Geometry="F0 M485,404z M0,0z M177.5,402.5C177.5,402.833 177.5,403.167 177.5,403.5 144.833,403.5 112.167,403.5 79.5,403.5 79.5,402.833 79.8333,402.5 80.5,402.5 112.329,402.063 144.663,402.063 177.5,402.5z" />
+                                        </DrawingGroup>
+                                    </DrawingGroup>
+                                </DrawingBrush.Drawing>
+                            </DrawingBrush>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    <Rectangle Width="20" Height="50" Margin="20,0">
+                        <Rectangle.Fill>
+                            <DrawingBrush>
+                                <DrawingBrush.Drawing>
+                                    <DrawingGroup ClipGeometry="M0,0 V480 H640 V0 H0 Z">
+                                        <DrawingGroup Transform="0.29,0,0,0.1,50,50">
+                                            <GeometryDrawing>
+                                                <GeometryDrawing.Pen>
+                                                    <Pen Brush="Gray" Thickness="20" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter" />
+                                                </GeometryDrawing.Pen>
+                                                <GeometryDrawing.Geometry>
+                                                    <LineGeometry StartPoint="0,200" EndPoint="160,-200" />
+                                                </GeometryDrawing.Geometry>
+                                            </GeometryDrawing>
+                                        </DrawingGroup>
+                                    </DrawingGroup>
+                                </DrawingBrush.Drawing>
+                            </DrawingBrush>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    <Image Source="/Resources/wiredev_colorfull.png" Height="35"/>
+                </StackPanel>
+            </hc:TransitioningContentControl>
+        </StackPanel>
+        <hc:TransitioningContentControl TransitionMode="Left2RightWithFade" VerticalAlignment="Bottom">
+            <StackPanel Orientation="Horizontal">
+                <hc:Shield Subject="Version" Status="0.0.0" Color="#1182c3" Margin="5"/>
+                <hc:Shield x:Name="ServerShield" Subject="Server" Status="Online" Color="#FF1FC311" Margin="5"/>
+            </StackPanel>
+        </hc:TransitioningContentControl>
+    </Grid>
+</Window>

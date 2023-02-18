@@ -12,5 +12,14 @@
         public string Status { get; }
         public string? Message { get; }
         public object? Data { get; }
+
+        public static bool ConvertStatus(string status)
+        {
+            return status switch
+            {
+                "Success" => true,
+                _ => false,
+            };
+        }
     }
 }
