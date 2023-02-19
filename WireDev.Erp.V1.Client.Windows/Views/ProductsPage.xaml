@@ -5,9 +5,13 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:WireDev.Erp.V1.Client.Windows.Pages" xmlns:vm="clr-namespace:WireDev.Erp.V1.Client.Windows.ViewModels"
       xmlns:hc="https://handyorg.github.io/handycontrol" xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns:cv="clr-namespace:WireDev.Erp.V1.Client.Windows.Converter"
       mc:Ignorable="d" 
       d:DesignHeight="500" d:DesignWidth="1000" d:Background="White"
       Title="{Binding Title, Mode=OneWay}">
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </Page.Resources>
     <Page.DataContext>
         <vm:ProductsViewModel/>
     </Page.DataContext>
@@ -25,49 +29,303 @@
                 <Button Command="{Binding GetProductsCommand, Mode=OneWay}" Content="list"/>
                 <Button Command="{Binding GetProductsDataCommand, Mode=OneWay}" Content="data"/>
             </StackPanel>
-            <ListView x:Name="ProductsView" Grid.Column="1" ItemsSource="{Binding Products.Values}" SelectedItem="{Binding SelectedProduct}">
-                <ListView.View>
-                    <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="Employee Information">
-                        <GridViewColumn Header="Status">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <ToggleButton IsChecked="{Binding Active}" Style="{StaticResource ToggleButtonSwitch}"/>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                        <GridViewColumn DisplayMemberBinding="{Binding Path=Uuid}">
-                            <GridViewColumnHeader>Number
-                                <GridViewColumnHeader.ContextMenu>
-                                    <ContextMenu>
-                                        <MenuItem Header="Ascending" />
-                                        <MenuItem Header="Descending" />
-                                    </ContextMenu>
-                                </GridViewColumnHeader.ContextMenu>
-                            </GridViewColumnHeader>
-                        </GridViewColumn>
-                        <GridViewColumn DisplayMemberBinding="{Binding Path=Name}" Header="Name"/>
-                        <GridViewColumn DisplayMemberBinding="{Binding Path=Availible}" Header="Availible"/>
-                        <GridViewColumn DisplayMemberBinding="{Binding Path=EAN[0]}" Header="EAN"/>
-                    </GridView>
-                </ListView.View>
-                <ListView.Resources>
-                    <ContextMenu x:Key="ItemContextMenu">
-                        <MenuItem Header="Edit" Command="{Binding Path=DataContext.MoreInfo, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListView}}">
-                            <MenuItem.Icon>
-                                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xe70f;" VerticalAlignment="Center"/>
-                            </MenuItem.Icon>
-                        </MenuItem>
-                    </ContextMenu>
-                </ListView.Resources>
-                <ListView.ItemContainerStyle>
-                    <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource ListViewItemBaseStyle}">
-                        <Setter Property="ContextMenu" Value="{StaticResource ItemContextMenu}" />
-                    </Style>
-                </ListView.ItemContainerStyle>
-            </ListView>
+            <DataGrid Grid.Column="1" ItemsSource="{Binding Products.Values}" SelectedItem="{Binding SelectedProduct}" hc:DataGridAttach.CanUnselectAllWithBlankArea="True" HeadersVisibility="All" RowHeaderWidth="60" AutoGenerateColumns="False">
+                <DataGrid.RowHeaderTemplate>
+                    <DataTemplate>
+                        <CheckBox IsChecked="{Binding IsSelected,RelativeSource={RelativeSource AncestorType=DataGridRow}}"/>
+                    </DataTemplate>
+                </DataGrid.RowHeaderTemplate>
+                <DataGrid.Columns>
+                    <DataGridTextColumn IsReadOnly="True" Width="80" CanUserResize="False" Binding="{Binding Uuid}" Header="Number"/>
+                    <DataGridTextColumn Binding="{Binding Name}" Header="Name"/>
+                    <DataGridCheckBoxColumn Width="100" CanUserResize="False" Binding="{Binding Active}" Header="Active"/>
+                    <DataGridComboBoxColumn ItemsSource="{Binding SelectedProduct.EAN}" Width="100" CanUserResize="False" Header="Type"/>
+                    <DataGridTextColumn Binding="{Binding Archived}" Header="Remark"/>
+                    <DataGridTemplateColumn CanUserResize="False" IsReadOnly="True" Header="Status">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Viewbox Margin="0,0,10,0" Visibility="{Binding Active, Converter={StaticResource cv:NegativeBooleanToVisibilityConverter}}">
+                                        <Rectangle Width="48" Height="48">
+                                            <Rectangle.Fill>
+                                                <DrawingBrush>
+                                                    <DrawingBrush.Drawing>
+                                                        <DrawingGroup ClipGeometry="M0,0 V48 H48 V0 H0 Z">
+                                                            <GeometryDrawing Geometry="F1 M48,48z M0,0z M44,24C44,35.045 35.045,44 24,44 12.955,44 4,35.045 4,24 4,12.955 12.955,4 24,4 35.045,4 44,12.955 44,24z">
+                                                                <GeometryDrawing.Brush>
+                                                                    <LinearGradientBrush StartPoint="9.858,9.858" EndPoint="38.142,38.142" MappingMode="Absolute" SpreadMethod="Pad" Opacity="1">
+                                                                        <GradientStop Color="#FF21AD64" Offset="0" />
+                                                                        <GradientStop Color="#FF088242" Offset="1" />
+                                                                    </LinearGradientBrush>
+                                                                </GeometryDrawing.Brush>
+                                                            </GeometryDrawing>
+                                                            <GeometryDrawing Geometry="F1 M48,48z M0,0z M32.172,16.172L22,26.344 16.828,21.172C16.047,20.391,14.781,20.391,14,21.172L12.586,22.586C11.805,23.367,11.805,24.633,12.586,25.414L20.586,33.414C21.367,34.195,22.633,34.195,23.414,33.414L36.414,20.414C37.195,19.633,37.195,18.367,36.414,17.586L35,16.172C34.219,15.391,32.953,15.391,32.172,16.172z">
+                                                                <GeometryDrawing.Brush>
+                                                                    <SolidColorBrush Color="#FF000000" Opacity="0.05" />
+                                                                </GeometryDrawing.Brush>
+                                                            </GeometryDrawing>
+                                                            <GeometryDrawing Geometry="F1 M48,48z M0,0z M20.939,33.061L12.939,25.061C12.353,24.475,12.353,23.525,12.939,22.94L14.353,21.526C14.939,20.94,15.889,20.94,16.474,21.526L22,27.051 32.525,16.526C33.111,15.94,34.061,15.94,34.646,16.526L36.06,17.94C36.646,18.526,36.646,19.476,36.06,20.061L23.06,33.061C22.475,33.646,21.525,33.646,20.939,33.061z">
+                                                                <GeometryDrawing.Brush>
+                                                                    <SolidColorBrush Color="#FF000000" Opacity="0.07" />
+                                                                </GeometryDrawing.Brush>
+                                                            </GeometryDrawing>
+                                                            <GeometryDrawing Brush="#FFFFFFFF" Geometry="F1 M48,48z M0,0z M21.293,32.707L13.293,24.707C12.902,24.316,12.902,23.683,13.293,23.293L14.707,21.879C15.098,21.488,15.731,21.488,16.121,21.879L22,27.758 32.879,16.879C33.27,16.488,33.903,16.488,34.293,16.879L35.707,18.293C36.098,18.684,36.098,19.317,35.707,19.707L22.707,32.707C22.317,33.098,21.683,33.098,21.293,32.707z" />
+                                                        </DrawingGroup>
+                                                    </DrawingBrush.Drawing>
+                                                </DrawingBrush>
+                                            </Rectangle.Fill>
+                                        </Rectangle>
+                                    </Viewbox>
+                                    <Viewbox Margin="0,0,10,0">
+                                        <Rectangle Width="48" Height="48">
+                                            <Rectangle.Fill>
+                                                <DrawingBrush>
+                                                    <DrawingBrush.Drawing>
+                                                        <DrawingGroup ClipGeometry="M0,0 V48 H48 V0 H0 Z">
+                                                            <GeometryDrawing Geometry="F1 M48,48z M0,0z M24,4C12.955,4 4,12.955 4,24 4,35.045 12.955,44 24,44 35.045,44 44,35.045 44,24 44,12.955 35.045,4 24,4z M24,38C16.268,38 10,31.732 10,24 10,16.268 16.268,10 24,10 31.732,10 38,16.268 38,24 38,31.732 31.732,38 24,38z">
+                                                                <GeometryDrawing.Brush>
+                                                                    <LinearGradientBrush StartPoint="9.812,9.812" EndPoint="38.361,38.361" MappingMode="Absolute" SpreadMethod="Pad" Opacity="1">
+                                                                        <GradientStop Color="#FFF44F5A" Offset="0" />
+                                                                        <GradientStop Color="#FFEE3D4A" Offset="0.44299999999999995" />
+                                                                        <GradientStop Color="#FFE52030" Offset="1" />
+                                                                    </LinearGradientBrush>
+                                                                </GeometryDrawing.Brush>
+                                                            </GeometryDrawing>
+                                                            <GeometryDrawing Geometry="F1 M48,48z M0,0z M13.371,38.871L13.371,38.871 9.129,34.629 34.629,9.129 38.871,13.371z">
+                                                                <GeometryDrawing.Brush>
+                                                                    <LinearGradientBrush StartPoint="6.821,6.321" EndPoint="41.08,40.58" MappingMode="Absolute" SpreadMethod="Pad" Opacity="1" Transform="1,0,0,1,-0.146,0.354">
+                                                                        <GradientStop Color="#FFF44F5A" Offset="0" />
+                                                                        <GradientStop Color="#FFEE3D4A" Offset="0.44299999999999995" />
+                                                                        <GradientStop Color="#FFE52030" Offset="1" />
+                                                                    </LinearGradientBrush>
+                                                                </GeometryDrawing.Brush>
+                                                            </GeometryDrawing>
+                                                        </DrawingGroup>
+                                                    </DrawingBrush.Drawing>
+                                                </DrawingBrush>
+                                            </Rectangle.Fill>
+                                        </Rectangle>
+                                    </Viewbox>
+                                    <Viewbox Margin="0,0,10,0" Visibility="{Binding Archived, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                        <Rectangle Width="20" Height="20">
+                                            <Rectangle.Fill>
+                                                <DrawingBrush>
+                                                    <DrawingBrush.Drawing>
+                                                        <DrawingGroup ClipGeometry="M0,0 V48 H48 V0 H0 Z">
+                                                            <GeometryDrawing Geometry="F1 M48,48z M0,0z M24.414,10.414L21.878,7.878C21.316,7.316,20.553,7,19.757,7L5,7C3.895,7,3,7.895,3,9L3,39C3,40.105,3.895,41,5,41L43,41C44.105,41,45,40.105,45,39L45,13C45,11.895,44.105,11,43,11L25.828,11C25.298,11,24.789,10.789,24.414,10.414z">
+                                                                <GeometryDrawing.Brush>
+                                                                    <LinearGradientBrush StartPoint="24,6.708" EndPoint="24,14.977" MappingMode="Absolute" SpreadMethod="Pad" Opacity="1">
+                                                                        <GradientStop Color="#FFEBA600" Offset="0" />
+                                                                        <GradientStop Color="#FFC28200" Offset="1" />
+                                                                    </LinearGradientBrush>
+                                                                </GeometryDrawing.Brush>
+                                                            </GeometryDrawing>
+                                                            <GeometryDrawing Geometry="F1 M48,48z M0,0z M21.586,14.414L24.854,11.146C24.947,11.053,25.074,11,25.207,11L43,11C44.105,11,45,11.895,45,13L45,39C45,40.105,44.105,41,43,41L5,41C3.895,41,3,40.105,3,39L3,15.5C3,15.224,3.224,15,3.5,15L20.172,15C20.702,15,21.211,14.789,21.586,14.414z">
+                                                                <GeometryDrawing.Brush>
+                                                                    <LinearGradientBrush StartPoint="24,10.854" EndPoint="24,40.983" MappingMode="Absolute" SpreadMethod="Pad" Opacity="1">
+                                                                        <GradientStop Color="#FFFFD869" Offset="0" />
+                                                                        <GradientStop Color="#FFFEC52B" Offset="1" />
+                                                                    </LinearGradientBrush>
+                                                                </GeometryDrawing.Brush>
+                                                            </GeometryDrawing>
+                                                            <GeometryDrawing Brush="#FFC28200" Geometry="F1 M48,48z M0,0z M36,11.5L36,12.5C36,12.776,35.776,13,35.5,13L34,13C33.448,13 33,12.552 33,12 33,11.448 33.448,11 34,11L35.5,11C35.776,11,36,11.224,36,11.5z M34,14C34,13.448,33.552,13,33,13L31.5,13C31.224,13,31,13.224,31,13.5L31,14.5C31,14.776,31.224,15,31.5,15L33,15C33.552,15,34,14.552,34,14z M33,16C33,16.552,33.448,17,34,17L35.5,17C35.776,17,36,16.776,36,16.5L36,15.5C36,15.224,35.776,15,35.5,15L34,15C33.448,15,33,15.448,33,16z M34,18C34,17.448,33.552,17,33,17L31.5,17C31.224,17,31,17.224,31,17.5L31,18.5C31,18.776,31.224,19,31.5,19L33,19C33.552,19,34,18.552,34,18z M33,20C33,20.552,33.448,21,34,21L35.5,21C35.776,21,36,20.776,36,20.5L36,19.5C36,19.224,35.776,19,35.5,19L34,19C33.448,19,33,19.448,33,20z M33,24C33,24.552,33.448,25,34,25L35.5,25C35.776,25,36,24.776,36,24.5L36,23.5C36,23.224,35.776,23,35.5,23L34,23C33.448,23,33,23.448,33,24z M34,22C34,21.448,33.552,21,33,21L31.5,21C31.224,21,31,21.224,31,21.5L31,22.5C31,22.776,31.224,23,31.5,23L33,23C33.552,23,34,22.552,34,22z" />
+                                                            <GeometryDrawing Geometry="F1 M48,48z M0,0z M36.128,26.848C36.055,26.358,35.635,26,35.139,26L31.86,26C31.365,26 30.945,26.358 30.872,26.848 30.603,28.65 30,32.761 30,33.5 30,35.433 31.567,37 33.5,37 35.433,37 37,35.433 37,33.5 37,32.761 36.397,28.65 36.128,26.848z M33.5,35C32.672,35 32,34.328 32,33.5 32,32.672 32.672,32 33.5,32 34.328,32 35,32.672 35,33.5 35,34.328 34.328,35 33.5,35z">
+                                                                <GeometryDrawing.Brush>
+                                                                    <LinearGradientBrush StartPoint="33.5,25.944" EndPoint="33.5,37.581" MappingMode="Absolute" SpreadMethod="Pad" Opacity="1">
+                                                                        <GradientStop Color="#FF4B4B4B" Offset="0" />
+                                                                        <GradientStop Color="#FF3B3B3B" Offset="1" />
+                                                                    </LinearGradientBrush>
+                                                                </GeometryDrawing.Brush>
+                                                            </GeometryDrawing>
+                                                        </DrawingGroup>
+                                                    </DrawingBrush.Drawing>
+                                                </DrawingBrush>
+                                            </Rectangle.Fill>
+                                        </Rectangle>
+                                    </Viewbox>
+                                    <Viewbox Margin="0,0,10,0">
+                                        <Rectangle Width="20" Height="20">
+                                            <Rectangle.Fill>
+                                                <DrawingBrush>
+                                                    <DrawingBrush.Drawing>
+                                                        <DrawingGroup ClipGeometry="M0,0 V48 H48 V0 H0 Z">
+                                                            <GeometryDrawing Brush="#FFC48C00" Geometry="F1 M48,48z M0,0z M44,37L4,37 4,42C4,43.105,4.895,44,6,44L42,44C43.105,44,44,43.105,44,42L44,37z" />
+                                                            <GeometryDrawing Geometry="F1 M48,48z M0,0z M11,13L11,16 15,16 15,13C15,8.029,19.029,4,24,4L24,4C28.971,4,33,8.029,33,13L33,16 37,16 37,13C37,5.82,31.18,0,24,0L24,0C16.82,0,11,5.82,11,13z">
+                                                                <GeometryDrawing.Brush>
+                                                                    <LinearGradientBrush StartPoint="24,15.647" EndPoint="24,-0.296" MappingMode="Absolute" SpreadMethod="Pad" Opacity="1">
+                                                                        <GradientStop Color="#FF92A3B0" Offset="0" />
+                                                                        <GradientStop Color="#FFA3B5C4" Offset="0.015" />
+                                                                        <GradientStop Color="#FFAEC2D1" Offset="0.032" />
+                                                                        <GradientStop Color="#FFB2C6D6" Offset="0.046" />
+                                                                    </LinearGradientBrush>
+                                                                </GeometryDrawing.Brush>
+                                                            </GeometryDrawing>
+                                                            <GeometryDrawing Brush="#FFFAD500" Geometry="F1 M48,48z M0,0z M44,23L4,23 4,18C4,16.895,4.895,16,6,16L42,16C43.105,16,44,16.895,44,18L44,23z" />
+                                                            <GeometryDrawing Brush="#FFEDBE00">
+                                                                <GeometryDrawing.Geometry>
+                                                                    <RectangleGeometry RadiusX="0" RadiusY="0" Rect="4,23,40,7" />
+                                                                </GeometryDrawing.Geometry>
+                                                            </GeometryDrawing>
+                                                            <GeometryDrawing Brush="#FFE3A600">
+                                                                <GeometryDrawing.Geometry>
+                                                                    <RectangleGeometry RadiusX="0" RadiusY="0" Rect="4,30,40,7" />
+                                                                </GeometryDrawing.Geometry>
+                                                            </GeometryDrawing>
+                                                            <GeometryDrawing Geometry="F1 M48,48z M0,0z M27,29C27,27.343 25.657,26 24,26 22.343,26 21,27.343 21,29 21,30.304 21.837,31.403 23,31.816L23,35C23,35.552 23.448,36 24,36 24.552,36 25,35.552 25,35L25,31.816C26.163,31.403,27,30.304,27,29z">
+                                                                <GeometryDrawing.Brush>
+                                                                    <LinearGradientBrush StartPoint="24,35.373" EndPoint="24,27.155" MappingMode="Absolute" SpreadMethod="Pad" Opacity="1">
+                                                                        <GradientStop Color="#FF4B4B4B" Offset="0" />
+                                                                        <GradientStop Color="#FF3B3B3B" Offset="1" />
+                                                                    </LinearGradientBrush>
+                                                                </GeometryDrawing.Brush>
+                                                            </GeometryDrawing>
+                                                        </DrawingGroup>
+                                                    </DrawingBrush.Drawing>
+                                                </DrawingBrush>
+                                            </Rectangle.Fill>
+                                        </Rectangle>
+                                    </Viewbox>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
         </Grid>
         <Grid Grid.Row="1">
-            <TextBlock Text="{Binding SelectedProduct.Name}"/>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <ToolBarTray Grid.Row="0" VerticalAlignment="Center" Margin="10">
+                <ToolBar Margin="0,0,4,4" Header="Werkzeuge">
+                    <CheckBox Content="Active" IsChecked="True" Margin="10,0,0,0" />
+                    <Separator Margin="10,0,0,0" />
+                    <RadioButton Margin="10,0,0,0" />
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton IsChecked="True" Margin="10,0,0,0" />
+                        <RadioButton Margin="10,0,0,0" />
+                    </StackPanel>
+                    <hc:SplitButton Margin="10,0,0,0" Content="Edit" HorizontalAlignment="Stretch">
+                        <hc:SplitButton.DropDownContent>
+                            <StackPanel>
+                                <MenuItem Header="Prices"/>
+                            </StackPanel>
+                        </hc:SplitButton.DropDownContent>
+                    </hc:SplitButton>
+                    <ToggleButton Content="Archive" Margin="10,0,0,0" Style="{StaticResource ToggleButtonInfo}" />
+                    <Button Content="Delete" Margin="10,0,0,0" Style="{StaticResource ButtonDanger}" />
+                </ToolBar>
+            </ToolBarTray>
+            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Viewbox Margin="0,0,10,0">
+                            <Rectangle Width="20" Height="20">
+                                <Rectangle.Fill>
+                                    <DrawingBrush>
+                                        <DrawingBrush.Drawing>
+                                            <DrawingGroup ClipGeometry="M0,0 V48 H48 V0 H0 Z">
+                                                <GeometryDrawing Geometry="F1 M48,48z M0,0z M24.414,10.414L21.878,7.878C21.316,7.316,20.553,7,19.757,7L5,7C3.895,7,3,7.895,3,9L3,39C3,40.105,3.895,41,5,41L43,41C44.105,41,45,40.105,45,39L45,13C45,11.895,44.105,11,43,11L25.828,11C25.298,11,24.789,10.789,24.414,10.414z">
+                                                    <GeometryDrawing.Brush>
+                                                        <LinearGradientBrush StartPoint="24,6.708" EndPoint="24,14.977" MappingMode="Absolute" SpreadMethod="Pad" Opacity="1">
+                                                            <GradientStop Color="#FFEBA600" Offset="0" />
+                                                            <GradientStop Color="#FFC28200" Offset="1" />
+                                                        </LinearGradientBrush>
+                                                    </GeometryDrawing.Brush>
+                                                </GeometryDrawing>
+                                                <GeometryDrawing Geometry="F1 M48,48z M0,0z M21.586,14.414L24.854,11.146C24.947,11.053,25.074,11,25.207,11L43,11C44.105,11,45,11.895,45,13L45,39C45,40.105,44.105,41,43,41L5,41C3.895,41,3,40.105,3,39L3,15.5C3,15.224,3.224,15,3.5,15L20.172,15C20.702,15,21.211,14.789,21.586,14.414z">
+                                                    <GeometryDrawing.Brush>
+                                                        <LinearGradientBrush StartPoint="24,10.854" EndPoint="24,40.983" MappingMode="Absolute" SpreadMethod="Pad" Opacity="1">
+                                                            <GradientStop Color="#FFFFD869" Offset="0" />
+                                                            <GradientStop Color="#FFFEC52B" Offset="1" />
+                                                        </LinearGradientBrush>
+                                                    </GeometryDrawing.Brush>
+                                                </GeometryDrawing>
+                                                <GeometryDrawing Brush="#FFC28200" Geometry="F1 M48,48z M0,0z M36,11.5L36,12.5C36,12.776,35.776,13,35.5,13L34,13C33.448,13 33,12.552 33,12 33,11.448 33.448,11 34,11L35.5,11C35.776,11,36,11.224,36,11.5z M34,14C34,13.448,33.552,13,33,13L31.5,13C31.224,13,31,13.224,31,13.5L31,14.5C31,14.776,31.224,15,31.5,15L33,15C33.552,15,34,14.552,34,14z M33,16C33,16.552,33.448,17,34,17L35.5,17C35.776,17,36,16.776,36,16.5L36,15.5C36,15.224,35.776,15,35.5,15L34,15C33.448,15,33,15.448,33,16z M34,18C34,17.448,33.552,17,33,17L31.5,17C31.224,17,31,17.224,31,17.5L31,18.5C31,18.776,31.224,19,31.5,19L33,19C33.552,19,34,18.552,34,18z M33,20C33,20.552,33.448,21,34,21L35.5,21C35.776,21,36,20.776,36,20.5L36,19.5C36,19.224,35.776,19,35.5,19L34,19C33.448,19,33,19.448,33,20z M33,24C33,24.552,33.448,25,34,25L35.5,25C35.776,25,36,24.776,36,24.5L36,23.5C36,23.224,35.776,23,35.5,23L34,23C33.448,23,33,23.448,33,24z M34,22C34,21.448,33.552,21,33,21L31.5,21C31.224,21,31,21.224,31,21.5L31,22.5C31,22.776,31.224,23,31.5,23L33,23C33.552,23,34,22.552,34,22z" />
+                                                <GeometryDrawing Geometry="F1 M48,48z M0,0z M36.128,26.848C36.055,26.358,35.635,26,35.139,26L31.86,26C31.365,26 30.945,26.358 30.872,26.848 30.603,28.65 30,32.761 30,33.5 30,35.433 31.567,37 33.5,37 35.433,37 37,35.433 37,33.5 37,32.761 36.397,28.65 36.128,26.848z M33.5,35C32.672,35 32,34.328 32,33.5 32,32.672 32.672,32 33.5,32 34.328,32 35,32.672 35,33.5 35,34.328 34.328,35 33.5,35z">
+                                                    <GeometryDrawing.Brush>
+                                                        <LinearGradientBrush StartPoint="33.5,25.944" EndPoint="33.5,37.581" MappingMode="Absolute" SpreadMethod="Pad" Opacity="1">
+                                                            <GradientStop Color="#FF4B4B4B" Offset="0" />
+                                                            <GradientStop Color="#FF3B3B3B" Offset="1" />
+                                                        </LinearGradientBrush>
+                                                    </GeometryDrawing.Brush>
+                                                </GeometryDrawing>
+                                            </DrawingGroup>
+                                        </DrawingBrush.Drawing>
+                                    </DrawingBrush>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                        </Viewbox>
+                        <Viewbox Margin="0,0,10,0">
+                            <Rectangle Width="20" Height="20">
+                                <Rectangle.Fill>
+                                    <DrawingBrush>
+                                        <DrawingBrush.Drawing>
+                                            <DrawingGroup ClipGeometry="M0,0 V48 H48 V0 H0 Z">
+                                                <GeometryDrawing Brush="#FFC48C00" Geometry="F1 M48,48z M0,0z M44,37L4,37 4,42C4,43.105,4.895,44,6,44L42,44C43.105,44,44,43.105,44,42L44,37z" />
+                                                <GeometryDrawing Geometry="F1 M48,48z M0,0z M11,13L11,16 15,16 15,13C15,8.029,19.029,4,24,4L24,4C28.971,4,33,8.029,33,13L33,16 37,16 37,13C37,5.82,31.18,0,24,0L24,0C16.82,0,11,5.82,11,13z">
+                                                    <GeometryDrawing.Brush>
+                                                        <LinearGradientBrush StartPoint="24,15.647" EndPoint="24,-0.296" MappingMode="Absolute" SpreadMethod="Pad" Opacity="1">
+                                                            <GradientStop Color="#FF92A3B0" Offset="0" />
+                                                            <GradientStop Color="#FFA3B5C4" Offset="0.015" />
+                                                            <GradientStop Color="#FFAEC2D1" Offset="0.032" />
+                                                            <GradientStop Color="#FFB2C6D6" Offset="0.046" />
+                                                        </LinearGradientBrush>
+                                                    </GeometryDrawing.Brush>
+                                                </GeometryDrawing>
+                                                <GeometryDrawing Brush="#FFFAD500" Geometry="F1 M48,48z M0,0z M44,23L4,23 4,18C4,16.895,4.895,16,6,16L42,16C43.105,16,44,16.895,44,18L44,23z" />
+                                                <GeometryDrawing Brush="#FFEDBE00">
+                                                    <GeometryDrawing.Geometry>
+                                                        <RectangleGeometry RadiusX="0" RadiusY="0" Rect="4,23,40,7" />
+                                                    </GeometryDrawing.Geometry>
+                                                </GeometryDrawing>
+                                                <GeometryDrawing Brush="#FFE3A600">
+                                                    <GeometryDrawing.Geometry>
+                                                        <RectangleGeometry RadiusX="0" RadiusY="0" Rect="4,30,40,7" />
+                                                    </GeometryDrawing.Geometry>
+                                                </GeometryDrawing>
+                                                <GeometryDrawing Geometry="F1 M48,48z M0,0z M27,29C27,27.343 25.657,26 24,26 22.343,26 21,27.343 21,29 21,30.304 21.837,31.403 23,31.816L23,35C23,35.552 23.448,36 24,36 24.552,36 25,35.552 25,35L25,31.816C26.163,31.403,27,30.304,27,29z">
+                                                    <GeometryDrawing.Brush>
+                                                        <LinearGradientBrush StartPoint="24,35.373" EndPoint="24,27.155" MappingMode="Absolute" SpreadMethod="Pad" Opacity="1">
+                                                            <GradientStop Color="#FF4B4B4B" Offset="0" />
+                                                            <GradientStop Color="#FF3B3B3B" Offset="1" />
+                                                        </LinearGradientBrush>
+                                                    </GeometryDrawing.Brush>
+                                                </GeometryDrawing>
+                                            </DrawingGroup>
+                                        </DrawingBrush.Drawing>
+                                    </DrawingBrush>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                        </Viewbox>
+                        <TextBlock Text="{Binding SelectedProduct.Uuid}" Style="{StaticResource TextBlockTitle}" HorizontalAlignment="Left"/>
+                    </StackPanel>
+                    <TextBlock Text="{Binding SelectedProduct.Name}" Style="{StaticResource TextBlockLargeBold}" HorizontalAlignment="Left"/>
+                    <TextBlock Text="{Binding SelectedProduct.Description}" Style="{StaticResource TextBlockDefaultBold}" HorizontalAlignment="Left"/>
+                    <TextBlock Text="{Binding SelectedProduct.DateCreated}" Style="{StaticResource TextBlockDefaultSecLight}" HorizontalAlignment="Left"/>
+                    <TextBlock Text="{Binding SelectedProduct.Availible}"/>
+                </StackPanel>
+                <DataGrid Style="{StaticResource DataGrid.Small}" HeadersVisibility="All" RowHeaderWidth="60" AutoGenerateColumns="False" ItemsSource="{Binding SelectedProduct.EAN/}" Margin="10,0,0,0" hc:DataGridAttach.ShowRowNumber="False" CanUserAddRows="True" CanUserDeleteRows="True" CanUserResizeColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding Name}" Header="EANs"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <DataGrid Style="{StaticResource DataGrid.Small}" HeadersVisibility="All" RowHeaderWidth="60" AutoGenerateColumns="False" ItemsSource="{Binding PriceTable}" hc:DataGridAttach.ShowRowNumber="True">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Width="60" CanUserResize="False" IsReadOnly="True" Header="Status">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock VerticalAlignment="Center" FontFamily="Segoe Fluent Icons" Text="&#xe72e;"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Binding="{Binding RetailValue}" Header="Retail"/>
+                        <DataGridTextColumn Binding="{Binding SellValue}" Header="Sell"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <hc:PropertyGrid Width="500" SelectedObject="{Binding SelectedProduct}"/>
+            </StackPanel>
         </Grid>
     </Grid>
 </Page>

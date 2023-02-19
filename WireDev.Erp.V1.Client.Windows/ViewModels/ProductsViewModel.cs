@@ -3,6 +3,7 @@ using HandyControl.Tools.Command;
 using HandyControl.Tools.Extension;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -75,12 +76,39 @@ namespace WireDev.Erp.V1.Client.Windows.ViewModels
             }
         }
 
+        public List<Price> PriceTable
+        {
+            get
+            {
+                List<Price> prices = new();
+                for (int i = 0; i < SelectedProduct.Prices.Count; i++)
+                {
+                    //prices.Add(Prices[SelectedProduct.Prices[i]]);
+                }
+                return prices;
+            }
+        }
+
         public ProductsViewModel()
         {
             Title = "Products";
             Products = new()
             {
-                { 9999, new Product(9999) { Active = true, Name = "Test_Product" } }
+            {
+                    9999,
+                    new Product(9999)
+                    {
+                        Active = true,
+                        Name = "Test_Product",
+                        Archived = true,
+                        Description = "Ich bin ein Produkt.",
+                        EAN = new() { 4387534643630, 349857387683 },
+                        Prices = new() { Guid.NewGuid() },
+                        Properties = new() { { "Attribut", "Wert" } },
+                        Group = 99,
+                        Metadata= new() { { "Attribut", "Wert" } }
+                    }
+            }
             };
             SelectedProduct = Products.Values.ToList()[0];
         }

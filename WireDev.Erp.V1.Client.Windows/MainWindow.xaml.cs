@@ -1,5 +1,4 @@
 ﻿using HandyControl.Controls;
-using SourceChord.FluentWPF;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +19,7 @@ namespace WireDev.Erp.V1.Client.Windows
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow
+    public partial class MainWindow : GlowWindow
     {
         public MainWindow()
         {

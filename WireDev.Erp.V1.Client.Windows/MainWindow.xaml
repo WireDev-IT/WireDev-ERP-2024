@@ -1,5 +1,4 @@
-﻿<fw:AcrylicWindow
-    xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
+﻿<hc:GlowWindow
     xmlns:hc="https://handyorg.github.io/handycontrol"
     x:Class="WireDev.Erp.V1.Client.Windows.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -14,7 +13,30 @@
     Height="450" 
     Width="800"
     Icon="/icon_transparent.ico"
-    BorderBrush="{x:Static fw:AccentColors.ImmersiveSystemAccentBrush}" BorderThickness="1">
+    Style="{StaticResource WindowGlow}"
+    Background="{DynamicResource SecondaryRegionBrush}"
+    ActiveGlowColor="{DynamicResource PrimaryColor}"
+    BorderThickness="1" ShowTitle="False">
+
+    <hc:Window.NonClientAreaContent>
+        <StackPanel Orientation="Horizontal">
+            <Menu>
+                <MenuItem Header="File">
+                    <MenuItem Header="Exit">
+                        <MenuItem.Icon>
+                            <TextBlock FontFamily="Segoe Fluent Icons" Text="&#xe8bb;" VerticalAlignment="Center"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+                <MenuItem Header="Edit">
+
+                </MenuItem>
+            </Menu>
+            <Border Margin="10,0,0,0" VerticalAlignment="Center" CornerRadius="2" Padding="10,4" Background="{DynamicResource SecondaryRegionBrush}">
+                <TextBlock FontWeight="Bold" Text="v0.0.1" VerticalAlignment="Center" Foreground="{DynamicResource PrimaryTextBrush}"/>
+            </Border>
+        </StackPanel>
+    </hc:Window.NonClientAreaContent>
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -55,4 +77,4 @@
             </TabItem>
         </hc:TabControl>
     </Grid>
-</fw:AcrylicWindow>
+</hc:GlowWindow>

@@ -38,7 +38,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentWPF" Version="0.10.2" />
     <PackageReference Include="HandyControls" Version="3.4.4" />
   </ItemGroup>
 
