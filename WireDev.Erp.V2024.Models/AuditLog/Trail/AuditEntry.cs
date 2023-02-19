@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json;
 using WireDev.Erp.V1.Models.AuditLog.Models;
 using WireDev.Erp.V1.Models.Enums;
@@ -21,16 +22,16 @@ namespace WireDev.Erp.V1.Models.AuditLog.Trail
         {
             Entry = entry;
             AuditUser = auditUser;
+            TableName = Entry.Entity.GetType().GetCustomAttributes(typeof(TableAttribute), true).SingleOrDefault() is TableAttribute tableAttr ? tableAttr.Name : Entry.Entity.GetType().Name;
             SetChanges();
         }
 
         private void SetChanges()
         {
-            TableName = null; //Entry.Metadata.Relational().TableName;
             foreach (PropertyEntry property in Entry.Properties)
             {
                 string propertyName = property.Metadata.Name;
-                string dbColumnName = null; //property.Metadata.GetColumnName();
+                string? dbColumnName = property.Metadata.Name; //not name of column
 
                 if (property.Metadata.IsPrimaryKey())
                 {
