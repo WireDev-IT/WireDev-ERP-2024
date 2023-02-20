@@ -1,15 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
-using System.Xml;
-using WireDev.Erp.V1.Models.Statistics;
-using System.Collections.Generic;
-using System.Text.Json;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Runtime.Serialization;
-using System.Text.Json.Nodes;
-using System.Xml.Linq;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace WireDev.Erp.V1.Models.Storage
 {
@@ -41,7 +31,7 @@ namespace WireDev.Erp.V1.Models.Storage
         public bool Archived { get; set; } = false;
         public int Availible { get; private set; } = 0;
 
-        public List<ulong> EAN { get; set; } = new();
+        public ObservableCollection<ulong> EAN { get; set; } = new();
         public List<Guid> Prices { get; set; } = new();
         public Dictionary<string, string> Properties { get; set; } = new();
         public Dictionary<string, string> Metadata { get; set; } = new();

@@ -4,12 +4,12 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:WireDev.Erp.V1.Client.Windows.Pages" xmlns:vm="clr-namespace:WireDev.Erp.V1.Client.Windows.ViewModels"
-      xmlns:hc="https://handyorg.github.io/handycontrol" xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-      xmlns:cv="clr-namespace:WireDev.Erp.V1.Client.Windows.Converter"
+      xmlns:hc="https://handyorg.github.io/handycontrol" xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       mc:Ignorable="d" 
       d:DesignHeight="500" d:DesignWidth="1000" d:Background="White"
       Title="{Binding Title, Mode=OneWay}">
     <Page.Resources>
+        <hc:Boolean2VisibilityReConverter x:Key="Boolean2VisibilityReConverter"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </Page.Resources>
     <Page.DataContext>
@@ -45,7 +45,7 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Viewbox Margin="0,0,10,0" Visibility="{Binding Active, Converter={StaticResource cv:NegativeBooleanToVisibilityConverter}}">
+                                    <Viewbox Margin="0,0,10,0" ToolTip="Availible" Visibility="{Binding Active, Converter={StaticResource BooleanToVisibilityConverter}}">
                                         <Rectangle Width="48" Height="48">
                                             <Rectangle.Fill>
                                                 <DrawingBrush>
@@ -76,7 +76,7 @@
                                             </Rectangle.Fill>
                                         </Rectangle>
                                     </Viewbox>
-                                    <Viewbox Margin="0,0,10,0">
+                                    <Viewbox Margin="0,0,10,0" ToolTip="Not availible" Visibility="{Binding Active, Converter={StaticResource Boolean2VisibilityReConverter}}">
                                         <Rectangle Width="48" Height="48">
                                             <Rectangle.Fill>
                                                 <DrawingBrush>
@@ -106,7 +106,7 @@
                                             </Rectangle.Fill>
                                         </Rectangle>
                                     </Viewbox>
-                                    <Viewbox Margin="0,0,10,0" Visibility="{Binding Archived, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                    <Viewbox Margin="0,0,10,0" ToolTip="Archived" Visibility="{Binding Archived, Converter={StaticResource BooleanToVisibilityConverter}}">
                                         <Rectangle Width="20" Height="20">
                                             <Rectangle.Fill>
                                                 <DrawingBrush>
@@ -143,7 +143,7 @@
                                             </Rectangle.Fill>
                                         </Rectangle>
                                     </Viewbox>
-                                    <Viewbox Margin="0,0,10,0">
+                                    <Viewbox Margin="0,0,10,0" ToolTip="Locked" Visibility="{Binding Used, Converter={StaticResource BooleanToVisibilityConverter}}">
                                         <Rectangle Width="20" Height="20">
                                             <Rectangle.Fill>
                                                 <DrawingBrush>
@@ -306,22 +306,28 @@
                     <TextBlock Text="{Binding SelectedProduct.DateCreated}" Style="{StaticResource TextBlockDefaultSecLight}" HorizontalAlignment="Left"/>
                     <TextBlock Text="{Binding SelectedProduct.Availible}"/>
                 </StackPanel>
-                <DataGrid Style="{StaticResource DataGrid.Small}" HeadersVisibility="All" RowHeaderWidth="60" AutoGenerateColumns="False" ItemsSource="{Binding SelectedProduct.EAN/}" Margin="10,0,0,0" hc:DataGridAttach.ShowRowNumber="False" CanUserAddRows="True" CanUserDeleteRows="True" CanUserResizeColumns="False">
+                <DataGrid Style="{StaticResource DataGrid.Small}" ItemsSource="{Binding SelectedProduct.EAN}" Margin="10,0,0,0" HeadersVisibility="Column" AutoGenerateColumns="False" CanUserAddRows="True" CanUserDeleteRows="True" GridLinesVisibility="Horizontal" InputScope="Number">
+                    <hc:Interaction.Triggers>
+                        <hc:EventTrigger EventName="MouseDoubleClick" >
+                            <hc:InvokeCommandAction Command="{Binding AddEan}" />
+                        </hc:EventTrigger>
+                    </hc:Interaction.Triggers>
                     <DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding Name}" Header="EANs"/>
+                        <DataGridTextColumn Binding="{Binding Path=.}" Header="EANs"/>
                     </DataGrid.Columns>
                 </DataGrid>
-                <DataGrid Style="{StaticResource DataGrid.Small}" HeadersVisibility="All" RowHeaderWidth="60" AutoGenerateColumns="False" ItemsSource="{Binding PriceTable}" hc:DataGridAttach.ShowRowNumber="True">
+                <DataGrid Style="{StaticResource DataGrid.Small}" RowHeaderWidth="60" IsReadOnly="True" AutoGenerateColumns="False" ItemsSource="{Binding SelectedProduct.DisplayPrices}" hc:DataGridAttach.ShowRowNumber="True">
                     <DataGrid.Columns>
-                        <DataGridTemplateColumn Width="60" CanUserResize="False" IsReadOnly="True" Header="Status">
+                        <DataGridTemplateColumn CanUserResize="False" Width="30">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock VerticalAlignment="Center" FontFamily="Segoe Fluent Icons" Text="&#xe72e;"/>
+                                    <TextBlock VerticalAlignment="Center" FontFamily="Segoe Fluent Icons" Text="&#xe72e;" Visibility="{Binding Locked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTextColumn Binding="{Binding RetailValue}" Header="Retail"/>
-                        <DataGridTextColumn Binding="{Binding SellValue}" Header="Sell"/>
+                        <DataGridTextColumn Binding="{Binding FormattedRetailValue}" Header="Retail"/>
+                        <DataGridTextColumn Binding="{Binding FormattedSellValue}" Header="Sell"/>
+                        <DataGridTextColumn Binding="{Binding Description}" Header="Description"/>
                     </DataGrid.Columns>
                 </DataGrid>
                 <hc:PropertyGrid Width="500" SelectedObject="{Binding SelectedProduct}"/>

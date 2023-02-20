@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -84,7 +85,7 @@ namespace WireDev.Erp.V1.Api.Context
             _ = builder.Entity<Product>()
                 .Property(e => e.EAN)
                 .HasConversion(v => JsonSerializer.Serialize(v, null as JsonSerializerOptions),
-                               v => JsonSerializer.Deserialize<List<ulong>>(v, null as JsonSerializerOptions),
+                               v => JsonSerializer.Deserialize<ObservableCollection<ulong>>(v, null as JsonSerializerOptions),
                                new ValueComparer<List<ulong>>(
                                    (c1, c2) => c1.SequenceEqual(c2),
                                    c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
