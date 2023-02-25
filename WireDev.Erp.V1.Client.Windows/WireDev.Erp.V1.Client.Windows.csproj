@@ -34,6 +34,7 @@
     <None Include="Languages\Strings.de.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </None>
   </ItemGroup>
 
@@ -47,7 +48,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WireDev.Erp.V2024.Models\WireDev.Erp.V1.Models.csproj" />
+    <ProjectReference Include="..\WireDev.Erp.V2024.Models\WireDev.Erp.V1.Models.csproj">
+      <ReferenceSourceTarget></ReferenceSourceTarget>
+    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>
