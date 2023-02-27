@@ -27,15 +27,15 @@ namespace WireDev.Erp.V1.Api.Controllers
         [HttpGet("all")]
         public async Task<IActionResult> GetProducts()
         {
-            List<Product>? list;
+            List<uint>? list;
             try
             {
-                list = await _context.Products.ToListAsync();
+                list = await _context.Products.Select(x => x.Uuid).ToListAsync();
             }
             catch (Exception ex)
             {
                 string message = $"List of products cannot be retrieved!";
-                _logger.LogError(message, ex);
+                _logger.LogError(ex, message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
             }
 
@@ -54,7 +54,7 @@ namespace WireDev.Erp.V1.Api.Controllers
             catch (Exception ex)
             {
                 string message = $"Product with the UUID {id} was not found!";
-                _logger.LogWarning(message, ex);
+                _logger.LogWarning(ex, message);
                 return NotFound(new Response(false, message));
             }
         }
@@ -63,7 +63,7 @@ namespace WireDev.Erp.V1.Api.Controllers
         /// 
         /// </summary>
         /// <param name="product"></param>
-        /// <returns>The UUID of the added product.</returns>
+        /// <returns>The added product.</returns>
         //[Authorize("PRODUCTS:RW")]
         [HttpPost("add")]
         public async Task<IActionResult> AddProduct([FromBody][Required(ErrorMessage = "To add a product, you have to provide one.")] Product product)
@@ -76,17 +76,17 @@ namespace WireDev.Erp.V1.Api.Controllers
             catch (DbUpdateException ex)
             {
                 string message = $"Could not save changes to database!";
-                _logger.LogError(message, ex);
+                _logger.LogError(ex, message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
             }
             catch (Exception ex)
             {
                 string message = $"Add product {product.Uuid} failed!";
-                _logger.LogError(message, ex);
+                _logger.LogError(ex, message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
             }
 
-            return StatusCode(StatusCodes.Status201Created, new Response(true, null, product.Uuid));
+            return StatusCode(StatusCodes.Status201Created, new Response(true, null, product));
         }
 
         //[Authorize("PRODUCTS:RW")]
@@ -104,19 +104,19 @@ namespace WireDev.Erp.V1.Api.Controllers
             catch (DbUpdateException ex)
             {
                 string message = $"Could not save changes to database!";
-                _logger.LogError(message, ex);
+                _logger.LogError(ex, message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
             }
             catch (ArgumentNullException ex)
             {
                 string message = $"Product with the UUID {id} was not found!";
-                _logger.LogError(message, ex);
+                _logger.LogError(ex, message);
                 return NotFound(new Response(false, message));
             }
             catch (Exception ex)
             {
                 string message = $"Edit product {id} failed!";
-                _logger.LogError(message, ex);
+                _logger.LogError(ex, message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
             }
 
@@ -137,19 +137,19 @@ namespace WireDev.Erp.V1.Api.Controllers
             catch (ArgumentNullException ex)
             {
                 string message = $"Product with the UUID {id} was not found!";
-                _logger.LogWarning(message, ex);
+                _logger.LogWarning(ex, message);
                 return NotFound(new Response(false, message));
             }
             catch (DbUpdateException ex)
             {
                 string message = $"Could not save changes to database!";
-                _logger.LogError(message, ex);
+                _logger.LogError(ex, message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
             }
             catch (Exception ex)
             {
                 string message = $"Product with the UUID {id} could not be removed!";
-                _logger.LogError(message, ex);
+                _logger.LogError(ex, message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
             }
 

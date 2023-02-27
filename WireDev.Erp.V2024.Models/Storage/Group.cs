@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 
 namespace WireDev.Erp.V1.Models.Storage
 {
@@ -23,5 +24,23 @@ namespace WireDev.Erp.V1.Models.Storage
         public string? Color { get; set; }
         public bool Used { get; private set; } = false;
 		public bool Use() => Used = true;
-	}
+
+        public Task ModifyProperties(Group group)
+        {
+            string[] propertyNames = { "Uuid" };
+            PropertyInfo[] properties = typeof(Group).GetProperties();
+            foreach (PropertyInfo sPI in properties)
+            {
+                if (!propertyNames.Contains(sPI.Name))
+                {
+                    PropertyInfo? tPI = this.GetType().GetProperty(sPI.Name, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                    if (tPI != null && tPI.CanWrite && tPI.PropertyType.IsAssignableFrom(sPI.PropertyType))
+                    {
+                        tPI.SetValue(this, sPI.GetValue(group, null), null);
+                    }
+                }
+            }
+            return Task.CompletedTask;
+        }
+    }
 }

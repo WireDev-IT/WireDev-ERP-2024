@@ -1,0 +1,58 @@
+﻿<fw:AcrylicWindow
+    xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    x:Class="WireDev.Erp.V1.Client.Windows.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:WireDev.Erp.V1.Client.Windows"
+    xmlns:resx="clr-namespace:WireDev.Erp.V1.Client.Windows.Languages"
+    mc:Ignorable="d"
+    WindowStartupLocation="CenterScreen"
+    Title="{x:Static resx:Strings.AppTitel}"
+    Height="450" 
+    Width="800"
+    Icon="/icon_transparent.ico"
+    BorderBrush="{x:Static fw:AccentColors.ImmersiveSystemAccentBrush}" BorderThickness="1">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <hc:SideMenu x:Name="MainMenu" Grid.Column="0" MinWidth="150">
+            <hc:SideMenuItem Header="Overview">
+                <hc:SideMenuItem.Icon>
+                    <Image Source="/Resources/icon_transparent.png" Width="24" Height="24"/>
+                </hc:SideMenuItem.Icon>
+                <hc:SideMenuItem Header="Summary">
+                    <hc:SideMenuItem.Icon>
+                        <TextBlock Text="&#xf2cb;"/>
+                    </hc:SideMenuItem.Icon>
+                </hc:SideMenuItem>
+                <hc:SideMenuItem Header="Dashboards">
+                    <hc:SideMenuItem.Icon>
+                        <TextBlock Text="&#xf246;"/>
+                    </hc:SideMenuItem.Icon>
+                </hc:SideMenuItem>
+            </hc:SideMenuItem>
+
+            <hc:SideMenuItem Header="Test Plans" IsSelected="True">
+                <hc:SideMenuItem.Icon>
+                    <Image Source="/Resources/icon_transparent.png" Width="24" Height="24"/>
+                </hc:SideMenuItem.Icon>
+                <hc:SideMenuItem Header="Test Plans">
+                    <hc:SideMenuItem.Icon>
+                        <TextBlock Text="&#xf3ab;"/>
+                    </hc:SideMenuItem.Icon>
+                </hc:SideMenuItem>
+            </hc:SideMenuItem>
+        </hc:SideMenu>
+        <hc:TabControl x:Name="MainTabControl" Grid.Column="1" IsAnimationEnabled="True" IsDraggable="True" IsScrollable="True" ShowCloseButton="True" ShowScrollButton="True" Background="{x:Null}">
+            <TabItem Header="Products">
+                <Frame Source="/Views/ProductsPage.xaml"></Frame>
+            </TabItem>
+        </hc:TabControl>
+    </Grid>
+</fw:AcrylicWindow>

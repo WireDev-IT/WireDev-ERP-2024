@@ -71,14 +71,6 @@ namespace WireDev.Erp.V1.Api.Controllers
             return Task.FromResult((totalStats, yearStats, monthStats, dayStats));
         }
 
-        private async Task ProcessTimeStats(uint count, Price price, TransactionType type, TotalStats totalStats, YearStats yearStats, MonthStats monthStats, DayStats dayStats)
-        {
-            await totalStats.AddTransaction(count, price, type);
-            await yearStats.AddTransaction(count, price, type);
-            await monthStats.AddTransaction(count, price, type);
-            await dayStats.AddTransaction(count, price, type);
-        }
-
         private Task ProcessProductWithStats(TransactionItem item, TransactionType type)
         {
             Product? product;
@@ -89,6 +81,8 @@ namespace WireDev.Erp.V1.Api.Controllers
                     product.Remove(item.Count);
                 else if (type == TransactionType.Cancel || type == TransactionType.Purchase)
                     product.Add(item.Count);
+
+                product.Use();
                 _context.Products.Update(product);
             }
             else
@@ -119,16 +113,19 @@ namespace WireDev.Erp.V1.Api.Controllers
             {
                 try
                 {
+                    //TESTING
                     Product? p = await _context.Products.FirstOrDefaultAsync();
-                    Price? price = await _context.Prices.FirstOrDefaultAsync();
-                    purchase.TryAddItem(p.Uuid, price, 3);
+                    Price? pr = await _context.Prices.FirstOrDefaultAsync();
+                    purchase.TryAddItem(p.Uuid, pr, 3);
+
+
                     purchase.Post();
                     _ = await _context.Purchases.AddAsync(purchase);
                 }
                 catch (Exception ex)
                 {
                     string message = $"Add purchase {purchase.Uuid} failed!";
-                    _logger.LogError(message, ex);
+                    _logger.LogError(ex, message);
                     return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
                 }
                 _ = await _context.SaveChangesAsync();
@@ -145,23 +142,28 @@ namespace WireDev.Erp.V1.Api.Controllers
                 catch (Exception ex)
                 {
                     string message = $"Preparing time statistics failed!";
-                    _logger.LogError(message, ex);
+                    _logger.LogError(ex, message);
                     return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
                 }
                 _ = await _context.SaveChangesAsync();
                 transaction.CreateSavepoint("BeforeProductModification");
 
                 Product? product = null;
+                Price? price = null;
                 try
                 {
                     foreach (TransactionItem item in purchase.Items)
                     {
                         await ProcessProductWithStats(item, purchase.Type);
 
-                        Price? price = await _context.Prices.FindAsync(item.PriceId);
+                        price = await _context.Prices.FindAsync(item.PriceId);
                         if (price != null)
                         {
-                            await ProcessTimeStats(item.Count, price, purchase.Type, totalStats, yearStats, monthStats, dayStats);
+                            await totalStats.AddTransaction(item.Count, price, purchase.Type);
+                            await yearStats.AddTransaction(item.Count, price, purchase.Type);
+                            await monthStats.AddTransaction(item.Count, price, purchase.Type);
+                            await dayStats.AddTransaction(item.Count, price, purchase.Type);
+                            price.Lock();
                         }
                         else
                         {
@@ -173,18 +175,19 @@ namespace WireDev.Erp.V1.Api.Controllers
                     _context.YearStats.Update(yearStats);
                     _context.MonthStats.Update(monthStats);
                     _context.DayStats.Update(dayStats);
+                    _context.Prices.Update(price);
                 }
                 catch (ArgumentNullException ex)
                 {
                     await transaction.RollbackAsync();
-                    _logger.LogError(ex.Message, ex);
+                    _logger.LogError(ex, ex.Message);
                     return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, ex.Message));
                 }
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
                     string message = $"Modifing product {product.Uuid} failed! Rolling back changes.";
-                    _logger.LogError(message, ex);
+                    _logger.LogError(ex, message);
                     return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
                 }
                 _ = await _context.SaveChangesAsync();
@@ -193,14 +196,14 @@ namespace WireDev.Erp.V1.Api.Controllers
             {
                 await transaction.RollbackAsync();
                 string message = $"Could not save changes to database! Rolling back changes.";
-                _logger.LogError(message, ex);
+                _logger.LogError(ex, message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
                 string message = $"Processing purchase {purchase.Uuid} failed! Rolling back changes.";
-                _logger.LogError(message, ex);
+                _logger.LogError(ex, message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
             }
             await transaction.CommitAsync();
@@ -211,15 +214,15 @@ namespace WireDev.Erp.V1.Api.Controllers
         [HttpGet("all")]
         public async Task<IActionResult> GetPurchases()
         {
-            List<Purchase>? list;
+            List<Guid>? list;
             try
             {
-                list = await _context.Purchases.ToListAsync();
+                list = await _context.Purchases.Select(x => x.Uuid).ToListAsync();
             }
             catch (Exception ex)
             {
                 string message = $"List of purchases cannot be retrieved!";
-                _logger.LogError(message, ex);
+                _logger.LogError(ex, message);
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
             }
 
