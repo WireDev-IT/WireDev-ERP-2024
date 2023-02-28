@@ -11,7 +11,7 @@ using WireDev.Erp.V1.Models.Storage;
 
 namespace WireDev.Erp.V1.Api.Context
 {
-    public class ApplicationDataDbContext : DbContext, IMopDbContext, IApplicationDataDbContext
+    public class ApplicationDataDbContext : DbContext, IMopDbContext
     {
         public ApplicationDataDbContext(DbContextOptions<ApplicationDataDbContext> options) : base(options)
         {
@@ -38,6 +38,12 @@ namespace WireDev.Erp.V1.Api.Context
         public virtual int SaveChanges(string userName)
         {
             new AuditHelper(this).AddAuditLogs(userName);
+            return SaveChanges();
+        }
+
+        public override int SaveChanges()
+        {
+            new AuditHelper(this).AddAuditLogs(null);
             return SaveChanges();
         }
 

@@ -30,7 +30,6 @@ namespace WireDev.Erp.V1.Api.Controllers
         /// <response code="204">There are no statistics</response>
         /// <response code="500">Oops! List of total statistics cannot be retrieved</response>
         [HttpGet("total")]
-        [ProducesResponseType(200)][ProducesResponseType(204)][ProducesResponseType(500)]
         public async Task<IActionResult> GetTotalStats()
         {
             List<TotalStats>? stats;

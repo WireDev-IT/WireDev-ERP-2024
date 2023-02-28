@@ -14,7 +14,7 @@ namespace WireDev.Erp.V1.Models.AuditLog.Trail
             Db = db;
         }
 
-        public void AddAuditLogs(string userName)
+        public void AddAuditLogs(string? userName)
         {
             Db.ChangeTracker.DetectChanges();
             List<AuditEntry> auditEntries = new();

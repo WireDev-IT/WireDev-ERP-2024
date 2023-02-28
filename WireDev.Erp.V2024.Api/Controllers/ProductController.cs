@@ -133,7 +133,7 @@ namespace WireDev.Erp.V1.Api.Controllers
             {
                 p = await _context.Products.FirstAsync(x => x.Uuid == id);
                 _ = _context.Products.Remove(p);
-                _ = _context.SaveChanges(User.Identity.Name);
+                _ = _context.SaveChanges(User?.Identity.Name);
             }
             catch (ArgumentNullException ex)
             {
