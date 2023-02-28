@@ -40,7 +40,7 @@ namespace WireDev.Erp.V1.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
             }
 
-            return Ok(new Response(true, null, list));
+            return StatusCode(StatusCodes.Status200OK, new Response(true, null, list));
         }
 
         [HttpGet("{id}")]
@@ -72,7 +72,7 @@ namespace WireDev.Erp.V1.Api.Controllers
             try
             {
                 _ = await _context.Products.AddAsync(product);
-                _ = _context.SaveChanges(User.Identity.Name);
+                _ = _context.SaveChanges(User?.Identity.Name);
             }
             catch (DbUpdateException ex)
             {

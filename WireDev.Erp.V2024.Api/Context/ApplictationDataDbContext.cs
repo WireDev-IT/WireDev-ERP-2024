@@ -11,7 +11,7 @@ using WireDev.Erp.V1.Models.Storage;
 
 namespace WireDev.Erp.V1.Api.Context
 {
-    public class ApplicationDataDbContext : DbContext, IMopDbContext
+    public class ApplicationDataDbContext : DbContext, IMopDbContext, IApplicationDataDbContext
     {
         public ApplicationDataDbContext(DbContextOptions<ApplicationDataDbContext> options) : base(options)
         {

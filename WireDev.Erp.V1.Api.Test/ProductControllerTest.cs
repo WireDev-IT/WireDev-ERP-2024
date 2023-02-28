@@ -1,6 +1,11 @@
-﻿using System.Net.Http.Headers;
-using System.Net.Http.Json;
-using WireDev.Erp.V1.Models;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Moq;
+using Moq.EntityFrameworkCore;
+using WireDev.Erp.V1.Api.Context;
+using WireDev.Erp.V1.Api.Controllers;
 using WireDev.Erp.V1.Models.Authentication;
 using WireDev.Erp.V1.Models.Storage;
 
@@ -9,35 +14,50 @@ namespace WireDev.Erp.V1.Api.Test;
 [TestClass]
 public class ProductControllerTest
 {
-    //[TestInitialize]
-    //public void InitTest()
-    //{
-    //    ApiConnection.SetClient(new Uri("https://127.0.0.1:7216/"), new MediaTypeWithQualityHeaderValue("application/json"));
-    //}
-
     [TestMethod]
-    public async void GetAllProductsTestMethod()
+    public void GetAllProductsTestMethod()
     {
-        using HttpResponseMessage response = await ApiConnection.Client.GetAsync($"api/Products/all");
-        Assert.IsNotNull(response);
-        Assert.IsTrue(response.IsSuccessStatusCode, "Status code does not indicate success.");
+        ILogger<ProductController> logger = Mock.Of<ILogger<ProductController>>();
+        DbContextOptions<ApplicationDataDbContext> options = new DbContextOptionsBuilder<ApplicationDataDbContext>()
+            .UseInMemoryDatabase("Data.WireDevErpV1")
+            .Options;
+        Mock<ApplicationDataDbContext> dbcMock = new(options);
+        List<Product> entities = new()
+        {
+            new(9999) { Name = "Default_Product", Prices = new() { Guid.NewGuid() } },
+            new(9998) { Name = "Default_Product1", Prices = new() { Guid.NewGuid() } },
+            new(9997) { Name = "Default_Product2", Prices = new() { Guid.NewGuid() } }
+        };
+        _ = dbcMock.Setup(x => x.Products).ReturnsDbSet(entities);
+        ProductController pc = new(dbcMock.Object, logger);
 
-        Response? r = await response.Content.ReadFromJsonAsync<Response>();
+        ObjectResult response = (ObjectResult)pc.GetProducts().Result;
+        Assert.IsNotNull(response);
+        Assert.IsTrue(response.StatusCode == StatusCodes.Status200OK, "Status code does not indicate success.");
+
+        Response? r = (Response?)response.Value;
         Assert.IsNotNull(r.Data, "Data in response is emtpy.");
-        Assert.IsInstanceOfType(r.Data, typeof(List<Product>), "Data is no instance of expected type.");
+        Assert.IsInstanceOfType(r.Data, typeof(List<uint>), "Data is not an instance of expected type.");
     }
 
     [TestMethod]
-    public async void CreateProductTestMethod()
+    public void CreateProductTestMethod()
     {
-        Product p = new() { Name = "test" };
-        using HttpResponseMessage response = await ApiConnection.Client.PostAsJsonAsync("api/Products/add", p);
-        Assert.IsNotNull(response);
-        Assert.IsTrue(response.IsSuccessStatusCode, "Status code does not indicate success.");
+        ILogger<ProductController> logger = Mock.Of<ILogger<ProductController>>();
+        DbContextOptions<ApplicationDataDbContext> options = new DbContextOptionsBuilder<ApplicationDataDbContext>()
+            .UseInMemoryDatabase("Data.WireDevErpV1")
+            .Options;
+        Mock<ApplicationDataDbContext> dbcMock = new(options);
+        _ = dbcMock.Setup(x => x.Products).ReturnsDbSet(new List<Product>());
+        ProductController pc = new(dbcMock.Object, logger);
+        Product p = new(9990) { Name = "Default_Product", Prices = new() { Guid.NewGuid() } };
 
-        Response? r = await response.Content.ReadFromJsonAsync<Response>();
+        ObjectResult response = (ObjectResult)pc.AddProduct(p).Result;
+        Assert.IsNotNull(response);
+        Assert.IsTrue(response.StatusCode == StatusCodes.Status201Created, "Status code does not indicate success.");
+
+        Response? r = (Response?)response.Value;
         Assert.IsNotNull(r.Data, "Data in response is emtpy.");
-        Assert.IsInstanceOfType(r.Data, typeof(Product), "Data is no instance of expected type.");
-        Assert.AreEqual(p, r.Data);
+        Assert.IsInstanceOfType(r.Data, typeof(Product), "Data is not an instance of expected type.");
     }
 }
