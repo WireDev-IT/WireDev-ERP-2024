@@ -118,18 +118,19 @@ namespace WireDev.Erp.V1.Api.Controllers
             MonthStats? stats;
             try
             {
-                stats = await _context.MonthStats.FindAsync(new DateTime(y, m, 1).Ticks);
+                stats = await _context.MonthStats.FirstAsync(x => x.Date == new DateTime(y, m, 1).Ticks);
+            }
+            catch (ArgumentNullException ex)
+            {
+                string message = $"There are no statistics.";
+                _logger.LogError(ex, message);
+                return StatusCode(StatusCodes.Status404NotFound, message);
             }
             catch (Exception ex)
             {
                 string message = $"Statistics for month {y}/{m} cannot be retrieved!";
                 _logger.LogError(ex, message);
                 return StatusCode(StatusCodes.Status500InternalServerError, message);
-            }
-
-            if (stats == null)
-            {
-                return StatusCode(StatusCodes.Status404NotFound, "There are no statistics.");
             }
 
             return Ok(stats);
@@ -173,18 +174,19 @@ namespace WireDev.Erp.V1.Api.Controllers
             DayStats? stats;
             try
             {
-                stats = await _context.DayStats.FindAsync(new DateTime(y, m, d).Ticks);
+                stats = await _context.DayStats.FirstAsync(x => x.Date == new DateTime(y, m, d).Ticks);
+            }
+            catch (ArgumentNullException ex)
+            {
+                string message = $"There are no statistics.";
+                _logger.LogError(ex, message);
+                return StatusCode(StatusCodes.Status404NotFound, message);
             }
             catch (Exception ex)
             {
                 string message = $"Statistics for day {y}/{m}/{d} cannot be retrieved!";
                 _logger.LogError(ex, message);
                 return StatusCode(StatusCodes.Status500InternalServerError, message);
-            }
-
-            if (stats == null)
-            {
-                return StatusCode(StatusCodes.Status404NotFound, "There are no statistics.");
             }
 
             return Ok(stats);
@@ -228,18 +230,19 @@ namespace WireDev.Erp.V1.Api.Controllers
             ProductStats? stats;
             try
             {
-                stats = await _context.ProductStats.FindAsync(id);
+                stats = await _context.ProductStats.FirstAsync(x => x.ProductId == id);
+            }
+            catch (ArgumentNullException ex)
+            {
+                string message = $"There are no statistics.";
+                _logger.LogError(ex, message);
+                return StatusCode(StatusCodes.Status404NotFound, message);
             }
             catch (Exception ex)
             {
                 string message = $"Statistics for product {id} cannot be retrieved!";
                 _logger.LogError(ex, message);
                 return StatusCode(StatusCodes.Status500InternalServerError, message);
-            }
-
-            if (stats == null)
-            {
-                return StatusCode(StatusCodes.Status404NotFound, "There are no statistics.");
             }
 
             return Ok(stats);
