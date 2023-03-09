@@ -10,7 +10,7 @@ namespace WireDev.Erp.V1.Api.Controllers
         [HttpGet("ping")]
         public IActionResult Ping()
         {
-            return Ok(new Response(true, "Pong"));
+            return Ok("Pong");
         }
     }
 }

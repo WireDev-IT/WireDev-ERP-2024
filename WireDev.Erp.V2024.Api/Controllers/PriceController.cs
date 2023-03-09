@@ -27,33 +27,34 @@ namespace WireDev.Erp.V1.Api.Controllers
             _context = context;
         }
 
-        /// <summary>Gets all existing price</summary>
+        /// <summary>Gets the ids of all existing price</summary>
         /// <response code="200">List was generated</response>
         /// <response code="404">There are no prices</response>
         /// <response code="500">Oops! Getting the prices from database failed</response>
+        /// <returns>A List of Guid</returns>
         //[Authorize(Roles = "Administrator")]
         [HttpGet("all")]
         public async Task<IActionResult> GetPrices()
         {
-            List<Price>? list;
+            List<Guid>? list;
             try
             {
-                list = await _context.Prices.ToListAsync();
+                list = await _context.Prices.Select(x => x.Uuid).ToListAsync();
             }
             catch (ArgumentNullException ex)
             {
                 string message = $"There are no prices!";
                 _logger.LogWarning(ex, message);
-                return NotFound(new Response(false, message));
+                return NotFound(message);
             }
             catch (Exception ex)
             {
                 string message = $"List of prices cannot be retrieved!";
                 _logger.LogError(ex, message);
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+                return StatusCode(StatusCodes.Status500InternalServerError, message);
             }
 
-            return Ok(new Response(true, null, list));
+            return Ok(list);
         }
 
         /// <summary>Gets an existing price</summary>
@@ -61,6 +62,7 @@ namespace WireDev.Erp.V1.Api.Controllers
         /// <response code="404">Price was not found</response>
         /// <response code="500">Oops! Getting the price from database failed</response>
         /// <param name="id">The id of the price object you want to get</param>
+        /// <returns>A Price object</returns>
         //[Authorize("PRICES:RO")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPrice(Guid id)
@@ -68,20 +70,20 @@ namespace WireDev.Erp.V1.Api.Controllers
             Price? price;
             try
             {
-                price = await _context.Prices.FindAsync(id);
-                if (price is null)
-                {
-                    string message = $"Price with the UUID {id} was not found!";
-                    _logger.LogWarning(message);
-                    return NotFound(new Response(false, message));
-                }
-                return Ok(new Response(true, null, price));
+                price = await _context.Prices.FirstAsync(x => x.Uuid == id);
+                return Ok(price);
+            }
+            catch (ArgumentNullException ex)
+            {
+                string message = $"Price with the UUID {id} was not found!";
+                _logger.LogWarning(ex, message);
+                return NotFound(message);
             }
             catch (Exception ex)
             {
                 string message = $"Price with the UUID {id} was not found!";
                 _logger.LogWarning(message, ex);
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+                return StatusCode(StatusCodes.Status500InternalServerError, message);
             }
         }
 
@@ -100,26 +102,26 @@ namespace WireDev.Erp.V1.Api.Controllers
                 {
                     string message = $"Price {price.Uuid} already exists!";
                     _logger.LogWarning(message);
-                    return Conflict(new Response(false, message));
+                    return Conflict(message);
                 }
 
                 _ = await _context.Prices.AddAsync(price);
-                _ = _context.SaveChanges(User.Identity.Name);
+                _ = _context.SaveChanges(User?.Identity.Name);
             }
             catch (DbUpdateException ex)
             {
                 string message = $"Could not save changes to database!";
                 _logger.LogError(ex, message);
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+                return StatusCode(StatusCodes.Status500InternalServerError, message);
             }
             catch (Exception ex)
             {
                 string message = $"Add price {price.Uuid} failed!";
                 _logger.LogError(ex, message);
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+                return StatusCode(StatusCodes.Status500InternalServerError, message);
             }
 
-            return Ok(new Response(true, null, price.Uuid));
+            return StatusCode(StatusCodes.Status201Created, price);
         }
 
         /// <summary>Modifies an existing price</summary>
@@ -129,6 +131,7 @@ namespace WireDev.Erp.V1.Api.Controllers
         /// <response code="500">Oops! Modifing the price in database failed</response>
         /// <param name="id">The id of the price</param>
         /// <param name="price">The price object with modifications</param>
+        /// <returns>The modified Price object</returns>
         //[Authorize("PRICES:RW")]
         [HttpPut("{id}")]
         public async Task<IActionResult> ModifyPrice(Guid id, [FromBody][Required(ErrorMessage = "To modify a price, you have to provide changes.")] Price price)
@@ -137,42 +140,38 @@ namespace WireDev.Erp.V1.Api.Controllers
             try
             {
                 temp_price = await _context.Prices.FirstAsync(x => x.Uuid == id);
-                if (temp_price == null)
-                {
-                    throw new ArgumentNullException($"Price {id} was not found!");
-                }
-                else if (temp_price.Locked)
+                if (temp_price.Locked)
                 {
                     string message = $"Price {id} is locked and can not be modified!";
                     _logger.LogWarning(message);
-                    return StatusCode(StatusCodes.Status423Locked, new Response(false, message));
+                    return StatusCode(StatusCodes.Status423Locked, message);
                 }
                 else
                 {
                     await temp_price.ModifyProperties(price);
                     _ = _context.Prices.Update(temp_price);
-                    _ = _context.SaveChanges(User.Identity.Name);
+                    _ = _context.SaveChanges(User?.Identity.Name);
                 }
             }
             catch (DbUpdateException ex)
             {
                 string message = $"Could not save changes to database!";
                 _logger.LogError(ex, message);
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+                return StatusCode(StatusCodes.Status500InternalServerError, message);
             }
             catch (ArgumentNullException ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return NotFound(new Response(false, ex.Message));
+                return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
                 string message = $"Edit price {id} failed!";
                 _logger.LogError(ex, message);
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+                return StatusCode(StatusCodes.Status500InternalServerError, message);
             }
 
-            return Ok(new Response(true, null, temp_price));
+            return Ok(temp_price);
         }
 
         /// <summary>Deletes a price by its id</summary>
@@ -194,32 +193,32 @@ namespace WireDev.Erp.V1.Api.Controllers
                 {
                     string message = $"Price {c.Uuid} is locked and can not be deleted! You can archive it.";
                     _logger.LogWarning(message);
-                    return StatusCode(StatusCodes.Status423Locked, new Response(false, message));
+                    return StatusCode(StatusCodes.Status423Locked, message);
                 }
 
                 _ = _context.Prices.Remove(c);
-                _ = _context.SaveChanges(User.Identity.Name);
+                _ = _context.SaveChanges(User?.Identity.Name);
             }
             catch (ArgumentNullException ex)
             {
                 string message = $"Price with the UUID {id} was not found!";
-                _logger.LogWarning(message, ex);
-                return NotFound(new Response(false, message));
+                _logger.LogWarning(ex, message);
+                return NotFound(message);
             }
             catch (DbUpdateException ex)
             {
                 string message = $"Could not save changes to database!";
                 _logger.LogError(ex, message);
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+                return StatusCode(StatusCodes.Status500InternalServerError, message);
             }
             catch (Exception ex)
             {
                 string message = $"Price with the UUID {id} could not be removed!";
                 _logger.LogError(ex, message);
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+                return StatusCode(StatusCodes.Status500InternalServerError, message);
             }
 
-            return Ok(new Response(true, "Price was removed."));
+            return Ok(null);
         }
     }
 }

@@ -15,9 +15,9 @@ namespace WireDev.Erp.V1.Api.Controllers
     public class StatsController : Controller
     {
         private readonly ApplicationDataDbContext _context;
-        private readonly ILogger<PurchaseController> _logger;
+        private readonly ILogger<StatsController> _logger;
 
-        public StatsController(ApplicationDataDbContext context, ILogger<PurchaseController> logger)
+        public StatsController(ApplicationDataDbContext context, ILogger<StatsController> logger)
         {
             _context = context;
             _logger = logger;
@@ -39,21 +39,21 @@ namespace WireDev.Erp.V1.Api.Controllers
             }
             catch (ArgumentNullException)
             {
-                return StatusCode(StatusCodes.Status204NoContent, new Response(true, "There are no statistics."));
+                return StatusCode(StatusCodes.Status204NoContent, "There are no statistics.");
             }
             catch (Exception ex)
             {
                 string message = $"List of total statistics cannot be retrieved!";
                 _logger.LogError(ex, message);
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+                return StatusCode(StatusCodes.Status500InternalServerError, message);
             }
 
             if (stats.Count == 0)
             {
-                return StatusCode(StatusCodes.Status204NoContent, new Response(false, "There are no statistics."));
+                return StatusCode(StatusCodes.Status204NoContent, "There are no statistics.");
             }
 
-            return Ok(new Response(true, null, stats));
+            return Ok(stats);
         }
 
         [HttpGet("year/{i}")]
@@ -62,21 +62,22 @@ namespace WireDev.Erp.V1.Api.Controllers
             YearStats? stats;
             try
             {
-                stats = await _context.YearStats.FindAsync(new DateTime(i, 1, 1).Ticks);
+                stats = _context.YearStats.First(x => x.Date == new DateTime(i, 1, 1).Ticks);
+            }
+            catch (ArgumentNullException ex)
+            {
+                string message = $"Statistics for year {i} not found!";
+                _logger.LogError(ex, message);
+                return NotFound(message);
             }
             catch (Exception ex)
             {
                 string message = $"Statistics for year {i} cannot be retrieved!";
                 _logger.LogError(ex, message);
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+                return StatusCode(StatusCodes.Status500InternalServerError, message);
             }
 
-            if (stats == null)
-            {
-                return StatusCode(StatusCodes.Status404NotFound, new Response(false, "There are no statistics."));
-            }
-
-            return Ok(new Response(true, null, stats));
+            return Ok(stats);
         }
 
         [HttpGet("year/all")]
@@ -89,7 +90,7 @@ namespace WireDev.Erp.V1.Api.Controllers
                 list = await _context.YearStats.Select(x => x.Date).ToListAsync();
                 if (list.Count == 0)
                 {
-                    return StatusCode(StatusCodes.Status204NoContent, new Response(false, "There are no statistics."));
+                    return StatusCode(StatusCodes.Status204NoContent, "There are no statistics.");
                 }
 
                 foreach (long l in list)
@@ -99,16 +100,16 @@ namespace WireDev.Erp.V1.Api.Controllers
             }
             catch (ArgumentNullException)
             {
-                return StatusCode(StatusCodes.Status204NoContent, new Response(true, "There are no statistics."));
+                return StatusCode(StatusCodes.Status204NoContent, "There are no statistics.");
             }
             catch (Exception ex)
             {
                 string message = $"List of year stats cannot be retrieved!";
                 _logger.LogError(ex, message);
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+                return StatusCode(StatusCodes.Status500InternalServerError, message);
             }
 
-            return Ok(new Response(true, null, years));
+            return Ok(years);
         }
 
         [HttpGet("month/{y}/{m}")]
@@ -123,15 +124,15 @@ namespace WireDev.Erp.V1.Api.Controllers
             {
                 string message = $"Statistics for month {y}/{m} cannot be retrieved!";
                 _logger.LogError(ex, message);
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+                return StatusCode(StatusCodes.Status500InternalServerError, message);
             }
 
             if (stats == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound, new Response(false, "There are no statistics."));
+                return StatusCode(StatusCodes.Status404NotFound, "There are no statistics.");
             }
 
-            return Ok(new Response(true, null, stats));
+            return Ok(stats);
         }
 
         [HttpGet("month/all")]
@@ -144,7 +145,7 @@ namespace WireDev.Erp.V1.Api.Controllers
                 list = await _context.MonthStats.Select(x => x.Date).Where(y => new DateTime(y).Year >= minYear && new DateTime(y).Year <= maxYear).ToListAsync();
                 if (list.Count == 0)
                 {
-                    return StatusCode(StatusCodes.Status204NoContent, new Response(false, "There are no statistics."));
+                    return StatusCode(StatusCodes.Status204NoContent, "There are no statistics.");
                 }
 
                 foreach (long l in list)
@@ -154,16 +155,16 @@ namespace WireDev.Erp.V1.Api.Controllers
             }
             catch (ArgumentNullException)
             {
-                return StatusCode(StatusCodes.Status204NoContent, new Response(true, "There are no statistics."));
+                return StatusCode(StatusCodes.Status204NoContent, "There are no statistics.");
             }
             catch (Exception ex)
             {
                 string message = $"List of month stats cannot be retrieved!";
                 _logger.LogError(ex, message);
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+                return StatusCode(StatusCodes.Status500InternalServerError, message);
             }
 
-            return Ok(new Response(true, null, months));
+            return Ok(months);
         }
 
         [HttpGet("day/{y}/{m}/{d}")]
@@ -178,15 +179,15 @@ namespace WireDev.Erp.V1.Api.Controllers
             {
                 string message = $"Statistics for day {y}/{m}/{d} cannot be retrieved!";
                 _logger.LogError(ex, message);
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+                return StatusCode(StatusCodes.Status500InternalServerError, message);
             }
 
             if (stats == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound, new Response(false, "There are no statistics."));
+                return StatusCode(StatusCodes.Status404NotFound, "There are no statistics.");
             }
 
-            return Ok(new Response(true, null, stats));
+            return Ok(stats);
         }
 
         [HttpGet("day/all")]
@@ -199,7 +200,7 @@ namespace WireDev.Erp.V1.Api.Controllers
                 list = await _context.DayStats.Select(x => x.Date).ToListAsync();
                 if (list.Count == 0)
                 {
-                    return StatusCode(StatusCodes.Status204NoContent, new Response(false, "There are no statistics."));
+                    return StatusCode(StatusCodes.Status204NoContent, "There are no statistics.");
                 }
 
                 foreach (long l in list)
@@ -209,16 +210,16 @@ namespace WireDev.Erp.V1.Api.Controllers
             }
             catch (ArgumentNullException)
             {
-                return StatusCode(StatusCodes.Status204NoContent, new Response(true, "There are no statistics."));
+                return StatusCode(StatusCodes.Status204NoContent, "There are no statistics.");
             }
             catch (Exception ex)
             {
                 string message = $"List of day stats cannot be retrieved!";
                 _logger.LogError(ex, message);
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+                return StatusCode(StatusCodes.Status500InternalServerError, message);
             }
 
-            return Ok(new Response(true, null, days));
+            return Ok(days);
         }
 
         [HttpGet("product/{id}")]
@@ -233,15 +234,15 @@ namespace WireDev.Erp.V1.Api.Controllers
             {
                 string message = $"Statistics for product {id} cannot be retrieved!";
                 _logger.LogError(ex, message);
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+                return StatusCode(StatusCodes.Status500InternalServerError, message);
             }
 
             if (stats == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound, new Response(false, "There are no statistics."));
+                return StatusCode(StatusCodes.Status404NotFound, "There are no statistics.");
             }
 
-            return Ok(new Response(true, null, stats));
+            return Ok(stats);
         }
     }
 }

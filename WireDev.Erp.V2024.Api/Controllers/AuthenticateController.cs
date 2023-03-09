@@ -58,7 +58,7 @@ namespace WireDev.Erp.V1.Api.Controllers
                     signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                     );
 
-                return Ok(new Response(true, token.ValidTo.ToString(), new JwtSecurityTokenHandler().WriteToken(token)));
+                return Ok(new JwtSecurityTokenHandler().WriteToken(token));
             }
             return Unauthorized();
         }
@@ -69,7 +69,7 @@ namespace WireDev.Erp.V1.Api.Controllers
             IdentityUser userExists = await userManager.FindByNameAsync(model.Username);
             if (userExists != null)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, "User already exists!"));
+                return StatusCode(StatusCodes.Status500InternalServerError, "User already exists!");
             }
 
             IdentityUser user = new()
@@ -81,8 +81,8 @@ namespace WireDev.Erp.V1.Api.Controllers
 
             IdentityResult result = await userManager.CreateAsync(user, model.Password);
             return !result.Succeeded
-                ? StatusCode(StatusCodes.Status500InternalServerError, new Response(false, "User creation failed! Please check user details and try again."))
-                : (IActionResult)Ok(new Response(true, "User created successfully!"));
+                ? StatusCode(StatusCodes.Status500InternalServerError, "User creation failed! Please check user details and try again.")
+                : Ok("User created successfully!");
         }
 
         [HttpPost("register-admin")]
@@ -91,7 +91,7 @@ namespace WireDev.Erp.V1.Api.Controllers
             IdentityUser userExists = await userManager.FindByNameAsync(model.Username);
             if (userExists != null)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, "User already exists!"));
+                return StatusCode(StatusCodes.Status500InternalServerError, "User already exists!");
             }
 
             IdentityUser user = new()
@@ -103,7 +103,7 @@ namespace WireDev.Erp.V1.Api.Controllers
             IdentityResult result = await userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, "User creation failed! Please check user details and try again."));
+                return StatusCode(StatusCodes.Status500InternalServerError, "User creation failed! Please check user details and try again.");
             }
 
             if (!await roleManager.RoleExistsAsync(UserRoles.Admin))
@@ -121,7 +121,7 @@ namespace WireDev.Erp.V1.Api.Controllers
                 _ = await userManager.AddToRoleAsync(user, UserRoles.Admin);
             }
 
-            return Ok(new Response(true, "User created successfully!"));
+            return Ok("User created successfully!");
         }
     }
 }

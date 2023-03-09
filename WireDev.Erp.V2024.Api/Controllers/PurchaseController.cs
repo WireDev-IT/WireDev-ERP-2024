@@ -15,6 +15,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using System.Text.Json;
 using WireDev.Erp.V1.Models.Statistics;
 using System.Data;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace WireDev.Erp.V1.Api.Controllers
 {
@@ -40,32 +41,32 @@ namespace WireDev.Erp.V1.Api.Controllers
             DayStats? dayStats;
             DateTime time = DateTime.UtcNow;
 
-            totalStats = _context.TotalStats.FirstOrDefault();
-            if (totalStats == null)
+            totalStats = _context.TotalStats?.FirstOrDefault();
+            if (totalStats == null || !_context.TotalStats.Any())
             {
                 totalStats = new(time);
-                _context.TotalStats.AddAsync(totalStats);
+                _context.TotalStats.Add(totalStats);
             }
 
             yearStats = _context.YearStats.Find(new DateTime((int)time.Year, 1, 1).Ticks);
             if (yearStats == null)
             {
                 yearStats = new(time);
-                _context.YearStats.AddAsync(yearStats);
+                _context.YearStats.Add(yearStats);
             }
 
             monthStats = _context.MonthStats.Find(new DateTime((int)time.Year, (int)time.Month, 1).Ticks);
             if (monthStats == null)
             {
                 monthStats = new(time);
-                _context.MonthStats.AddAsync(monthStats);
+                _context.MonthStats.Add(monthStats);
             }
 
             dayStats = _context.DayStats.Find(new DateTime((int)time.Year, (int)time.Month, (int)time.Day).Ticks);
             if (dayStats == null)
             {
                 dayStats = new(time);
-                _context.DayStats.AddAsync(dayStats);
+                _context.DayStats.Add(dayStats);
             }
 
             return Task.FromResult((totalStats, yearStats, monthStats, dayStats));
@@ -108,17 +109,11 @@ namespace WireDev.Erp.V1.Api.Controllers
 
         private async Task<ObjectResult> ProcessTransaction(Purchase purchase)
         {
-            using IDbContextTransaction transaction = _context.Database.BeginTransaction();
+            //using IDbContextTransaction transaction = _context.Database.BeginTransaction();
             try
             {
                 try
                 {
-                    //TESTING
-                    Product? p = await _context.Products.FirstOrDefaultAsync();
-                    Price? pr = await _context.Prices.FirstOrDefaultAsync();
-                    purchase.TryAddItem(p.Uuid, pr, 3);
-
-
                     purchase.Post();
                     _ = await _context.Purchases.AddAsync(purchase);
                 }
@@ -126,10 +121,10 @@ namespace WireDev.Erp.V1.Api.Controllers
                 {
                     string message = $"Add purchase {purchase.Uuid} failed!";
                     _logger.LogError(ex, message);
-                    return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+                    return StatusCode(StatusCodes.Status500InternalServerError, message);
                 }
-                _ = _context.SaveChanges(User.Identity.Name);
-                transaction.CreateSavepoint("BeforeStaticsPreparation");
+                _ = _context.SaveChanges(User?.Identity.Name);
+                //transaction.CreateSavepoint("BeforeStaticsPreparation");
 
                 TotalStats? totalStats;
                 YearStats? yearStats;
@@ -143,10 +138,10 @@ namespace WireDev.Erp.V1.Api.Controllers
                 {
                     string message = $"Preparing time statistics failed!";
                     _logger.LogError(ex, message);
-                    return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+                    return StatusCode(StatusCodes.Status500InternalServerError, message);
                 }
-                _ = _context.SaveChanges(User.Identity.Name);
-                transaction.CreateSavepoint("BeforeProductModification");
+                _ = _context.SaveChanges(User?.Identity.Name);
+                //transaction.CreateSavepoint("BeforeProductModification");
 
                 Product? product = null;
                 Price? price = null;
@@ -179,36 +174,36 @@ namespace WireDev.Erp.V1.Api.Controllers
                 }
                 catch (ArgumentNullException ex)
                 {
-                    await transaction.RollbackAsync();
+                    //await transaction.RollbackAsync();
                     _logger.LogError(ex, ex.Message);
-                    return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, ex.Message));
+                    return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
                 }
                 catch (Exception ex)
                 {
-                    await transaction.RollbackAsync();
+                    //await transaction.RollbackAsync();
                     string message = $"Modifing product {product.Uuid} failed! Rolling back changes.";
                     _logger.LogError(ex, message);
-                    return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+                    return StatusCode(StatusCodes.Status500InternalServerError, message);
                 }
-                _ = _context.SaveChanges(User.Identity.Name);
+                _ = _context.SaveChanges(User?.Identity.Name);
             }
             catch (DbUpdateException ex)
             {
-                await transaction.RollbackAsync();
+                //await transaction.RollbackAsync();
                 string message = $"Could not save changes to database! Rolling back changes.";
                 _logger.LogError(ex, message);
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+                return StatusCode(StatusCodes.Status500InternalServerError, message);
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync();
+                //await transaction.RollbackAsync();
                 string message = $"Processing purchase {purchase.Uuid} failed! Rolling back changes.";
                 _logger.LogError(ex, message);
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+                return StatusCode(StatusCodes.Status500InternalServerError, message);
             }
-            await transaction.CommitAsync();
+            //await transaction.CommitAsync();
 
-            return Ok(new Response(true, null, purchase.Uuid));
+            return Ok(purchase.Uuid);
         }
 
         [HttpGet("all")]
@@ -223,10 +218,10 @@ namespace WireDev.Erp.V1.Api.Controllers
             {
                 string message = $"List of purchases cannot be retrieved!";
                 _logger.LogError(ex, message);
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response(false, message));
+                return StatusCode(StatusCodes.Status500InternalServerError, message);
             }
 
-            return Ok(new Response(true, null, list));
+            return Ok(list);
         }
 
         [HttpGet("{id}")]
@@ -236,13 +231,13 @@ namespace WireDev.Erp.V1.Api.Controllers
             try
             {
                 purchase = await _context.Purchases.FirstAsync(x => x.Uuid == id);
-                return Ok(new Response(true, null, purchase));
+                return Ok(purchase);
             }
             catch (Exception ex)
             {
                 string message = $"Purchase with the UUID {id} was not found!";
                 _logger.LogWarning(message, ex);
-                return NotFound(new Response(true, message));
+                return NotFound(message);
             }
         }
 
@@ -254,7 +249,7 @@ namespace WireDev.Erp.V1.Api.Controllers
             {
                 string message = $"Purchase has not the correct transaction type!";
                 _logger.LogWarning(message);
-                return StatusCode(StatusCodes.Status400BadRequest, new Response(false, message));
+                return StatusCode(StatusCodes.Status400BadRequest, message);
             }
 
             return await ProcessTransaction(purchase);
@@ -268,7 +263,7 @@ namespace WireDev.Erp.V1.Api.Controllers
             {
                 string message = $"Purchase has not the correct transaction type!";
                 _logger.LogWarning(message);
-                return StatusCode(StatusCodes.Status400BadRequest, new Response(false, message));
+                return StatusCode(StatusCodes.Status400BadRequest, message);
             }
 
             return await ProcessTransaction(purchase);
@@ -282,7 +277,7 @@ namespace WireDev.Erp.V1.Api.Controllers
             {
                 string message = $"Purchase has not the correct transaction type!";
                 _logger.LogWarning(message);
-                return StatusCode(StatusCodes.Status400BadRequest, new Response(false, message));
+                return StatusCode(StatusCodes.Status400BadRequest, message);
             }
 
             return await ProcessTransaction(purchase);
@@ -296,7 +291,7 @@ namespace WireDev.Erp.V1.Api.Controllers
             {
                 string message = $"Purchase has not the correct transaction type!";
                 _logger.LogWarning(message);
-                return StatusCode(StatusCodes.Status400BadRequest, new Response(false, message));
+                return StatusCode(StatusCodes.Status400BadRequest, message);
             }
 
             return await ProcessTransaction(purchase);
@@ -310,7 +305,7 @@ namespace WireDev.Erp.V1.Api.Controllers
             {
                 string message = $"Purchase has not the correct transaction type!";
                 _logger.LogWarning(message);
-                return StatusCode(StatusCodes.Status400BadRequest, new Response(false, message));
+                return StatusCode(StatusCodes.Status400BadRequest, message);
             }
 
             return await ProcessTransaction(purchase);
