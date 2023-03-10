@@ -16,24 +16,24 @@ namespace WireDev.Erp.V1.Api.Controllers
     [AllowAnonymous]
     public class AuthenticateController : ControllerBase
     {
-        private readonly UserManager<IdentityUser> userManager;
-        private readonly RoleManager<IdentityRole> roleManager;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
 
         public AuthenticateController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
         {
-            this.userManager = userManager;
-            this.roleManager = roleManager;
+            _userManager = userManager;
+            _roleManager = roleManager;
             _configuration = configuration;
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
-            IdentityUser user = await userManager.FindByNameAsync(model.Username);
-            if (user != null && await userManager.CheckPasswordAsync(user, model.Password))
+            IdentityUser user = await _userManager.FindByNameAsync(model.Username);
+            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
             {
-                IList<string> userRoles = await userManager.GetRolesAsync(user);
+                IList<string> userRoles = await _userManager.GetRolesAsync(user);
 
                 List<Claim> authClaims = new()
                 {
@@ -66,7 +66,7 @@ namespace WireDev.Erp.V1.Api.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
-            IdentityUser userExists = await userManager.FindByNameAsync(model.Username);
+            IdentityUser userExists = await _userManager.FindByNameAsync(model.Username);
             if (userExists != null)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "User already exists!");
@@ -79,7 +79,7 @@ namespace WireDev.Erp.V1.Api.Controllers
                 UserName = model.Username
             };
 
-            IdentityResult result = await userManager.CreateAsync(user, model.Password);
+            IdentityResult result = await _userManager.CreateAsync(user, model.Password);
             return !result.Succeeded
                 ? StatusCode(StatusCodes.Status500InternalServerError, "User creation failed! Please check user details and try again.")
                 : Ok("User created successfully!");
@@ -88,7 +88,7 @@ namespace WireDev.Erp.V1.Api.Controllers
         [HttpPost("register-admin")]
         public async Task<IActionResult> RegisterAdmin([FromBody] RegisterModel model)
         {
-            IdentityUser userExists = await userManager.FindByNameAsync(model.Username);
+            IdentityUser userExists = await _userManager.FindByNameAsync(model.Username);
             if (userExists != null)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "User already exists!");
@@ -100,25 +100,25 @@ namespace WireDev.Erp.V1.Api.Controllers
                 SecurityStamp = Guid.NewGuid().ToString(),
                 UserName = model.Username
             };
-            IdentityResult result = await userManager.CreateAsync(user, model.Password);
+            IdentityResult result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "User creation failed! Please check user details and try again.");
             }
 
-            if (!await roleManager.RoleExistsAsync(UserRoles.Admin))
+            if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
             {
-                _ = await roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
+                _ = await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
             }
 
-            if (!await roleManager.RoleExistsAsync(UserRoles.User))
+            if (!await _roleManager.RoleExistsAsync(UserRoles.User))
             {
-                _ = await roleManager.CreateAsync(new IdentityRole(UserRoles.User));
+                _ = await _roleManager.CreateAsync(new IdentityRole(UserRoles.User));
             }
 
-            if (await roleManager.RoleExistsAsync(UserRoles.Admin))
+            if (await _roleManager.RoleExistsAsync(UserRoles.Admin))
             {
-                _ = await userManager.AddToRoleAsync(user, UserRoles.Admin);
+                _ = await _userManager.AddToRoleAsync(user, UserRoles.Admin);
             }
 
             return Ok("User created successfully!");
