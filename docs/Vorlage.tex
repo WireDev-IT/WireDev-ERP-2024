@@ -94,14 +94,42 @@
 
 \chapter{Authentifizierung}
 \section{HTTP-Authentifizierung}
+Die Authentifizierung für HTTP soll sicherstellen, das die Anfragen eines Benutzers nur bearbeitet werden, wenn dieser dazu berechtigt ist, diese Anfragen zu stellen. Durch die Feststellung der Identität kann die Sicherheit im Netzwerk gewährleistet werden. Es gibt mehrere Arten von Methoden zur Authentifizierung. Im wesentlichen bestehen diese darin, dass der Client Benutzername und Passwort an den Server schickt, welcher diese anschließend validiert.
+\subsection{Basic Authentication}
+Als am einfachsten zu Implementieren gilt das senden und überprüfen von Benutzername und Passwort im Klartext. Dies ist jedoch nur mit der Verwendung von HTTPS zu empfehlen, da die Sicherheit sonst nicht gewährleistet werden kann.
+\subsection{Digest Authentication}
+Anders als bei Basic, wird das Passwort hier nicht im Klartext übertragen. Ein Hash des Passworts erhöht hier die Sicherheit und gibt somit nicht das Geheimnis preis.
+\subsection{Token-Based Authentication}
+Statt eines Passworts kommt hier ein eindeutiges Token zum Einsatz, welches bei jeder Aufforderung mitgesendet wird. Der Server validiert dieses jedes mal, um die Berechtigung des Benutzers zu prüfen.
+\subsection{OAuth Authentication}
+Der hier verwendete Token wird von einem Drittanbieter bereitgestellt, der sein eigenes Rechtesystem verwaltet. Dieser teilt dem Server bei einer Anfrage mit, ob der Benutzer berechtigt ist, auf diese Ressourcen zuzugreifen.
+
 \section{JSON-Web-Token}
+Der Standard überträgt Authentifizierungs- und Autorisierungsinformationen zwischen zwei Teilnehmern eines Netzwerks in Form einer Zeichenkette, dem Token. Diese Methode soll einen einfachen Informationsaustausch für Anmeldungen ermöglichen, ohne das eine aktive Verbindung aufrechterhalten werden muss.
+
+Das JSON-Web-Token (JWT) setzt sich aus drei Teilen zusammen: dem Header mit Token-Typ und die Signaturmethode enthält, dem Payload, welcher Informationen über den Benutzer beinhaltet und die Signatur, welche die Richtigkeit des Tokens bezeugen soll.
+
+Diese Eigenschaften machen JWT portabel und skalierbar. Die Übertragung ist Plattformübergreifend möglich und das Format ist kompakt. Der Server muss hier keine Sitzungsinformationen speichern, da JWT alle Informationen über die Berechtigungen enthält. Eine Manipulation ist nicht möglich, da es sonst zu Fehlern bei einer Validierung der Signatur kommt.
+
+JWTs wirkt bei Single-Sign-On (SSO) unterstützend, da der Benutzer nach einer Authentifizierung einen JWT erhält, welchen er für die Anmeldung bei Anfragen an einen Server verwenden kann.
 
 \chapter{REST-API}
 Erklären, Aufbau, Endpoints
 
+Der Architekturstil von Representational State Transfer Application Programming Interface (REST-API) wurde für Webanwendungen entwickelt, welche eine Schnittstelle zwischen verschiedenen Endpunkten implementieren. Diese dienen dem Austausch von Daten und Ressourcen. Um Zugriff auf diese zu erhalten, wird das Prinzip der Nutzung von HTTP verwendet: GET, POST, PUT, DELETE. Zur Adressierung werden URI (Uniform Resource Identifier) und URL (Uniform Resource Locator) verwendet.
+
+Anfragen an die API erfolgen gängigerweise im JSON- oder XML-Format, um die angeforderten oder übertragenen Daten zu gliedern. Zur Manipulation werden 4 Anfragetypen verwendet:
+\begin{itemize}
+	\item GET: Abrufen von Daten aus einer Ressource
+	\item POST: Erstellen von Daten auf der Ressource
+	\item PUT: Aktualisieren von Daten auf der Ressource
+	\item DELETE: Löschen von Daten von der Ressource
+\end{itemize}
+
 \chapter{Back-End}
 Datenbank, Schnittstellen
 
+Die verwendete Datenbank Technologie ist SQLite.
 \chapter{Front-End}
 Technologien, Aufbau
 
