@@ -6,10 +6,10 @@
 \contentsline {section}{\numberline {2.1}C\#}{3}{section.2.1}%
 \contentsline {section}{\numberline {2.2}HTTP}{3}{section.2.2}%
 \contentsline {section}{\numberline {2.3}IDE}{4}{section.2.3}%
-\contentsline {section}{\numberline {2.4}Git}{4}{section.2.4}%
-\contentsline {section}{\numberline {2.5}SQLite}{5}{section.2.5}%
+\contentsline {section}{\numberline {2.4}Git}{5}{section.2.4}%
+\contentsline {section}{\numberline {2.5}SQLite}{6}{section.2.5}%
 \contentsline {section}{\numberline {2.6}Kanban}{6}{section.2.6}%
-\contentsline {section}{\numberline {2.7}Testing}{7}{section.2.7}%
+\contentsline {section}{\numberline {2.7}Testing}{6}{section.2.7}%
 \contentsline {chapter}{\numberline {3}Authentifizierung}{8}{chapter.3}%
 \contentsline {section}{\numberline {3.1}HTTP-Authentifizierung}{8}{section.3.1}%
 \contentsline {paragraph}{\nonumberline Basic Authentication}{8}{paragraph*.3}%
@@ -21,4 +21,5 @@
 \contentsline {chapter}{\numberline {5}Back-End}{11}{chapter.5}%
 \contentsline {chapter}{\numberline {6}Reflexion}{14}{chapter.6}%
 \contentsline {chapter}{\numberline {7}Einführung}{15}{chapter.7}%
+\contentsline {chapter}{\nonumberline Literaturverzeichnis}{18}{chapter*.10}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file
