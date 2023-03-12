@@ -1,0 +1,24 @@
+Die Wahl von ASP.NET Core als Framework und Mircosoft Visual C\# als Programmiersprache ist eine gute Entscheidung gewesen, da hier der geringste Einarbeitungsaufwand im Vergleich zu anderen Sprachen wie Pascal, Visual Basic oder Node.Js vorhanden war. Entscheidend ist somit die persönlich Bekannteste Sprache gewesen, woraus sich einen zeitlichen Vorteil ergab.
+
+Während der Entwicklungsphase kamen immer wieder Probleme auf, welche die Einhaltung der zeitlichen Planung verhinderten.
+Das implementieren der Authentifizierung dauerte mehr als eine geplante Woche und durch eine ungenaue Planung zu Beginn, mussten Datenmodelle in laufe der Entwicklung immer wieder geändert werden, um die gesetzten Anforderungen erfüllen zu können.
+
+Bis zwei Wochen nach eigentlicher Fertigstellung der Datenmodelle mussten für Grundlegende Eigenschaften wie Primärschlüssel ein anderer Datentyp gewählt werden, um die Integrität in der Datenbank sicherstellen zu können.
+Oft entstanden neue Ideen zur Umsetzung des Projekt oder es traten Fehler als Licht, die durch eine genauere Planung hätten vermieden werden können.
+Die Funktionen der API sind weitreichend Kommentiert. Leider ließ es die Zeit nicht mehr zu, weitere innere Quelltextzeilen zu kommentieren.
+
+Vor Start des Projekts sollte zusätzlich zu deiner implementierten API auch ein Client erstellt werden, der als Kommunikationsschnittstelle zwischen API und Benutzer fungieren sollte. Als jedoch laut Zeitplan die Entwicklung des Frontends starten müsste und das Backend bei weitem noch nicht fertig war, entfiel dieser Teil des Projekts, um die API in einer höheren Qualität entwickeln zu können.
+
+Die erstellten Integration-Tests decken nur den Bereich der Erfolgreichen Antworten ab.
+Die API besteht all diese Tests, allerdings ist ungewiss, ob bei einer falschen Verwendung der Endpunkte die richtigen Fehler angezeigt werden.
+Prinzipiell ist die API so entwickelt, dass jeder Fehler aufgefangen werden kann, ohne das die Anwendung Einfriert oder Abstürzt.
+
+SQLite ist, wie bereits erwähnt, sehr gut führ diesen Anwendungszweck geeignet.
+Jedoch lassen sich API-Server und Datenbankserver nicht voneinander trennen.
+Diese Eigenschaft ist im Umfeld der Projektanforderungen in Ordnung, verbietet aber den Aufstieg in eine professionellere Ebene.
+MySQL oder SQL-Server wären mit den Frameworks ebenso kompatibel gewesen, hätten aber auch einen größeren Konfigurationsaufwand für dieses Projekt mitgebracht. Dieser Grund und die Kompatibilität von SQLite, mit den gleichen Plattformen wie der API-Server, gaben die Entscheidung auf das zu verwendete Datenbanksystem vor.
+
+Das Projekte hatte einen sehr großen Lerneffekt.
+Durch das Entwickeln eines, persönlich, neuen Anwendungstyps hat weitreichende Blicke in die Zukunft gebracht, um für die nächsten Projekte mehr Möglichkeiten zur Umsetzung einer Problemlösung zu haben.
+Das schreiben der Dokumentation in LaTeX statt einen anderen Editors wie Microsoft Word o.ä. hat das schreiben, formatieren und einbinden von Darstellungen wesentlich vereinfacht.
+Die neuen Erkenntnisse über HTTP, die Verwendung von Git und verschiedene Authentifizierungsmethoden werden ebenso einen nachhaltigen Effekt auf zukünftige Problemlösung haben.

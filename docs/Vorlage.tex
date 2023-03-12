@@ -23,10 +23,10 @@
 % Alle überflüssigen Zeilen können gelöscht werden.
 \pgfqkeys{/VorlageVersion5}{
 	all/Autoren						= {Tom Mohr},
-	all/Titel	 					= {},
-	all/Untertitel 					= {},
+	all/Titel	 					= {Softwareprojekt},
+	all/Untertitel 					= {Informatiksysteme, Klasse 13},
 	all/VersionPraefix 				= {1.0.0},
-	all/Version 					= {false},
+	all/Version 					= {true},
 	all/Icon/Breite					= {.7},
 	all/Icon/URL					= {},
 	all/Index/Boxen/blau/titel 		= {Liste der Sätze und Definitionen},
@@ -77,13 +77,14 @@
 % ===========================================================================
 %      Hier eigene Packages einbinden und eigene Befehle definieren
 
-
+\usepackage{caption}
+\captionsetup{font=small,labelfont=bf}
+\usepackage{graphicx}
+\usepackage{rotating}
 % ===========================================================================
 
 
 \begin{document}
-
-
 
 \chapter{Anforderungsdefinition}	
 %\addcontentsline{toc}{chapter}{Zusammenfassung}
@@ -95,19 +96,10 @@
 \chapter{Authentifizierung}
 \input{authentifizierung}
 
-\chapter{REST-API}
-Erklären, Aufbau, Endpoints
-
-\input{rest-api}
-
-\chapter{Back-End}\label{backend}
+\chapter{Backend}\label{backend}
 \input{backend}
 
 \chapter{Reflexion}
-Auswertung des Endprodukts
-
-\chapter{Einführung}
-
-\input{intro}
+\input{reflexion}
 
 \end{document}

@@ -1,0 +1,67 @@
+This is BibTeX, Version 0.99d
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: Vorlage.aux
+Reallocating 'name_of_file' (item size: 1) to 9 items.
+The style file: alphadin.bst
+Reallocating 'name_of_file' (item size: 1) to 8 items.
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Reallocating 'wiz_functions' (item size: 4) to 6000 items.
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Database file #1: quellen.bib
+Warning--I didn't find a database entry for "tiobe-index"
+Too many commas in name 1 of "mijacobs, alexbuckgit, v-thepet, EdKaim" for entry ms-kanban
+while executing---line 2132 of file alphadin.bst
+Too many commas in name 1 of "mijacobs, alexbuckgit, v-thepet, EdKaim" for entry ms-kanban
+while executing---line 2132 of file alphadin.bst
+Too many commas in name 1 of "mijacobs, alexbuckgit, v-thepet, EdKaim" for entry ms-kanban
+while executing---line 2132 of file alphadin.bst
+Too many commas in name 1 of "mijacobs, alexbuckgit, v-thepet, EdKaim" for entry ms-kanban
+while executing---line 2205 of file alphadin.bst
+Too many commas in name 1 of "mijacobs, alexbuckgit, v-thepet, EdKaim" for entry ms-kanban
+while executing---line 2205 of file alphadin.bst
+Too many commas in name 1 of "mijacobs, alexbuckgit, v-thepet, EdKaim" for entry ms-kanban
+while executing---line 2205 of file alphadin.bst
+You've used 14 entries,
+            4793 wiz_defined-function locations,
+            946 strings with 7697 characters,
+and the built_in function-call counts, 5501 in all, are:
+= -- 526
+> -- 112
+< -- 105
++ -- 111
+- -- 29
+* -- 271
+:= -- 938
+add.period$ -- 28
+call.type$ -- 14
+change.case$ -- 56
+chr.to.int$ -- 10
+cite$ -- 14
+duplicate$ -- 196
+empty$ -- 435
+format.name$ -- 84
+if$ -- 1144
+int.to.chr$ -- 5
+int.to.str$ -- 0
+missing$ -- 84
+newline$ -- 94
+num.names$ -- 42
+pop$ -- 126
+preamble$ -- 1
+purify$ -- 84
+quote$ -- 0
+skip$ -- 283
+stack$ -- 0
+substring$ -- 249
+swap$ -- 28
+text.length$ -- 28
+text.prefix$ -- 14
+top$ -- 0
+type$ -- 140
+warning$ -- 0
+while$ -- 42
+width$ -- 19
+write$ -- 189
+(There were 6 error messages)

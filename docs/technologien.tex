@@ -1,45 +1,68 @@
 Dieses Projekt verwenden gängige Technologien, welches die Entwicklung vereinfachen und die Integration mit anderen Systemen ermöglichen. Im folgenden werden die wesentlichen T. erklärt.
 
 \section{C\#}
-C\# (gesprochen „C-Sharp“) ist eine objektorientierte Programmiersprache, die im Auftrag von Microsoft entwickelt und 2000 veröffentlicht wurde.
-Die Sprache ist grundsätzlich plattformunabhängig und wurde für die Softwareplattform .NET entwickelt.
+C\# (gesprochen „C-Sharp“) ist eine objektorientierte Programmiersprache, die im Auftrag von Microsoft entwickelt und 2001 veröffentlicht wurde.
+Die Sprache ist grundsätzlich plattformunabhängig und wurde für die Softwareplattform .NET entwickelt.
 Auf GitHub gehört sie zu den fünf am meisten verwendeten Programmiersprachen.\cite{ms-csharp}
 
-Die Einsatzbereiche dieser Sprache sind nahezu Grenzenlos.
-Schon seit Veröffentlichung entstanden Projekte in den Bereichen Webseiten, Entwicklerwerkzeuge und Kompilierer.
+Die Einsatzbereiche dieser Sprache sind nahezu vielfältig.
+Schon seit Veröffentlichung im Jahre 2001 entstanden Projekte in den Bereichen Webseiten, Entwicklerwerkzeuge und Kompilierer.
 Durch diese einfach, moderne und flexible Sprache qualifiziert sie sich auch für dieses Projekt.
-Der Zusammenschluss von C und C++ brachte diese Eigenschaften herbei und macht es somit selbst Java Entwicklern einfach, die Sprache zu verwenden.\cite{dev-csharp}
+Die aktuelle Version 11 wurde im November 2022 veröffentlicht, was zeigt, dass die Sprache noch aktiv gepflegt wird.
+Einflüsse durch ältere Programmiersprachen wie C, C++ und Java führen dazu, dass die Einstiegshürde auch für Entwickler anderer Sprachen gering ist. \cite{dev-csharp}
 
 \section{HTTP}
-HTTP steht für „Hypertext Transfer Protocol“ und ist das Kommunikationsprotokoll im World Wide Web (WWW).
-Es ist für das Abrufen von statischen Inhalten, wie HTML-Dokumenten, vorgesehen und bildet somit die Grundlage für jeden Datenaustausch im Web als Client-Server-Protokoll.
+HTTP steht für „Hypertext Transfer Protocol“ und ist das Standardkommunikationsprotokoll im World Wide Web (WWW).
+Es ist für das Abrufen von statischen Inhalten, wie HTML-Dokumenten, vorgesehen und bildet somit die Grundlage für jeden Datenaustausch im Web als Client-Server-Protokoll.
 In der Regel werden Anfragen an den Server über einen Browser gestellt, der ebenso die Antwort des Servers empfängt und darstellt.
 
-Das  in den 1990er Entwickelte Protokoll ist erweiterbar und kann mittels TLS Verschlüsselt werden. Es lässt sich inder Anwendungsschicht im ISO/OSI-Referenzmodell einordnen.
+Das  in den 1990er Entwickelte Protokoll ist erweiterbar und kann mittels TLS Verschlüsselt werden. Es lässt sich in der Anwendungsschicht im OSI-Referenzmo-dell einordnen.
 HTTP ist zustandslos, da es keine Verbindung zwischen zwei Anfragen gibt, die nacheinander auf der selben Verbindung ausgeführt werden, kann aber mittels HTTP-Cookies für zustandshafte Sitzungen Verwendung finden.\cite{mdn-http}
 
 HTTP-Antworten enthalten die Version des Protokolls, Header, den Statuscode der angibt, ob die Anfrage erfolgreich war (wie in Abbildung \vref{http-response} gezeigt), eine Status-Nachricht und den Körper der Nachricht mit dem angeforderten Inhalt.
 HTTP-Header ermöglichen Client und Server den Austausch zusätzlicher Informationen, so z.B. für die Authentifizierung des Clients am Server, für das verwendete Caching (Pufferspeichern) oder gespeicherte Cookies.\cite{mdn-http-header}
+Das Protokoll wird stetig weiterentwickelt; die aktuelle Version (per Juni 2022) ist HTTP/3.
 
 \begin{figure}[ht]
 	\centering
-	\includegraphics[width=0.7\linewidth]{http_response.png}
+	\includegraphics[width=.8\linewidth]{http_response.png}
 	\caption{Beispiel einer HTTP-Antwort}
 	\label{http-response}
 \end{figure}
 
+\section{REST-API}
+Der Architekturstil des \emph{Representational State Transfer Application Programm-ing Interface} (REST-API) wurde für Webanwendungen entwickelt, welche eine Schnittstelle zwischen verschiedenen Endpunkten implementieren. 
+Diese dienen dem Austausch von Daten und Ressourcen. 
+Um Zugriff auf diese zu erhalten, stellt das HTTP-Protokoll verschiedene Methoden (\emph{HTTP-Verben}) zur Verfügung. Die wichtigsten sind \texttt{GET}, \texttt{POST}, \texttt{PUT} und \texttt{DELETE}. 
+Zur Adressierung werden URLs (Uniform  Resource Locator), eine spezielle Form von URIs (Uniform Resource Identifier) verwendet.
+
+Anfragen an die API erfolgen üblicherweise im JSON- oder XML-Format, um die angeforderten oder übertragenen Daten zu gliedern. 
+Die oben genannten Verben haben folgende Bedeutungen:
+\begin{itemize}
+	\item \texttt{GET}: Abrufen von Daten aus einer Ressource
+	\item \texttt{POST}: Erstellen von Daten auf der Ressource
+	\item \texttt{PUT}: Aktualisieren von Daten auf der Ressource
+	\item \texttt{DELETE}: Löschen von Daten von der Ressource
+\end{itemize}
+
 \section{IDE}
-%bearbeiten
-Für eine effiziente Arbeitsweise benötige ich Programme, welche mir beim Schreiben des Quelltextes helfen und diesen für mich kompilieren, damit am Ende eine ausführbare Anwendung bereitsteht. Auch hier greife ich wieder auf eine mir bereits bekannte Lösung von Microsoft zurück: Microsoft Visual Studio 2022. Das Programm bietet hilfreiche Funktionen wie das automatische Installieren von Paketen, das farbige Markieren von Quelltexten für eine bessere Lesbarkeit und einen Kompilierer, der C-Sharp versteht. Die IDE gibt mir außerdem Möglichkeiten in meine Anwendung während der Laufzeit hereinzuschauen, um Fehler schneller finden zu können sowie die Korrektheit der Vorgänge zu überprüfen.
+Für eine effiziente Arbeitsweise benötigt man Programme, die beim Schreiben und Kompilieren des Quelltextes unterstützen, indem sie viele Schritte automatisieren.
+Das Ergebnis ist eine ausführbare Anwendung in Form einer \texttt{.exe}-Datei. 
+Da bereits Erfahrung mit der Software Microsoft Visual Studio 2022 existiert und diese für die Entwicklung mit C\# optimiert ist, wird diese Software auch für dieses Projekt verwendet. 
+Das Programm bietet hilfreiche Funktionen wie das automatische Installieren von Paketen, das farbige Markieren von Quelltexten für eine bessere Lesbarkeit. 
+Die IDE bietet außerdem die Möglichkeit, während der Laufzeit in die Anwendung zu schauen, um Fehler schneller finden zu können sowie die Korrektheit der Vorgänge zu überprüfen (Debugging).
 
 \section{Git}
-Git ist ein ausgereiftes, aktiv gepflegtes Open-Source-Projekt, das ursprünglich 2005 von Linus Torvalds, entwickelt wurde.
-Eine erstaunliche Anzahl von Softwareprojekten verlässt sich auf Git für die Versionskontrolle, einschließlich kommerzieller Projekte sowie Open Source.
-Im Gegensatz anderer Versionskontrollsoftware lässt sich Git bei der Versionshistorie des Dateibaums nicht von den Namen der Dateien täuschen, stattdessen konzentriert sich Git auf den Dateiinhalt selbst.
-Somit gehört es mit zu den Leistungsstärksten seiner Art.
-Die Integriergerät des Quellcodes war bei der Entwicklung die höchste Priorität. Der SHA1 Algorithmus wird für die Sicherung der Verzeichnissen verwendet. So wird der Verlauf vor Änderungen beschützt.
+Git ist ein ausgereiftes, aktiv gepflegtes Open-Source-Projekt zur Versionsverwaltung von Software, das ursprünglich 2005 von Linus Torvalds entwickelt wurde.
+Es ist der Standard für fast alle Softwareprojekte für die Versionskontrolle, sowohl bei kommerziellen Projekten als auch in Open-Source-Software.
+Git verwendet dabei einen Algorithmus, der sowohl sehr schnell als auch speichersparend arbeitet.
+Somit gehört es mit zu den leistungsstärksten Versionsverwaltungstools.
+Die Integriergerät des Quellcodes war bei der Entwicklung die höchste Priorität. 
+Der SHA1 Algorithmus wird für die Sicherung der Verzeichnissen verwendet. 
+So können nachträgliche Veränderungen des Verlaufs erkannt werden.
 
-Git zeichnet sich ebenso durch seine Flexibilität aus: es Unterstützt verschiedene Arten von Entwicklerworkflows, die nichtlinear sind. Es eignet sich somit für alle Größen von Projekten.\cite{git}
+Git zeichnet sich ebenso durch seine Flexibilität aus: es unterstützt verschiedene Arten von Entwicklerworkflows, die nichtlinear sind. 
+Es eignet sich somit für alle Größen von Projekten.\cite{git}
 Durch die Einteilung von Git in drei Arbeitsbereiche können Änderungen flexibel angebracht werden.
 
 Im Arbeitsverzeichnis (Working Directory) liegen alle Projektdateien zur Bearbeitung oder Benutzung.
@@ -49,19 +72,26 @@ Diese können dann im Versionsverlauf des Git Verzeichnisses gespeichert werden.
 
 \begin{figure}[ht]
 	\centering
-	\includegraphics[width=0.8\linewidth]{git-sections.png}
+	\includegraphics[width=.9\linewidth]{git-sections.png}
 	\caption{Arbeitsverzeichnis, Entwicklungsbereich, Git Verzeichnis}
 	\label{git-sections}
 \end{figure}
 
 \section{SQLite}
-Das relationale Datenbank-Management-System (DBMS) ist eine leichtgewichtige Lösung, die ohne Server auskommt, für eine schnelle Datenbankanbindung. Die Open-Source-Software kann in Anwendungen integriert werden, um Speicherung von Daten ohne separaten Datenbankserver zu ermöglichen. SQLite wurde in C geschrieben und ist mit vielen Betriebssystem wie Windows, Linux, MacOS, Android und iOS. Unterstützt werden grundlegende SQL-Operationen wie INSERT, UPDATE; SELECT und DELETE. Abfragen mit Aggregatfunktionen, Unterabfragen und Joins sind ebenso möglich. Durch die ACID-Konformität ist Zuverlässigkeit und Robustheit gewährleistet. Der Funtkionsumfang ist gegenüber MySQL sehr eingeschränkt. Diese Einschränkung haben jedoch keinen negativen Einfluss auf das Projekt.
+SQLite ist eine im Funktionsumfang reduzierte Alternative zu anderen SQL-Imple-mentierungen wie MySQL.
+Die Open-Source-Software kann in Anwendungen integriert werden, um Speicherung von Daten ohne separaten Datenbankserver zu ermöglichen. 
+SQLite wurde in C geschrieben und ist mit vielen Betriebssystem wie Windows, Linux, MacOS, Android und iOS kompatibel. 
+Unterstützt werden grundlegende SQL-Operationen wie \texttt{INSERT}, \texttt{UPDATE} \texttt{SELECT} und \texttt{DELETE}. 
+Abfragen mit Aggregatfunktionen, Unterabfragen und Joins sind ebenso möglich. 
+Durch die ACID-Konformität ist Zuverlässigkeit und Robustheit gewährleistet. 
+Der Funktionsumfang ist gegenüber MySQL jedoch eingeschränkt. 
+Diese Einschränkung haben allerdings keinen negativen Einfluss auf das Projekt.
 
 \section{Kanban}
 Kandban ist ein Arbeitsmodus, indem ein Projekt in kleine Arbeitspakete zerlegt wird und diese mithilfe eines Boards geplant werden können.
-Das Board besteht aus Spalten TODO, In Progress, Done als einfachste Form.
+Das Board besteht aus Spalten wie z. B. \emph{To Do}, \emph{In Progress}, \emph{Done} als einfachste Form.
 Ein Vorteil dieser Arbeitsweise ist, einen direkten überblicke über getane und geplante Arbeit zu erhalten.
-Du durch einzelne Spalten könne zusätzlich priorisierte Gruppen erstellt werden.
+Innerhalb der einzelnen Spalten könne zusätzlich priorisierte Gruppen erstellt werden.
 Beim Kollaborativen Arbeiten werden die Tickets, die in Bearbeitung sind, einer Verantwortlichen Person zugewiesen.
 Um den Erfolg einer Arbeit in Kanban zu messen, verwendet man zwei wesentliche Metriken: die Zykluszeit, welche die benötige Zeit für eine Aufgabe misst und den Durchsatz, der die Anzahl der abgeschlossenen Daten für eine bestimmte Zeiteinheit zurückgibt. \cite{kanban}
 
@@ -69,13 +99,13 @@ Eine weitere Darstellungsform des Erfolgs ist das kumulatives Flussdiagramm (CFD
 
 \begin{figure}[ht]
 	\centering
-	\includegraphics[width=0.7\linewidth]{kanban-cumulative-flow-2.png}
+	\includegraphics[width=.9\linewidth]{kanban-cumulative-flow-2.png}
 	\caption{Beispiel eines CFD mit Verschiebung im Zeitplan}
 	\label{cfd}
 \end{figure}
 
 \section{Testing}
-Um sicherzustellen, das die Software den gestellten Anforderungen entspricht, müssen zentrale Bestandteile dieser durch Tests abgesichert werden.
+Um sicherzustellen, dass die Software den gestellten Anforderungen entspricht, müssen zentrale Bestandteile dieser durch Tests abgesichert werden.
 Es gibt verschiedene Arten von Test, von denen die wichtigsten Unit-Test sind.
 Hierbei handelt es sich um de Prüfung isolierter Softwarebestandteile, die gegen vordefinierte Daten geprüft werden.
 Zu beachten ist, das Tests keine Fehlerfreiheit garantieren können, jedoch insbesondere die Software gegen Fehler durch Erweiterungen robust machen.\cite{ms-testing}
@@ -85,7 +115,7 @@ Integrationstests überprüfen die einzelnen Module einer Software auf ihre Zusa
 So können z.B. Datenbankanbindungen und Microservices auf ihre Funktionalität geprüft werden.\cite{atlassian-testing}
 
 Allgemein sollen Tests Sicherheit, Produktqualität und Kostenersparnisse sichern.
-Wenn ein defekt in der Software nicht Zeitnah erkannt wird, steigt der Suchaufwand nach des Auslösers in komplexen Projekten enorm.
+Wenn ein Defekt in der Software nicht zeitnah erkannt wird, steigt der Suchaufwand nach dem Auslöser in komplexen Projekten enorm.
 Werden Fehler in der frühen Entwicklungsphase behoben, werden so die Kosten für die weiteren Entwicklung niedriger gehalten.
 Sicherheitslücken die noch vor der Veröffentlichung einer Version geschlossen werden, bieten Angreifern keine Möglichkeit eine Software zu missbrauchen.
 Nebenbei sei auch erwähnt, dass eine fehlerfreie Software mehr Kundenzufriedenheit bedeutet.\cite{stm-testing}
