@@ -1,0 +1,23 @@
+Der Architekturstil von Representational State Transfer Application Programming Interface (REST-API) wurde für Webanwendungen entwickelt, welche eine Schnittstelle zwischen verschiedenen Endpunkten implementieren. Diese dienen dem Austausch von Daten und Ressourcen. Um Zugriff auf diese zu erhalten, wird das Prinzip der Nutzung von HTTP verwendet: GET, POST, PUT, DELETE. Zur Adressierung werden URI (Uniform Resource Identifier) und URL (Uniform Resource Locator) verwendet.
+
+Anfragen an die API erfolgen gängigerweise im JSON- oder XML-Format, um die angeforderten oder übertragenen Daten zu gliedern. Zur Manipulation werden 4 Anfragetypen verwendet:
+\begin{itemize}
+	\item GET: Abrufen von Daten aus einer Ressource
+	\item POST: Erstellen von Daten auf der Ressource
+	\item PUT: Aktualisieren von Daten auf der Ressource
+	\item DELETE: Löschen von Daten von der Ressource
+\end{itemize}
+
+In diesem Projekt werden API-Controller und Funktionen voneinander getrennt.
+Es erfolgt lediglich eine Verweisung von Request-URL auf eine Funktion.
+Somit können Endpunkte einfach verschoben und Integration Tests einfacher durchgeführt werden.
+Der Verweis erfolgt mit einem Attribut (HttpGet, HttpPost, etc.) über der Definition einer Funktion.
+Das ermöglicht, die Zugehörigkeit direkt im Quelltext abzulesen.
+
+Die in der URL übertragenen Parameter werden direkt die der Funktion zugeordnet.
+Dadurch wird sichergestellt, das die Daten aus dem Body der Anfrage dem Datentyp entsprechen, den die Funktion verarbeiten kann.
+Sollte dies nicht der Fall sein, beantwortet das Framework, welches in Abschnitt \ref{backend} genauer erklärt wird, die Anfrage mit einem Fehler.
+
+Funktion geben immer ein IActionResult zurück, welches die Klasse ObjectResult enthält.
+Die hier am Wichtigsten enthaltenen Eigenschaften sind der Statuscode und der Body.
+Das Framework kann somit eine HTTP-Antwort zurückgeben und gleichzeitig können Integration Tests intern, ohne HTTP, durchgeführt werden.
