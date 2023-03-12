@@ -1,0 +1,30 @@
+\babel@toc {ngerman}{}\relax
+\contentsline {chapter}{\numberline {1}Anforderungsdefinition}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Projektinhalt}{1}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Erwartungshorizont}{1}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Zeitliche Planung}{2}{section.1.3}%
+\contentsline {chapter}{\numberline {2}Technologien}{6}{chapter.2}%
+\contentsline {section}{\numberline {2.1}C\#}{6}{section.2.1}%
+\contentsline {section}{\numberline {2.2}HTTP}{6}{section.2.2}%
+\contentsline {section}{\numberline {2.3}REST-API}{7}{section.2.3}%
+\contentsline {section}{\numberline {2.4}IDE}{8}{section.2.4}%
+\contentsline {section}{\numberline {2.5}Git}{8}{section.2.5}%
+\contentsline {section}{\numberline {2.6}SQLite}{9}{section.2.6}%
+\contentsline {section}{\numberline {2.7}Kanban}{9}{section.2.7}%
+\contentsline {section}{\numberline {2.8}Testing}{10}{section.2.8}%
+\contentsline {chapter}{\numberline {3}Authentifizierung}{12}{chapter.3}%
+\contentsline {section}{\numberline {3.1}HTTP-Authentifizierung}{12}{section.3.1}%
+\contentsline {paragraph}{\nonumberline Basic Authentication}{12}{paragraph*.9}%
+\contentsline {paragraph}{\nonumberline Digest Authentication}{12}{paragraph*.11}%
+\contentsline {paragraph}{\nonumberline Token-Based Authentication}{12}{paragraph*.13}%
+\contentsline {paragraph}{\nonumberline OAuth2 Authentication}{12}{paragraph*.15}%
+\contentsline {section}{\numberline {3.2}JSON-Web-Token}{13}{section.3.2}%
+\contentsline {chapter}{\numberline {4}Backend}{15}{chapter.4}%
+\contentsline {section}{\numberline {4.1}REST-API}{15}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Weitere Bestandteile}{18}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Datenbank}{18}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}Authentifizierung}{18}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}Verarbeitung von Anfragen}{19}{subsection.4.2.3}%
+\contentsline {chapter}{\numberline {5}Reflexion}{22}{chapter.5}%
+\contentsline {chapter}{\nonumberline Literaturverzeichnis}{24}{chapter*.22}%
+\providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file

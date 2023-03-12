@@ -1,0 +1,870 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%   LaTeX-Arbeitsvorlage, Version 5.15                	  	%
+%   Autor: 		Mirco Lukas <http://mircol.de>              %
+%   Lizenz: 	The MIT License (MIT)						%
+%   Updates: 	https://github.com/MircoL/LatexTemplateDE   %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{xstring}
+
+\makeatletter
+	\@ifundefined{dokumentTyp}{%
+		\errmessage{DokumentTyp muss angegeben werden!} %
+		\stop %
+	}
+\makeatother
+
+\IfStrEqCase{\dokumentTyp}{
+	{Skript}{\documentclass[12pt,ngerman,openany,numbers=noenddot,listof=totoc,bibliography=totoc,oneside]{scrbook}}%
+	{Thesis}{\documentclass[12pt,ngerman,openany,numbers=noenddot,listof=totoc,bibliography=totoc,oneside]{scrbook}}%
+	{Mitschrift}{\documentclass[a4paper,12pt,ngerman,oneside]{scrartcl}}%
+	{Praesentation}{\documentclass{beamer}}%
+}[\errmessage{Ungueltiger Dokumenttyp: \dokumentTyp}\stop]
+
+
+% =====================================================
+%    Kompatibilitätseinstellungen für ältere Versionen
+% =====================================================
+% V5.9+	\providecommand{\hauptsprache}{ngerman}
+	\providecommand{\andereSprachen}{english,polish}
+
+% =====================================================
+%    Pakete
+% =====================================================
+
+% sollte möglichst weit oben stehen
+\usepackage{morewrites}
+
+\usepackage{array}
+
+\usepackage[xcolor,pdftex,rightbars]{changebar}
+
+\usepackage{graphicx}
+	\usepackage{epstopdf}
+
+\usepackage{amsmath}
+
+\usepackage{amssymb}
+
+\usepackage[main=\hauptsprache,\andereSprachen]{babel}
+
+% Tabelle farbig markieren: \columncolor{wunschfarbe} \rowcolor{}, \cellcolor{}
+\usepackage{colortbl}
+
+\usepackage{enumitem}
+
+\usepackage{environ}
+
+\usepackage{esint}
+
+\usepackage{eurosym}
+
+\usepackage[OT2, T2A,TS1,T1]{fontenc}
+
+
+\usepackage[utf8]{inputenc}
+
+\usepackage{listings}
+
+\usepackage{lipsum}
+
+\usepackage{ifthen}
+
+\usepackage{ifsym}
+
+% erlaubt mehrseitige Tabellen:  \begin{longtable}{|l|r|c|p{2cm}|} \hline ... \end{longtable}
+\usepackage{longtable}
+
+\usepackage{mVersion}
+\increaseBuild
+
+\usepackage{makeidx}
+
+\usepackage{multicol}
+
+% Workaround for Linux with texlive
+
+\providecommand{\oeschfamily}{\em}
+\usepackage{pgfkeys}
+
+\usepackage{polski}
+
+% m u s s  vor hyperref stehen!o
+\providecommand{\zeilenabstand}{singlespacing}
+\usepackage[\zeilenabstand]{setspace}
+
+\usepackage{soul}
+
+\usepackage{tcolorbox}
+
+
+
+\usepackage[\hauptsprache]{varioref}
+
+\usepackage{wasysym}
+
+\usepackage{xspace}
+
+\usepackage{xargs}
+
+\usepackage{yfonts}
+% Lade Pakete abhängig vom DokumentTyp.
+\IfStrEqCase{\dokumentTyp}{
+	{Skript}{
+		\usepackage[a4paper]{geometry}
+		\usepackage[hyphens]{url}
+		\usepackage[pdftex,pdfborderstyle={/S/U/W 1}]{hyperref}
+	}
+	{Thesis}{
+		\usepackage[a4paper]{geometry}
+		\usepackage[hyphens]{url}
+		\usepackage[pdftex,pdfborderstyle={/S/U/W 1}]{hyperref}
+	}
+	{Mitschrift}{
+		\usepackage{fancyhdr}
+		\usepackage[a4paper]{geometry}
+		\usepackage[hyphens]{url}
+		\usepackage[pdftex,pdfborderstyle={/S/U/W 1}]{hyperref}
+		\let\chapter\section
+	}
+	{Praesentation}{
+
+		\usecolortheme{whale}
+
+		\newcommand{\fip}[1][]{\frametitle{\insertsection\xspace##1}\pause}
+		\newcommand{\finp}[1][]{\frametitle{\insertsection\xspace##1}}
+
+		\usefonttheme{professionalfonts}
+
+		\setbeamercovered{invisible}  % Overlays auf den Folien
+
+		\setbeamertemplate{footline}{
+			\begin{beamercolorbox}[sep=1.8em,wd=\paperwidth,leftskip=0.5cm,rightskip=0.5cm]{footlinecolor}
+			\end{beamercolorbox}%
+			\insertsectionnavigationhorizontal{\paperwidth}{}{\hskip0pt plus1filll}
+		}
+
+		\setbeamertemplate{footline}{
+			\begin{minipage}[c]{4cm}
+				\get{Version 5/all/Titel}
+			\end{minipage}
+			\begin{minipage}[l]{4cm}
+				\ifthenelse{\equal{\get{Version 5/Praesentationen/TitelKurz}}{}}{\get{Version 5/all/Titel}}{\get{Version 5/Praesentationen/TitelKurz}}
+			\end{minipage}
+			\begin{minipage}[c]{2cm}
+				\StrSubstitute{\get{all/Autoren}}{&}{\par}
+			\end{minipage}
+			\hfill
+			\begin{minipage}[c]{1.2cm}
+				Folie \insertframenumber\ (\inserttotalframenumber)
+			\end{minipage}
+		}
+	}
+}
+
+% m u s s   hier stehen!
+\setlength{\marginparwidth}{2cm}
+\usepackage{todonotes}
+
+
+% =====================================================
+%    Eigene Befehle
+% =====================================================
+\newcommand{\andd}{\wedge}
+	\newcommand{\bigandd}{\bigwedge}
+
+\newcommand{\aufgabe}[1]{%
+	\command{\aktuelleAufgabe}{#1}%
+	\section*{Aufgabe \aktuelleAufgabe}%
+}
+	\newcommand{\teilaufgabe}[1]{\paragraph*{\underline{TA \aktuelleAufgabe.#1}}}
+	\newcommand{\aktuelleAufgabe}{1}
+
+\newboolean{isAppendixSet}
+	\let\appendixOld\appendix
+	\renewcommand{\appendix}{\ifthenelse{\boolean{isAppendixSet}}{}{\appendixOld\setboolean{isAppendixSet}{true}}}
+
+\newcommand{\blitz}{\lightning\xspace}
+
+\newcommand{\countAutoren}[1]{\newcounter{autorenC}\setcounter{autorenC}{#1}}
+
+% Nicht \dh, sonst Kollision mit dem Buchstaben ð (Eth)
+\newcommand{\dhe}{d.\,h.\xspace}
+\newcommand{\Dhe}{D.\,h.\xspace}
+
+\newcommand{\ellipse}{.\hspace*{-.1em}.\hspace*{-.1em}.}
+
+\newcommand{\fallunterscheidung}[3][]{\ensuremath{#1 \left\{\begin{array}{cl}#2\\#3\end{array}\right.}}
+	\newcommand{\fuer}{&\text{für }}
+	\newcommand{\sonst}{&\text{sonst}}
+
+\newcommand{\get}[1]{\pgfkeysvalueof{/VorlageVersion5/#1}}
+
+\newcommand{\idr}{i.\,d.\,R.\xspace}
+\newcommand{\Idr}{I.\,d.\,R.\xspace}
+
+\newcommand{\length}[1]{\ensuremath{|#1|}}
+
+\newcommand{\name}[1]{\mbox{\textsc{#1}}}
+
+\newcommand{\neuerbegriff}[1]{\tcbox[size=small,on line,colframe=red!75!black,colback=blue!5!white,fontupper=\normalsize]{#1}\xspace}
+
+\newcommand{\neuerbegriffIdx}[2][]{\ifthenelse{\equal{#1}{}}{\index{#2}\neuerbegriff{#2}}{\index{#1}\neuerbegriff{#2}}}
+
+\makeindex
+
+\newcommand{\obda}{o.\,B.\,d.\,A.\xspace}
+\newcommand{\Obda}{O.\,B.\,d.\,A.\xspace}
+
+\makeatletter
+	\def\colorref@i		{\text{\textmarker{yellow}{(i)}}}
+	\def\colorref@ii	{\text{\textmarker{green}{(ii)}}}
+	\def\colorref@iii	{\text{\textmarker{red}{(iii)}}}
+	\def\colorref@iv	{\text{\textcolor{white}{\textmarker{blue}{(iv)}}}}
+\makeatother
+\newcounter{colorrefCtr}
+\def\colorref(#1){ %
+	\setcounter{colorrefCtr}{#1} %
+	\makeatletter %
+		\csname colorref@\roman{colorrefCtr}\endcsname%
+	\makeatother
+}
+
+\newcommand{\sio}{s.\,o.\xspace}
+\newcommand{\Sio}{S.\,o.\xspace}
+\newcommand{\siu}{s.\,u.\xspace}
+\newcommand{\Siu}{S.\,u.\xspace}
+
+\newcommand{\orr}{\vee}
+	\newcommand{\bigorr}{\bigvee}
+
+\newcommand{\textmarker}[2]{\sethlcolor{#1}\hl{#2}}
+
+\newcommand{\ua}{u.\,a.\xspace}
+\newcommand{\Ua}{U.\,a.\xspace}
+
+\newcommand{\va}{v.\,a.\xspace}
+\newcommand{\Va}{V.\,a.\xspace}
+
+
+\newcommand{\wiki}[1]{\href{#1}{Wikipedia}}
+
+\newcommand{\zb}{z.\,B.\xspace}
+\newcommand{\Zb}{Z.\,B.\xspace}
+
+\newcommand{\zt}{z.\,T.\xspace}
+\newcommand{\Zt}{Z.\,T.\xspace}
+
+
+\IfStrEqCase{\dokumentTyp}{
+	{Skript}{
+		\newcommand{\qed}{\hfill\ensuremath{\square}}
+	}
+	{Mitschrift}{
+		\newcommand{\qed}{\hfill\ensuremath{\square}}
+	}
+	{Praesentation}{
+		\newcommand{\itemz}{\item[\RIGHTarrow]}
+	}%
+}
+
+
+
+% =====================================================
+%    Eigene Umgebungen
+% =====================================================
+\newcommand{\bspT}{}
+\newenvironmentx{beispiel}[2][1={}, 2={}]{%
+	\renewcommand{\bspT}{#2}
+	\paragraph{Beispiel\xspace#1}%
+		\begin{quotation}%
+			\setlength{\parindent}{0em}\noindent%
+			\ifthenelse{\equal{\bspT}{o} \OR \equal{\bspT}{b}}{\vspace*{-2em}}{}%
+}{%
+	\ifthenelse{\equal{\bspT}{u} \OR \equal{\bspT}{b}}{\vspace*{-1em}}{}%
+	\end{quotation}%
+}
+
+\newenvironmentx{beispiele}[2][1={}, 2={}]{%
+	\renewcommand{\bspT}{#2}
+	\paragraph{Beispiele\xspace#1}%
+	\begin{quotation}%
+		\setlength{\parindent}{0em}\noindent%
+		\ifthenelse{\equal{\bspT}{o} \OR \equal{\bspT}{b}}{\vspace*{-2em}}{}%
+	}{%
+	\ifthenelse{\equal{\bspT}{u} \OR \equal{\bspT}{b}}{\vspace*{-1em}}{}%
+	\end{quotation}%
+}
+
+\newenvironmentx{beweis}[2][1={}, 2={}]{%
+	\renewcommand{\bspT}{#2}
+	\paragraph{Beweis\xspace#1}%
+	\begin{quotation}%
+		\setlength{\parindent}{0em}\noindent%
+		\ifthenelse{\equal{\bspT}{o} \OR \equal{\bspT}{b}}{\vspace*{-1em}}{}
+	}{%
+	\ifthenelse{\equal{\bspT}{u} \OR \equal{\bspT}{b}}{\vspace*{-1.3em}}{}%
+	\qed%
+	\ifthenelse{\equal{\bspT}{u} \OR \equal{\bspT}{b}}{\vspace*{.5em}}{}%
+	\end{quotation}%
+}
+
+\newenvironment{enumeratealpha}{\begin{enumerate}[label={\alph*)}]}{\end{enumerate}}
+
+\newenvironment{enumerateAlpha}{\begin{enumerate}[label={\Alph*)}]}{\end{enumerate}}
+
+\newenvironment{enumerateroman}{\begin{enumerate}[label={\roman*)}]}{\end{enumerate}}
+
+\newenvironment{enumerateRoman}{\begin{enumerate}[label={\Roman*)}]}{\end{enumerate}}
+
+
+\newcommand{\tmpQx}{}
+\newcommand{\kHand}[1]{%
+	\IfStrEqCase{#1}{%
+		{e}{e\hspace*{-.5em}\raisebox{.05em}{\reflectbox{\c{}}}\hspace*{-.2em}}%
+		{a}{a\hspace*{-.6em}\raisebox{.05em}{\reflectbox{\c{}}}\hspace*{-.1em}}%
+	}[\errmessage{Ogonek nur unter 'a' und 'e'!}\stop]
+}
+\newcommand{\kFraktur}[1]{%
+	\IfStrEqCase{#1}{%
+		{e}{e\hspace*{-.1em}\raisebox{.05em}{\reflectbox{\c{}}}\hspace*{-.2em}}%
+		{a}{a\hspace*{-.15em}\raisebox{.05em}{\reflectbox{\c{}}}\hspace*{-.15em}}%
+	}[\errmessage{Ogonek nur unter 'a' und 'e'!}\stop]
+}
+\newenvironmentx{quotex}[2][1={},2={}]{%
+	\renewcommand{\tmpQx}{#1}
+	\begin{quote}%
+		\IfStrEqCase{#2}{
+			{tt}{ \texttt{#1} }%
+			{hand}{ \let\k\kHand \oeschfamily }%
+			{fraktur}{  \let\k\kFraktur \frakfamily }%
+		}[ \normalfont ]
+}{%
+		\ifthenelse{\equal{\tmpQx}{}}{}{\par \mbox{} \hfill \normalfont --- \emph{\tmpQx}}%
+	\end{quote}%
+}
+\newenvironmentx{quotationx}[2][1={},2={default}]{%
+	\renewcommand{\tmpQx}{#1}
+	\begin{quotation}%
+		\IfStrEqCase{#2}{
+			{tt}{ \texttt{#1} }%
+			{hand}{ \oeschfamily }%
+			{fraktur}{ \frakfamily }%
+			{default}{ \normalfont }%
+		}[ \errmessage{Ungueltiger Parameter: \#2 muss 'tt' oder 'hand' oder 'fraktur' sein!}\stop ]
+}{%
+		\ifthenelse{\equal{\tmpQx}{}}{}{\par \mbox{} \hfill \normalfont --- \emph{\tmpQx}}%
+	\end{quotation}%
+}
+
+
+% =====================================================
+%    Farbige Boxen (tcolorbox) und Indizes
+% =====================================================
+\tcbuselibrary{listings,breakable}
+
+\newcommand{\boxnummer}{\thetcbcounter}
+\newtcolorbox[auto counter,number format=\arabic,list inside=blueboxes]{blueboxIdx}[2][box\boxnummer]{%
+	colframe=blue!75!black,fonttitle=\bfseries,title={#2},phantomlabel={#1},breakable%
+}
+
+\newtcolorbox[use counter from=blueboxIdx,number format=\arabic,list inside=yellowboxes]{yellowboxIdx}[2][box\boxnummer]{%
+	colframe=yellow!99,fonttitle=\bfseries,title={\textcolor{black}{#2}},phantomlabel={#1},breakable%
+}
+
+\newtcolorbox[use counter from=blueboxIdx,number format=\arabic,list inside=greenboxes]{greenboxIdx}[2][box\boxnummer]{%
+	colframe=green,fonttitle=\bfseries,title={\textcolor{black}{#2}},phantomlabel={#1},breakable%
+}
+
+\newtcolorbox[number format=\arabic]{redbox}[1][]{%
+	colframe=red!99,fonttitle=\bfseries,title={\textcolor{black}{Achtung!}},phantomlabel={#1},breakable%
+}
+
+
+
+% =====================================================
+%    Listings einrichten
+% =====================================================
+
+\lstset{literate=
+	{á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+	{Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+	{à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1
+	{À}{{\`A}}1 {È}{{\'E}}1 {Ì}{{\`I}}1 {Ò}{{\`O}}1 {Ù}{{\`U}}1
+	{ä}{{\"a}}1 {ë}{{\"e}}1 {ï}{{\"i}}1 {ö}{{\"o}}1 {ü}{{\"u}}1
+	{Ä}{{\"A}}1 {Ë}{{\"E}}1 {Ï}{{\"I}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1
+	{â}{{\^a}}1 {ê}{{\^e}}1 {î}{{\^i}}1 {ô}{{\^o}}1 {û}{{\^u}}1
+	{Â}{{\^A}}1 {Ê}{{\^E}}1 {Î}{{\^I}}1 {Ô}{{\^O}}1 {Û}{{\^U}}1
+	{œ}{{\oe}}1 {Œ}{{\OE}}1 {æ}{{\ae}}1 {Æ}{{\AE}}1 {ß}{{\ss}}1
+	{ű}{{\H{u}}}1 {Ű}{{\H{U}}}1 {ő}{{\H{o}}}1 {Ő}{{\H{O}}}1
+	{ç}{{\c c}}1 {Ç}{{\c C}}1 {ø}{{\o}}1 {å}{{\r a}}1 {Å}{{\r A}}1
+	{€}{{\EUR}}1 {£}{{\pounds}}1 {~}{{\textasciitilde}}1
+}
+
+\definecolor{myGray}{RGB}{220,225,225}
+
+\lstset{
+	backgroundcolor=\color{myGray},
+	numbers=left,
+	breakautoindent=true,
+	tabsize=4,
+	frame=single,
+	breaklines=true,
+	postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\color{red}\hookrightarrow\space}},
+	caption=\texttt\lstname
+}
+
+\definecolor{javared}{rgb}{0.6,0,0} % for strings
+\definecolor{javagreen}{rgb}{0.25,0.5,0.35} % comments
+\definecolor{javapurple}{rgb}{0.5,0,0.35} % keywords
+\definecolor{javadocblue}{rgb}{0.25,0.35,0.75} % javadoc
+\definecolor{javablue}{RGB}{0,37,189} % javadoc
+
+\lstset{language=Java,
+	basicstyle=\ttfamily,
+	keywordstyle=\color{javapurple}\bfseries,
+	stringstyle=\color{javablue},
+	commentstyle=\color{javagreen},
+	morecomment=[s][\color{javadocblue}]{/**}{*/},
+	numbers=left,
+	numberstyle=\tiny\color{black},
+	numbersep=10pt,
+	tabsize=4,
+	showspaces=false,
+	showstringspaces=false
+}
+
+% =====================================================
+%    Programmierdokumentation
+% =====================================================
+\definecolor{eclipsemodifier}{RGB}{143,0,83}
+\definecolor{eclipsevar}{RGB}{0,37,189}
+\newcommand{\documentationxMargin}{15pt}
+\newenvironment{documentationx}{
+	\fboxsep1mm
+	\newcommand{\Parameter}[2][]{%
+		\ifthenelse%
+			{\equal{##1}{}}%
+			{}%
+			{%
+				\IfStrEqCase{##1}{%
+					{boolean}{\textcolor{eclipsemodifier}{##1}}%
+					{bool}{\textcolor{eclipsemodifier}{##1}}%
+					{byte}{\textcolor{eclipsemodifier}{##1}}%
+					{char}{\textcolor{eclipsemodifier}{##1}}%
+					{double}{\textcolor{eclipsemodifier}{##1}}%
+					{short}{\textcolor{eclipsemodifier}{##1}}%
+					{int}{\textcolor{eclipsemodifier}{##1}}%
+					{float}{\textcolor{eclipsemodifier}{##1}}%
+				}[##1]%
+				\ %
+			}%
+		\textcolor{eclipsevar}{##2}%
+	}
+
+	\newcommand{\Pkgdef}[2]{%
+		\pgfqkeys{/documentationx/pkg/##1}{
+			name/.initial = {},
+			description/.initial = {},
+		}%
+		\pgfqkeys{/documentationx/pkg/##1}{##2}%
+		\noindent%
+		\fbox{\textcolor{eclipsemodifier}{\texttt{package}} \texttt{\pgfkeysvalueof{/documentationx/pkg/##1/name}}}:
+		\begin{addmargin}[\documentationxMargin]{0pt}
+			\pgfkeysvalueof{/documentationx/pkg/##1/description}
+		\end{addmargin}
+	}
+	\newcommand{\Classdef}[2]{%
+		\pgfqkeys{/documentationx/class/##1}{
+			name/.initial = {},
+			description/.initial = {},
+			modifier/.initial = {},
+			type/.initial = {}
+		}%
+		\pgfqkeys{/documentationx/class/##1}{##2}%
+		\noindent%
+		\begingroup
+			\texttt{
+				\ifthenelse%
+					{\equal{}{\pgfkeysvalueof{/documentationx/class/##1/modifier}}{}}%
+					{}%
+					{\textcolor{eclipsemodifier}{\pgfkeysvalueof{/documentationx/class/##1/modifier}}\ }%
+				\ifthenelse%
+					{\equal{}{\pgfkeysvalueof{/documentationx/class/##1/type}}{}}%
+					{}%
+					{\textcolor{eclipsemodifier}{\pgfkeysvalueof{/documentationx/class/##1/type}}\ }%
+				\pgfkeysvalueof{/documentationx/class/##1/name}%
+			}%
+	%	\ifthenelse%
+	%		{\equal{\pgfkeysvalueof{/documentationx/class/##1/description}}{}}%
+	%		{}%
+	%		{%
+				\normalfont :
+				\begin{addmargin}[\documentationxMargin]{0pt}
+					\pgfkeysvalueof{/documentationx/class/##1/description}
+				\end{addmargin}
+	%		}%
+		\endgroup%
+	}
+	\newcommand{\Vardef}[2]{%
+		\pgfqkeys{/documentationx/var/##1}{
+			name/.initial = {},
+			description/.initial = {},
+			modifier/.initial = {},
+			type/.initial = {}
+		}%
+		\pgfqkeys{/documentationx/var/##1}{##2}%
+		\noindent%
+		\begingroup
+			\texttt{%
+				\ifthenelse%
+					{\equal{}{\pgfkeysvalueof{/documentationx/var/##1/modifier}}{}}%
+					{}%
+					{\textcolor{eclipsemodifier}{\pgfkeysvalueof{/documentationx/var/##1/modifier}}\ }%
+				\ifthenelse%
+					{\equal{}{\pgfkeysvalueof{/documentationx/var/##1/type}}{}}%
+					{}%
+					{\textcolor{eclipsemodifier}{\pgfkeysvalueof{/documentationx/var/##1/type}}\ }%
+				\textcolor{eclipsevar}{\pgfkeysvalueof{/documentationx/var/##1/name}}%
+				\ifthenelse%
+					{\equal{\pgfkeysvalueof{/documentationx/var/##1/description}}{}}%
+					{}%
+					{%
+						\normalfont :
+						\begin{addmargin}[\documentationxMargin]{0pt}
+							\pgfkeysvalueof{/documentationx/var/##1/description}
+						\end{addmargin}
+					}%
+			}%
+		\endgroup%
+	}
+	\newcommand{\Methoddef}[2]{%
+		\pgfqkeys{/documentationx/method/##1}{
+			name/.initial = {},
+			description/.initial = {},
+			modifier/.initial = {},
+			type/.initial = {} % return type
+		}
+		\pgfqkeys{/documentationx/method/##1}{##2}%
+		\noindent%
+		\begingroup
+			\texttt{
+				\ifthenelse%
+					{\equal{}{\pgfkeysvalueof{/documentationx/method/##1/modifier}}{}}%
+					{}%
+					{\textcolor{eclipsemodifier}{\pgfkeysvalueof{/documentationx/method/##1/modifier}}\ }%
+				\ifthenelse%
+					{\equal{}{\pgfkeysvalueof{/documentationx/method/##1/type}}{}}%
+					{}%
+					{\textcolor{eclipsemodifier}{\pgfkeysvalueof{/documentationx/method/##1/type}}\ }%
+				\pgfkeysvalueof{/documentationx/method/##1/name}%
+				\ifthenelse%
+					{\equal{\pgfkeysvalueof{/documentationx/method/##1/description}}{}}%
+					{}%
+					{%
+						\normalfont :
+						\begin{addmargin}[\documentationxMargin]{0pt}
+							\pgfkeysvalueof{/documentationx/method/##1/description}
+						\end{addmargin}
+					}%
+			}%
+		\endgroup%
+	}
+}
+
+% =====================================================
+%    Initiale Konfiguration
+% =====================================================
+
+\clubpenalty = 10000
+
+\widowpenalty = 10000
+
+\displaywidowpenalty = 10000
+
+\makeatletter
+	\@removefromreset{footnote}{chapter}
+\makeatother
+
+% Paragraphenüberschriften immer mit einem Punkt beenden. Kann durch die Stern-Variante "\paragraph*{title}" unterdrückt werden.
+\renewcommand\paragraphmark[1]{.}
+
+\let\epsilonOld\epsilon
+\let\epsilon\varepsilon
+
+\let\phiOld\phi
+\let\phi\varphi
+
+
+% =====================================================
+%    Deklaration der Variablen
+% =====================================================
+
+\pgfqkeys{/VorlageVersion5}{
+	all/Autoren/.initial					= {},
+	all/Titel/.initial	 					= {},
+	all/Untertitel/.initial 				= {},
+	all/VersionPraefix/.initial 			= {},
+	all/Version/.initial 					= {true},
+	all/Icon/Breite/.initial				= {},
+	all/Icon/URL/.initial					= {},
+	all/Index/Boxen/blau/titel/.initial 	= {Liste der Sätze und Definitionen},
+	all/Index/Boxen/blau/zeigen/.initial 	= {false},
+	all/Index/Boxen/gelb/titel/.initial 	= {Liste der Beispiele},
+	all/Index/Boxen/gelb/zeigen/.initial 	= {false},
+	all/Index/Boxen/gruen/titel/.initial 	= {Liste der Fragen},
+	all/Index/Boxen/gruen/zeigen/.initial 	= {false},
+	all/Index/Begriffe/titel/.initial 		= {Index},
+	all/Index/Begriffe/zeigen/.initial 		= {false},
+	all/Index/Literatur/titel/.initial 		= {Literaturverzeichnis},
+	all/Index/Literatur/zeigen/.initial 	= {false},
+	Skript/AnmerkungenTitelseite/.initial 	= {},
+	Mitschriften/Vorlesungsname/.initial 	= {},
+	Mitschriften/Typ/.initial 				= {},
+	Mitschriften/LfdNr/.initial 			= {},
+	Mitschriften/Gruppe/.initial 			= {},
+	Mitschriften/Headerhoehe/.initial		= {42pt},
+	Buecher/Widmung/.initial				= {},
+	Buecher/Modus/.initial					= {rl},
+	Praesentationen/TitelKurz/.initial		= {},
+	Praesentationen/Institut/lang/.initial	= {},
+	Praesentationen/Institut/kurz/.initial	= {},
+	Thesis/AkademischerGrad/kurz/.initial	= {},
+	Thesis/AkademischerGrad/lang/.initial	= {},
+	Thesis/Fach/Nominativ/.initial			= {},
+	Thesis/Fach/Genitiv/.initial			= {},
+	Thesis/UniName/lang/.initial			= {},
+	Thesis/UniName/kurz/.initial			= {},
+	Thesis/EingereichtBei/.initial			= {},
+	Thesis/BetreuungDurch/.initial			= {},
+	Thesis/Abgabedatum/.initial				= {},
+	Thesis/Versicherung/zeigen/.initial		= {true},
+	Thesis/Versicherung/text/.initial		= {},
+	Thesis/Versicherung/ort/.initial		= {}
+}
+
+
+% =====================================================
+%    Generiere passende Titelseiten, Kopfzeilen etc.
+% =====================================================
+\AtBeginDocument{
+	% Zulässige Werte testen
+	\begingroup
+		\newcommand{\checkbool}[1]{\ifthenelse{\equal{\get{#1}}{true} \OR \equal{\get{#1}}{false}}{}{\errmessage{Boolean '#1' muss 'true' oder 'false' sein!}\stop}}
+		\checkbool{all/Version}
+		\checkbool{all/Index/Boxen/blau/zeigen}
+		\checkbool{all/Index/Boxen/gelb/zeigen}
+		\checkbool{all/Index/Boxen/gruen/zeigen}
+		\checkbool{all/Index/Begriffe/zeigen}
+		\checkbool{all/Index/Literatur/zeigen}
+		\checkbool{Thesis/Versicherung/zeigen}
+		% ------------------------------------------------------------------------
+	\endgroup
+
+	\setVersion{\get{all/VersionPraefix}}
+	\IfStrEqCase{\dokumentTyp}{
+		{Skript}{%
+			\thispagestyle{empty}
+			\vspace*{4em}
+			\begin{center}
+				\ifthenelse{\equal{\get{all/Titel}}{}}{}{{\Huge \textbf{\get{all/Titel}}\par}}
+				\ifthenelse{\equal{\get{all/Untertitel}}{}}{}{\vspace*{.5em}{\large\textbf{\get{all/Untertitel}}\par}}
+			\end{center}
+			\begin{flushright}
+				\ifthenelse{\equal{\get{Skript/AnmerkungenTitelseite}}{}}{}{{\em \vspace*{1em}\get{Skript/AnmerkungenTitelseite}\par}}
+				\ifthenelse{\equal{\get{all/Version}}{true}}{Version: \version, }{}\today\par\vspace*{1em}
+				\StrSubstitute{\get{all/Autoren}}{&}{\par}
+			\end{flushright}
+			\begin{center}
+				\IfFileExists{titel.png}{%
+					\includegraphics[width=\get{all/Icon/Breite}\textwidth]{titel.png}\par%
+					\ifthenelse{\equal{\get{all/Icon/URL}}{}}{}{{\tiny \href{\get{all/Icon/URL}}{Quelle}}}
+				}{}
+			\end{center}
+			\newpage
+
+			\pagenumbering{Roman}
+			\newpage
+			\tableofcontents
+
+			\newpage
+
+			\newpage
+			\pagenumbering{arabic}
+		}
+		{Thesis}{%
+			\ifthenelse{\equal{\get{all/Autoren}}{}}{\errmessage{Kein Autor bei der Thesis angegeben!}\stop}{}
+			\ifthenelse{\equal{\get{all/Titel}}{}}{\errmessage{Kein Titel bei der Thesis angegeben!}\stop}{}
+
+			% an anderer Stelle führt dies zu einem Stacküberlauf ("Tex capacity exceeded, sorry...")!
+			% \newcommand\eingereichtBei{}
+			% \StrSubstitute{\get{Thesis/EingereichtBei}}{&}{,\par}[\eingereichtBei]
+			% \newcommand\betreuungDurch{}
+			% \StrSubstitute{\get{Thesis/BetreuungDurch}}{&}{,\par}[\betreuungDurch]
+
+			\thispagestyle{empty}
+			\vspace*{4em}
+			\begin{center}
+				%\ifthenelse{\equal{\get{Thesis/AkademischerGrad/kurz}}{}}{}{%
+					%\get{Thesis/AkademischerGrad/kurz}arbeit zur Erlangung des akademischen Grades\par	eines \get{Thesis/AkademischerGrad/lang} \get{Thesis/Fach/Genitiv}%
+					%Abschlussarbeit im Fach \get{Thesis/Fach/Nominativ}%
+				%}
+				%\\
+				\ifthenelse{\equal{\get{Thesis/UniName/lang}}{}}{}{\textbf{\get{Thesis/UniName/lang}}\par}
+				\IfFileExists{titel.jpg}{%
+					\vspace*{1em}%
+					\includegraphics[width=\get{all/Icon/Breite}\textwidth]{titel.jpg}\par%
+					\ifthenelse{\equal{\get{all/Icon/URL}}{}}{}{{\tiny \href{\get{all/Icon/URL}}{Quelle}}}
+				}{}
+				\ifthenelse{\equal{\get{all/Titel}}{}}{}{{\Huge \textbf{\get{all/Titel}}\par}}
+				\ifthenelse{\equal{\get{all/Untertitel}}{}}{}{\vspace*{.5em}{\large\textbf{\get{all/Untertitel}}\par}}
+				\vspace*{.5em}
+				{\textbf{\Large \get{all/Autoren}}}
+			\end{center}
+
+			\begin{tabular}{ll}%
+				\ifthenelse{\equal{\eingereichtBei}{}}{}{\noindent Eingereicht bei: & \multicolumn{1}{p{11cm}}{\eingereichtBei} \\}%
+				\ifthenelse{\equal{\betreuungDurch}{}}{}{\noindent Betreuung durch: & \multicolumn{1}{p{11cm}}{\betreuungDurch} \\}%
+				\noindent Abgabedatum:	 & \get{Thesis/Abgabedatum}%
+			\end{tabular}
+			\begin{flushright}
+				\ifthenelse{\equal{\get{Skript/AnmerkungenTitelseite}}{}}{}{{\em \vspace*{1em}\get{Skript/AnmerkungenTitelseite}\par}}
+				\ifthenelse{\equal{\get{all/Version}}{true}}{Version: \version}{}
+			\end{flushright}
+
+			\newpage
+
+			\pagenumbering{Roman}
+			\newpage
+			\tableofcontents
+
+			\newpage
+
+			\newpage
+			\pagenumbering{arabic}
+		}
+		{Mitschrift}{
+			\setlength{\parindent}{0cm}
+			\setlength{\headheight}{\get{Mitschriften/Headerhoehe}}
+			\pagestyle{fancy}
+			\newcommand{\autorTemp}{\StrSubstitute{\get{all/Autoren}}{&}{\par}}
+			\expandafter\lhead{\autorTemp}
+			\chead{%
+				\IfFileExists{titel.jpg}{\includegraphics[width=\get{all/Icon/Breite}\textwidth]{titel.jpg}\\}{}
+				\ifthenelse{\equal{\get{Mitschriften/Gruppe}}{}}{}{Gruppe \get{Mitschriften/Gruppe}}
+			}
+			\rhead{\textbf{\emph{\get{Mitschriften/Vorlesungsname}}}\\\textbf{\get{Mitschriften/Typ}\ \get{Mitschriften/LfdNr}}\ifthenelse{\equal{\get{all/Version}}{true}}{\\Stand: \today}{}}
+			\lfoot{}
+			\cfoot{-- \thepage\ --}
+			\rfoot{}
+
+			\global\long\def\headrulewidth{0.4pt}
+			\global\long\def\footrulewidth{0.4pt}
+			\ifthenelse{\equal{\get{all/Titel}}{}}%
+				{\section*{\get{Mitschriften/Typ}\ \get{Mitschriften/LfdNr}}}%
+				{\section*{\get{all/Titel}}}
+
+			\ifthenelse{\equal{\get{all/Untertitel}}{}}{}{\subsubsection*{\get{all/Untertitel}}}
+		}
+		{Praesentation}{
+			\title{\get{all/Titel}}
+			\subtitle{\get{all/Untertitel}}
+			\StrSubstitute{\get{all/Autoren}}{&}{\par}[\autorTemp]
+			\author{\autorTemp}
+			\IfFileExists{titel.jpg}{\logo{titel.jpg}}{}
+			\ifthenelse{\equal{\get{Praesentationen/Institut}}{}}{}{\institute{\get{Praesentationen/Institut}}}
+
+			\frame{\titlepage}
+
+			\frame{
+				\finp
+				\tableofcontents
+			}
+		}
+	}
+}
+
+\AtEndDocument{
+	\appendix
+
+
+		\renewcommand{\bibname}{\get{all/Index/Literatur/titel}}
+		\bibliographystyle{alphadin}
+		\nocite{*}
+		\bibliography{quellen}
+
+
+	\IfStrEqCase{\dokumentTyp}{
+		{Skript}{%
+			\ifthenelse{\equal{\get{all/Index/Boxen/blau/zeigen}}{true}}{\tcblistof[\chapter]{blueboxes}{\get{all/Index/Boxen/blau/titel}}}{}
+
+			\ifthenelse{\equal{\get{all/Index/Boxen/gelb/zeigen}}{true}}{\tcblistof[\chapter]{yellowboxes}{\get{all/Index/Boxen/gelb/titel}}}{}
+
+			\ifthenelse{\equal{\get{all/Index/Boxen/gruen/zeigen}}{true}}{\tcblistof[\chapter]{greenboxes}{\get{all/Index/Boxen/gruen/titel}}}{}
+
+			\newpage
+			\ifthenelse{\equal{\get{all/Index/Begriffe/zeigen}}{true}}{
+				\renewcommand{\indexname}{\get{all/Index/Begriffe/titel}}
+				\phantomsection
+				\addcontentsline{toc}{chapter}{\indexname}
+				\printindex
+			}{}
+		}
+		{Thesis}{%
+			\ifthenelse{\equal{\get{Thesis/Versicherung/zeigen}}{true}}{%
+				\chapter{Eigenständigkeitserklärung}%
+				\ifthenelse{\equal{\get{Thesis/Versicherung/text}}{}}%
+					{Ich erkläre hiermit, dass ich die vorliegende Arbeit selbständig verfasst, keine anderen als die angegebenen Quellen und Hilfsmittel benutzt sowie die diesen Quellen und Hilfsmitteln wörtlich oder sinngemäß entnommenen Ausführungen als solche kenntlich gemacht habe. \par
+					\noindent Die Arbeit habe ich bisher oder gleichzeitig keiner anderen Prüfungsbehörde vorgelegt.
+					\\ \\
+				}{\get{Thesis/Versicherung/text}}%
+				\noindent \get{Thesis/Versicherung/ort}, \get{Thesis/Abgabedatum}
+				\\ \\ \\
+
+				\noindent ......................................................
+
+				\noindent \StrSubstitute{\get{all/Autoren}}{&}{\par}
+
+				\newpage%
+			}{}
+
+			\ifthenelse{\equal{\get{all/Index/Boxen/blau/zeigen}}{true}}{\tcblistof[\chapter]{blueboxes}{\get{all/Index/Boxen/blau/titel}}}{}
+
+			\ifthenelse{\equal{\get{all/Index/Boxen/gelb/zeigen}}{true}}{\tcblistof[\chapter]{yellowboxes}{\get{all/Index/Boxen/gelb/titel}}}{}
+
+			\ifthenelse{\equal{\get{all/Index/Boxen/gruen/zeigen}}{true}}{\tcblistof[\chapter]{greenboxes}{\get{all/Index/Boxen/gruen/titel}}}{}
+
+			\ifthenelse{\equal{\get{all/Index/Begriffe/zeigen}}{true}}{
+				\renewcommand{\indexname}{\get{all/Index/Begriffe/titel}}
+				\addcontentsline{toc}{chapter}{\indexname}
+				\printindex
+			}{}
+		}
+		{Mitschrift}{%
+			\ifthenelse{\equal{\get{all/Index/Boxen/blau/zeigen}}{true}}{\tcblistof[\chapter]{blueboxes}{\get{all/Index/Boxen/blau/titel}}}{}
+
+			\ifthenelse{\equal{\get{all/Index/Boxen/gelb/zeigen}}{true}}{\tcblistof[\chapter]{yellowboxes}{\get{all/Index/Boxen/gelb/titel}}}{}
+
+			\ifthenelse{\equal{\get{all/Index/Boxen/gruen/zeigen}}{true}}{\tcblistof[\chapter]{greenboxes}{\get{all/Index/Boxen/gruen/titel}}}{}
+
+			\ifthenelse{\equal{\get{all/Index/Begriffe/zeigen}}{true}}{
+				\renewcommand{\indexname}{\get{all/Index/Begriffe/titel}}
+				\addcontentsline{toc}{chapter}{\indexname}
+				\printindex
+			}{}
+		}
+		{Praesentation}{%
+			\ifthenelse{\equal{\get{all/Index/Begriffe/zeigen}}{true}}{
+				\newenvironment{theindex}{\let\item\par}{}
+
+				\newcommand\indexspace{}
+
+				\begin{frame}
+					\frametitle{\get{all/Index/Begriffe/titel}}
+					\printindex
+				\end{frame}
+			}{}
+		}
+	}
+}
+
