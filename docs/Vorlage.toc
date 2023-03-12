@@ -20,6 +20,5 @@
 \contentsline {chapter}{\numberline {4}REST-API}{10}{chapter.4}%
 \contentsline {chapter}{\numberline {5}Back-End}{12}{chapter.5}%
 \contentsline {chapter}{\numberline {6}Reflexion}{15}{chapter.6}%
-\contentsline {chapter}{\numberline {7}Einführung}{16}{chapter.7}%
-\contentsline {chapter}{\nonumberline Literaturverzeichnis}{19}{chapter*.10}%
+\contentsline {chapter}{\nonumberline Literaturverzeichnis}{16}{chapter*.10}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file
