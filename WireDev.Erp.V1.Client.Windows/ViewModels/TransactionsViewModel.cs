@@ -58,7 +58,7 @@ namespace WireDev.Erp.V1.Client.Windows.ViewModels
                     Response? r = await response.Content.ReadFromJsonAsync<Response>();
                     if (response.IsSuccessStatusCode)
                     {
-                        if (r.Data is List<Guid> list)
+                        if (response.Value is List<Guid> list)
                         {
                             listCts.Token.ThrowIfCancellationRequested();
                             PurchaseList.Clear();
@@ -101,7 +101,7 @@ namespace WireDev.Erp.V1.Client.Windows.ViewModels
                     tokens.Add(id, cts);
                     using HttpResponseMessage response = await ApiConnection.Client.GetAsync($"api/Purchase/{id}", cts.Token);
                     Response? r = await response.Content.ReadFromJsonAsync<Response>();
-                    return response.IsSuccessStatusCode && (r.Data is Purchase p) ? p : throw new ArgumentNullException(nameof(GetPurchaseAsync), "Response is not as expected!");
+                    return response.IsSuccessStatusCode && (response.Value is Purchase p) ? p : throw new ArgumentNullException(nameof(GetPurchaseAsync), "Response is not as expected!");
                 }
                 catch (ArgumentNullException)
                 {

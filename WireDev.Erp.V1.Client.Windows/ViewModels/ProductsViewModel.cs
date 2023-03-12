@@ -119,7 +119,7 @@ namespace WireDev.Erp.V1.Client.Windows.ViewModels
 
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    return ProductIds = r.Data is List<uint> list ? list : throw new ArgumentNullException("Response is not as expected!");
+                    return ProductIds = response.Value is List<uint> list ? list : throw new ArgumentNullException("Response is not as expected!");
                 }
                 else
                 {
@@ -138,7 +138,7 @@ namespace WireDev.Erp.V1.Client.Windows.ViewModels
         {
             using HttpResponseMessage response = await ApiConnection.Client.GetAsync($"api/Products/{id}");
             Response? r = await response.Content.ReadFromJsonAsync<Response>();
-            return response.IsSuccessStatusCode && r.Data is Product p ? p : throw new ArgumentNullException(nameof(GetProductAsync), "Response is not as expected!");
+            return response.IsSuccessStatusCode && response.Value is Product p ? p : throw new ArgumentNullException(nameof(GetProductAsync), "Response is not as expected!");
         }
 
         private async Task GetProductsDataAsync(uint startId = uint.MinValue, uint endId = uint.MaxValue)
@@ -167,7 +167,7 @@ namespace WireDev.Erp.V1.Client.Windows.ViewModels
             if (response.IsSuccessStatusCode)
             {
                 Response? r = await response.Content.ReadFromJsonAsync<Response>();
-                product = r.Data as Product;
+                product = response.Value as Product;
                 Products.Add(product.Uuid, product);
             }
             else
@@ -226,7 +226,7 @@ namespace WireDev.Erp.V1.Client.Windows.ViewModels
                         {
                             using HttpResponseMessage response = await ApiConnection.Client.GetAsync($"api/Prices/{price}", priceLoadCts.Token);
                             Response? r = await response.Content.ReadFromJsonAsync<Response>(cancellationToken: priceLoadCts.Token);
-                            if (response.IsSuccessStatusCode && r.Data is Price p)
+                            if (response.IsSuccessStatusCode && response.Value is Price p)
                             {
                                 if (!Prices.ContainsKey(price)) { Prices.Add(price, null); }
                                 else { Prices[price] = p; }
@@ -259,7 +259,7 @@ namespace WireDev.Erp.V1.Client.Windows.ViewModels
             {
                 using HttpResponseMessage response = await ApiConnection.Client.PutAsJsonAsync($"api/Prices/add", price, token);
                 Response? r = await response.Content.ReadFromJsonAsync<Response>(cancellationToken: token);
-                if (response.IsSuccessStatusCode && r.Data is Price p)
+                if (response.IsSuccessStatusCode && response.Value is Price p)
                 {
                     if (!Prices.ContainsKey(p.Uuid)) { Prices.Add(p.Uuid, p); }
                     else { Prices[p.Uuid] = p; }
@@ -287,7 +287,7 @@ namespace WireDev.Erp.V1.Client.Windows.ViewModels
             {
                 using HttpResponseMessage response = await ApiConnection.Client.PutAsJsonAsync($"api/Prices/{price.Uuid}", price, token);
                 Response? r = await response.Content.ReadFromJsonAsync<Response>(cancellationToken: token);
-                if (response.IsSuccessStatusCode && r.Data is Price p)
+                if (response.IsSuccessStatusCode && response.Value is Price p)
                 {
                     if (!Prices.ContainsKey(p.Uuid)) { Prices.Add(p.Uuid, p); }
                     else { Prices[p.Uuid] = p; }

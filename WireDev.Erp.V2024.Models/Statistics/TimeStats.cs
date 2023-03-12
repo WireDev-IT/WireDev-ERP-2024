@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using WireDev.Erp.V1.Models.Enums;
 using WireDev.Erp.V1.Models.Interfaces;
 using WireDev.Erp.V1.Models.Storage;
@@ -14,6 +15,7 @@ namespace WireDev.Erp.V1.Models.Statistics
             Date = date.Ticks;
         }
 
+        [Key]
         public virtual long Date { get; }
         public decimal Expenses { get; private set; } = 0;
         public decimal Revenue { get; private set; } = 0;

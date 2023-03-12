@@ -10,6 +10,7 @@ using System.Runtime.Serialization;
 using System.Text.Json.Nodes;
 using System.Xml.Linq;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using System.Reflection;
 
 namespace WireDev.Erp.V1.Models.Storage
 {
@@ -48,5 +49,23 @@ namespace WireDev.Erp.V1.Models.Storage
 
         public int Add(uint add) => Availible += (int)add;
         public int Remove(uint add) => Availible -= (int)add;
+
+        public Task ModifyProperties(Product product)
+        {
+            string[] propertyNames = { "Uuid" };
+            PropertyInfo[] properties = typeof(Product).GetProperties();
+            foreach (PropertyInfo sPI in properties)
+            {
+                if (!propertyNames.Contains(sPI.Name))
+                {
+                    PropertyInfo? tPI = this.GetType().GetProperty(sPI.Name, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                    if (tPI != null && tPI.CanWrite && tPI.PropertyType.IsAssignableFrom(sPI.PropertyType))
+                    {
+                        tPI.SetValue(this, sPI.GetValue(product, null), null);
+                    }
+                }
+            }
+            return Task.CompletedTask;
+        }
     }
 }

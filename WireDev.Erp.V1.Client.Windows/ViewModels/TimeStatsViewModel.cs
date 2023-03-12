@@ -92,7 +92,7 @@ namespace WireDev.Erp.V1.Client.Windows.ViewModels
 
                     if (response.StatusCode == HttpStatusCode.OK)
                     {
-                        StatsTimeList = r.Data is List<DateTime> list ? list : throw new ArgumentNullException("Response is not as expected!");
+                        StatsTimeList = response.Value is List<DateTime> list ? list : throw new ArgumentNullException("Response is not as expected!");
                         return true;
                     }
                     else
@@ -136,7 +136,7 @@ namespace WireDev.Erp.V1.Client.Windows.ViewModels
             Response? r = await response.Content.ReadFromJsonAsync<Response>();
 
             token.ThrowIfCancellationRequested();
-            return response.IsSuccessStatusCode && (r.Data is TimeStats m) ? m : throw new ArgumentNullException("Response is not as expected!");
+            return response.IsSuccessStatusCode && (response.Value is TimeStats m) ? m : throw new ArgumentNullException("Response is not as expected!");
         }
 
         protected static async Task<bool> HandleStatDataAsync(Task task)

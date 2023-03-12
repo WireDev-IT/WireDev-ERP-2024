@@ -1,0 +1,4 @@
+﻿using System.Net.Http.Headers;
+namespace WireDev.Erp.V1.Models{    public static class ApiConnection    {        public static HttpClient? Client { get; set; }        public static void SetClient(Uri url, MediaTypeWithQualityHeaderValue mediaType)        {            Client = new()            {                BaseAddress = url            };            Client.DefaultRequestHeaders.Accept.Clear();            Client.DefaultRequestHeaders.Accept.Add(mediaType);        }
+
+        public static void SetToken(string token)        {            Client.DefaultRequestHeaders.Authorization = new("Bearer", token);        }        public static async Task<bool> IsOnline()        {            try            {                HttpResponseMessage response = await Client.GetAsync("ping");                return response.IsSuccessStatusCode;            }            catch { return false; }        }    }}

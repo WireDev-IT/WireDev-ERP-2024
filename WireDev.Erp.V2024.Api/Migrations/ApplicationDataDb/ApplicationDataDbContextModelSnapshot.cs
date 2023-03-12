@@ -15,7 +15,65 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "7.0.2");
+            modelBuilder.HasAnnotation("ProductVersion", "7.0.3");
+
+            modelBuilder.Entity("WireDev.Erp.V1.Models.AuditLog.Models.Audit", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("AuditDateTimeUtc")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AuditType")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AuditUser")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ChangedColumns")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("KeyValues")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("NewValues")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("OldValues")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TableName")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Audit");
+                });
+
+            modelBuilder.Entity("WireDev.Erp.V1.Models.AuditLog.Models.Role", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Details")
+                        .HasMaxLength(150)
+                        .HasColumnType("TEXT")
+                        .HasColumnName("details");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Role");
+                });
 
             modelBuilder.Entity("WireDev.Erp.V1.Models.Settings", b =>
                 {
@@ -36,7 +94,7 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                     b.HasData(
                         new
                         {
-                            Uuid = new Guid("53afa4a5-5334-41c6-b631-d3da6e9fee8f"),
+                            Uuid = new Guid("a92f5b39-2a34-44e7-b742-8754a7c975fe"),
                             NextGroupNumber = 100,
                             NextProductNumber = 10000u
                         });
@@ -257,7 +315,7 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                     b.HasData(
                         new
                         {
-                            Uuid = new Guid("263c8922-2ee5-4080-bfcb-4669f938605b"),
+                            Uuid = new Guid("aa567964-1234-4070-9a1e-ad19eeba3578"),
                             Archived = false,
                             Description = "Defaul_Price",
                             Locked = false,
@@ -325,7 +383,7 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                             Group = 100,
                             Metadata = "{}",
                             Name = "Default_Product",
-                            Prices = "[\"263c8922-2ee5-4080-bfcb-4669f938605b\"]",
+                            Prices = "[\"aa567964-1234-4070-9a1e-ad19eeba3578\"]",
                             Properties = "{}",
                             Used = false
                         });
@@ -360,8 +418,8 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                     b.HasData(
                         new
                         {
-                            Uuid = new Guid("37f3d770-bb11-49d5-8cdd-3bedc2043b9b"),
-                            DatePosted = new DateTime(2023, 1, 23, 15, 0, 30, 753, DateTimeKind.Utc).AddTicks(3750),
+                            Uuid = new Guid("fb4a837e-b279-4aa9-ad9d-9129d9ecf3c7"),
+                            DatePosted = new DateTime(2023, 3, 8, 10, 6, 31, 258, DateTimeKind.Utc).AddTicks(70),
                             Items = "[]",
                             Posted = true,
                             TotalPrice = 0m,

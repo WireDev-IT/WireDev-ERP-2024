@@ -41,7 +41,7 @@ namespace WireDev.Erp.V1.Client.Windows.ViewModels
                     tokens.Add(id, cts);
                     using HttpResponseMessage response = await ApiConnection.Client.GetAsync($"api/Products/{id}", cts.Token);
                     Response? r = await response.Content.ReadFromJsonAsync<Response>();
-                    return response.IsSuccessStatusCode && (r.Data is Product p) ? p : throw new ArgumentNullException(nameof(GetProductAsync), "Response is not as expected!");
+                    return response.IsSuccessStatusCode && (response.Value is Product p) ? p : throw new ArgumentNullException(nameof(GetProductAsync), "Response is not as expected!");
                 }
                 catch (ArgumentNullException)
                 {
@@ -78,7 +78,7 @@ namespace WireDev.Erp.V1.Client.Windows.ViewModels
                             purchaseToPush = null;
                             CheckoutItems.Clear();
 
-                            if (r.Data is Guid g)
+                            if (response.Value is Guid g)
                             {
                                 _ = MessageBox.Success("Transaction done!", "Sell");
                                 CheckoutItems.Clear();
