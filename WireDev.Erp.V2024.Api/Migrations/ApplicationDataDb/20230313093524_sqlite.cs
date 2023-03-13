@@ -229,22 +229,22 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
             migrationBuilder.InsertData(
                 table: "Prices",
                 columns: new[] { "Uuid", "Archived", "Description", "Locked", "RetailValue", "SellValue" },
-                values: new object[] { new Guid("b1584aba-eac3-4b10-a4c1-3c1bf1e21ce7"), false, "Defaul_Price", false, 10m, 15m });
+                values: new object[] { new Guid("bdd9faca-f05f-4658-a1a7-61c978078a13"), false, "Defaul_Price", false, 10m, 15m });
 
             migrationBuilder.InsertData(
                 table: "Products",
                 columns: new[] { "Uuid", "Active", "Archived", "Availible", "Description", "EAN", "Group", "Metadata", "Name", "Prices", "Properties", "Used" },
-                values: new object[] { 9999u, false, false, 0, null, "[]", 100, "{}", "Default_Product", "[\"b1584aba-eac3-4b10-a4c1-3c1bf1e21ce7\"]", "{}", false });
+                values: new object[] { 9999u, false, false, 0, null, "[]", 100, "{}", "Default_Product", "[\"bdd9faca-f05f-4658-a1a7-61c978078a13\"]", "{}", false });
 
             migrationBuilder.InsertData(
                 table: "Purchases",
                 columns: new[] { "Uuid", "DatePosted", "Items", "Posted", "TotalPrice", "Type" },
-                values: new object[] { new Guid("2eb4bc78-f422-484b-b4e2-f76c6015da2f"), new DateTime(2023, 3, 13, 7, 52, 26, 544, DateTimeKind.Utc).AddTicks(4240), "[]", true, 0m, 0 });
+                values: new object[] { new Guid("0265d7dc-da76-41d1-8c75-43dfb919ae64"), new DateTime(2023, 3, 13, 9, 35, 24, 362, DateTimeKind.Utc).AddTicks(630), "[]", true, 0m, 0 });
 
             migrationBuilder.InsertData(
                 table: "Settings",
                 columns: new[] { "Uuid", "NextGroupNumber", "NextProductNumber" },
-                values: new object[] { new Guid("28cdfdf8-c8c5-4284-9dd3-8437ea53fd15"), 100, 10000u });
+                values: new object[] { new Guid("47a542b6-4856-4e44-9bc4-15bd7d896eed"), 100, 10000u });
         }
 
         /// <inheritdoc />

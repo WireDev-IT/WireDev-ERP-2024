@@ -120,15 +120,25 @@ namespace WireDev.Erp.V1.Api.Controllers
                 _ = await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
             }
 
-            if (!await _roleManager.RoleExistsAsync(UserRoles.User))
+            if (!await _roleManager.RoleExistsAsync(UserRoles.Manager))
             {
-                _ = await _roleManager.CreateAsync(new IdentityRole(UserRoles.User));
+                _ = await _roleManager.CreateAsync(new IdentityRole(UserRoles.Manager));
             }
 
-            if (await _roleManager.RoleExistsAsync(UserRoles.Admin))
+            if (!await _roleManager.RoleExistsAsync(UserRoles.Seller))
             {
-                _ = await _userManager.AddToRoleAsync(user, UserRoles.Admin);
+                _ = await _roleManager.CreateAsync(new IdentityRole(UserRoles.Seller));
             }
+
+            if (!await _roleManager.RoleExistsAsync(UserRoles.Analyst))
+            {
+                _ = await _roleManager.CreateAsync(new IdentityRole(UserRoles.Analyst));
+            }
+
+            _ = await _userManager.AddToRoleAsync(user, UserRoles.Admin);
+            _ = await _userManager.AddToRoleAsync(user, UserRoles.Manager);
+            _ = await _userManager.AddToRoleAsync(user, UserRoles.Seller);
+            _ = await _userManager.AddToRoleAsync(user, UserRoles.Analyst);
 
             return Ok("User created successfully!");
         }

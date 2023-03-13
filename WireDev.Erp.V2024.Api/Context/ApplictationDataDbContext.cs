@@ -41,12 +41,6 @@ namespace WireDev.Erp.V1.Api.Context
             return SaveChanges();
         }
 
-        public override int SaveChanges()
-        {
-            new AuditHelper(this).AddAuditLogs(null);
-            return SaveChanges();
-        }
-
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
