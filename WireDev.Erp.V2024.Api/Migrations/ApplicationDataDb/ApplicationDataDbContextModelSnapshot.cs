@@ -94,7 +94,7 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                     b.HasData(
                         new
                         {
-                            Uuid = new Guid("a92f5b39-2a34-44e7-b742-8754a7c975fe"),
+                            Uuid = new Guid("28cdfdf8-c8c5-4284-9dd3-8437ea53fd15"),
                             NextGroupNumber = 100,
                             NextProductNumber = 10000u
                         });
@@ -315,7 +315,7 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                     b.HasData(
                         new
                         {
-                            Uuid = new Guid("aa567964-1234-4070-9a1e-ad19eeba3578"),
+                            Uuid = new Guid("b1584aba-eac3-4b10-a4c1-3c1bf1e21ce7"),
                             Archived = false,
                             Description = "Defaul_Price",
                             Locked = false,
@@ -383,7 +383,7 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                             Group = 100,
                             Metadata = "{}",
                             Name = "Default_Product",
-                            Prices = "[\"aa567964-1234-4070-9a1e-ad19eeba3578\"]",
+                            Prices = "[\"b1584aba-eac3-4b10-a4c1-3c1bf1e21ce7\"]",
                             Properties = "{}",
                             Used = false
                         });
@@ -418,8 +418,8 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                     b.HasData(
                         new
                         {
-                            Uuid = new Guid("fb4a837e-b279-4aa9-ad9d-9129d9ecf3c7"),
-                            DatePosted = new DateTime(2023, 3, 8, 10, 6, 31, 258, DateTimeKind.Utc).AddTicks(70),
+                            Uuid = new Guid("2eb4bc78-f422-484b-b4e2-f76c6015da2f"),
+                            DatePosted = new DateTime(2023, 3, 13, 7, 52, 26, 544, DateTimeKind.Utc).AddTicks(4240),
                             Items = "[]",
                             Posted = true,
                             TotalPrice = 0m,
