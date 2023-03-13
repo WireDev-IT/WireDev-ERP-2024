@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Identity;
 namespace WireDev.Erp.V1.Api.Controllers
 {
     [ApiController]
-    //[Authorize("PRODUCTS:RO,PRODUCTS:RW")]
     [Route("api/[controller]")]
     public class ProductController : Controller
     {
@@ -30,7 +29,7 @@ namespace WireDev.Erp.V1.Api.Controllers
         /// <response code="404">There are no products</response>
         /// <response code="500">Oops! Getting the products from database failed</response>
         /// <returns>A List of uint</returns>
-        [HttpGet("all")]
+        [HttpGet("all"), Authorize(Roles = "Seller")]
         public async Task<IActionResult> GetProducts()
         {
             List<uint>? list;
@@ -60,8 +59,7 @@ namespace WireDev.Erp.V1.Api.Controllers
         /// <response code="500">Oops! Getting the product from database failed</response>
         /// <param name="id">The id of the product object you want to get</param>
         /// <returns>A Product object</returns>
-        //[Authorize("PRODUCTS:RO")]
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), Authorize(Roles = "Seller")]
         public async Task<IActionResult> GetProduct(uint id)
         {
             Product? product;
@@ -91,7 +89,7 @@ namespace WireDev.Erp.V1.Api.Controllers
         /// <param name="product">The product object to add</param>
         /// <returns>The added product.</returns>
         //[Authorize("PRODUCTS:RW")]
-        [HttpPost("add")]
+        [HttpPost("add"), Authorize(Roles = "Manager")]
         public async Task<IActionResult> AddProduct([FromBody][Required(ErrorMessage = "To add a product, you have to provide one.")] Product product)
         {
             try
@@ -123,8 +121,7 @@ namespace WireDev.Erp.V1.Api.Controllers
         /// <param name="id">The id of the product</param>
         /// <param name="product">The product object with modifications</param>
         /// <returns>The modified product object</returns>
-        //[Authorize("PRODUCTS:RW")]
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize(Roles = "Manager")]
         public async Task<IActionResult> ModifyProduct(uint id, [FromBody][Required(ErrorMessage = "To modify a product, you have to provide changes.")] Product product)
         {
             Product? temp_product;
@@ -172,8 +169,7 @@ namespace WireDev.Erp.V1.Api.Controllers
         /// <response code="423">The product is locked</response>
         /// <response code="500">Oops! Deleting the product from database failed</response>
         /// <param name="id">The id of the product</param>
-        //[Authorize("PRODUCTS:RW")]
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize(Roles = "Manager")]
         public async Task<IActionResult> DeleteProduct(uint id)
         {
             Product? p;

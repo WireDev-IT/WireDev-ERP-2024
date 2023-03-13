@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +11,6 @@ using WireDev.Erp.V1.Models.Storage;
 namespace WireDev.Erp.V1.Api.Controllers
 {
     [ApiController]
-    //[Authorize("STATS:RO")]
     [Route("api/[controller]")]
     public class StatsController : Controller
     {
@@ -23,13 +23,12 @@ namespace WireDev.Erp.V1.Api.Controllers
             _logger = logger;
         }
 
-        /// <summary>
-        /// Retrieves a list of all total statistics
-        /// </summary>
+        /// <summary>Retrieves a list of all total statistics</summary>
         /// <response code="200">Retrieving total stats succeded</response>
         /// <response code="204">There are no statistics</response>
         /// <response code="500">Oops! List of total statistics cannot be retrieved</response>
-        [HttpGet("total")]
+        /// <returns>A List of TotalStats</returns>
+        [HttpGet("total"), Authorize(Roles = "Analyst")]
         public async Task<IActionResult> GetTotalStats()
         {
             List<TotalStats>? stats;
@@ -56,13 +55,19 @@ namespace WireDev.Erp.V1.Api.Controllers
             return Ok(stats);
         }
 
-        [HttpGet("year/{i}")]
+        /// <summary>Get the stats of a year by its number.</summary>
+        /// <param name="i">The year</param>
+        /// <response code="200">Retrieving total stats succeded</response>
+        /// <response code="404">Year not found</response>
+        /// <response code="500">Oops! Year statistics cannot be retrieved</response>
+        /// <returns>A YearStats object</returns>
+        [HttpGet("year/{i}"), Authorize(Roles = "Analyst")]
         public async Task<IActionResult> GetYearStats(ushort i)
         {
             YearStats? stats;
             try
             {
-                stats = _context.YearStats.First(x => x.Date == new DateTime(i, 1, 1).Ticks);
+                stats = await _context.YearStats.FirstAsync(x => x.Date == new DateTime(i, 1, 1).Ticks);
             }
             catch (ArgumentNullException ex)
             {
@@ -80,7 +85,12 @@ namespace WireDev.Erp.V1.Api.Controllers
             return Ok(stats);
         }
 
-        [HttpGet("year/all")]
+        /// <summary>Retrieves a list of all total statistics</summary>
+        /// <response code="200">Retrieving total stats succeded</response>
+        /// <response code="204">There are no statistics</response>
+        /// <response code="500">Oops! List of total statistics cannot be retrieved</response>
+        /// <returns>A List of YearStats</returns>
+        [HttpGet("year/all"), Authorize(Roles = "Analyst")]
         public async Task<IActionResult> GetAllYearStats()
         {
             List<long>? list;
@@ -112,7 +122,14 @@ namespace WireDev.Erp.V1.Api.Controllers
             return Ok(years);
         }
 
-        [HttpGet("month/{y}/{m}")]
+        /// <summary>Get the stats of a month by its number and year.</summary>
+        /// <param name="y">The year</param>
+        /// <param name="m">The month</param>
+        /// <response code="200">Retrieving month stats succeded</response>
+        /// <response code="404">Month not found</response>
+        /// <response code="500">Oops! Year statistics cannot be retrieved</response>
+        /// <returns>A YearStats object</returns>
+        [HttpGet("month/{y}/{m}"), Authorize(Roles = "Analyst")]
         public async Task<IActionResult> GetMonthStats(ushort y, ushort m)
         {
             MonthStats? stats;
@@ -136,7 +153,14 @@ namespace WireDev.Erp.V1.Api.Controllers
             return Ok(stats);
         }
 
-        [HttpGet("month/all")]
+        /// <summary>Gets a list of all months from query.</summary>
+        /// <param name="minYear">Minium Year</param>
+        /// <param name="maxYear">Maximum Year</param>
+        /// <response code="200">Retrieving month stats succeded</response>
+        /// <response code="204">There are no statistics</response>
+        /// <response code="500">Oops! List of month statistics cannot be retrieved</response>
+        /// <returns>A List of MonthStats</returns>
+        [HttpGet("month/all"), Authorize(Roles = "Analyst")]
         public async Task<IActionResult> GetAllMonthStats([FromQuery] ushort minYear = ushort.MinValue, [FromQuery] ushort maxYear = ushort.MaxValue)
         {
             List<long>? list;
@@ -168,7 +192,15 @@ namespace WireDev.Erp.V1.Api.Controllers
             return Ok(months);
         }
 
-        [HttpGet("day/{y}/{m}/{d}")]
+        /// <summary>Get the stats of a day by its number, month and year.</summary>
+        /// <param name="y">The year</param>
+        /// <param name="m">The month</param>
+        /// <param name="d">The day</param>
+        /// <response code="200">Retrieving day stats succeded</response>
+        /// <response code="404">Day not found</response>
+        /// <response code="500">Oops! Year statistics cannot be retrieved</response>
+        /// <returns>A DayStats object</returns>
+        [HttpGet("day/{y}/{m}/{d}"), Authorize(Roles = "Analyst")]
         public async Task<IActionResult> GetDayStats(ushort y, ushort m, ushort d)
         {
             DayStats? stats;
@@ -192,14 +224,28 @@ namespace WireDev.Erp.V1.Api.Controllers
             return Ok(stats);
         }
 
-        [HttpGet("day/all")]
-        public async Task<IActionResult> GetAllDayStats()
+        /// <summary>Gets a list of all days from query.</summary>
+        /// <param name="minYear">Minium Year</param>
+        /// <param name="maxYear">Maximum Year</param>
+        /// <param name="minMonth">Minium Month</param>
+        /// <param name="maxMonth">Maximum Month</param>
+        /// <response code="200">Retrieving day stats succeded</response>
+        /// <response code="204">There are no statistics</response>
+        /// <response code="500">Oops! List of day statistics cannot be retrieved</response>
+        /// <returns>A List of DayStats</returns>
+        [HttpGet("day/all"), Authorize(Roles = "Analyst")]
+        public async Task<IActionResult> GetAllDayStats([FromQuery] ushort minYear = ushort.MinValue, [FromQuery] ushort maxYear = ushort.MaxValue, [FromQuery] ushort minMonth = ushort.MinValue, [FromQuery] ushort maxMonth = ushort.MaxValue)
         {
             List<long>? list;
             List<DateTime>? days = new();
             try
             {
-                list = await _context.DayStats.Select(x => x.Date).ToListAsync();
+                list = await _context.DayStats
+                    .Select(x => x.Date)
+                    .Where(y => new DateTime(y).Year >= minYear && new DateTime(y).Year <= maxYear)
+                    .Where(m => new DateTime(m).Month >= minMonth && new DateTime(m).Month <= maxMonth)
+                    .ToListAsync();
+
                 if (list.Count == 0)
                 {
                     return StatusCode(StatusCodes.Status204NoContent, "There are no statistics.");
@@ -224,7 +270,13 @@ namespace WireDev.Erp.V1.Api.Controllers
             return Ok(days);
         }
 
-        [HttpGet("product/{id}")]
+        /// <summary>Get the stats of a product by its id.</summary>
+        /// <param name="id">The product id</param>
+        /// <response code="200">Retrieving product stats succeded</response>
+        /// <response code="404">Product stats not found</response>
+        /// <response code="500">Oops! Year statistics cannot be retrieved</response>
+        /// <returns>A ProductStats object</returns>
+        [HttpGet("product/{id}"), Authorize(Roles = "Analyst")]
         public async Task<IActionResult> GetProductStats(uint id)
         {
             ProductStats? stats;

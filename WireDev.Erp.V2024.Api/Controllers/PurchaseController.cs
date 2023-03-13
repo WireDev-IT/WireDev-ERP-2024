@@ -20,7 +20,6 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 namespace WireDev.Erp.V1.Api.Controllers
 {
     [ApiController]
-    //[Authorize("PURCHASE:RO")]
     [Route("api/[controller]")]
     public class PurchaseController : Controller
     {
@@ -33,6 +32,10 @@ namespace WireDev.Erp.V1.Api.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Creates new TimeStats objects
+        /// </summary>
+        /// <returns>(TotalStats, YearStats, MonthStats, DayStats)</returns>
         private Task<(TotalStats, YearStats, MonthStats, DayStats)> PrepareTimeStats()
         {
             TotalStats? totalStats;
@@ -72,6 +75,12 @@ namespace WireDev.Erp.V1.Api.Controllers
             return Task.FromResult((totalStats, yearStats, monthStats, dayStats));
         }
 
+        /// <summary>
+        /// Modifies product and generates stats.
+        /// </summary>
+        /// <param name="item">The TransactionItem to process.</param>
+        /// <param name="type">The Type od the transaction.</param>
+        /// <exception cref="ArgumentNullException">Product not found</exception>
         private Task ProcessProductWithStats(TransactionItem item, TransactionType type)
         {
             Product? product;
@@ -107,9 +116,13 @@ namespace WireDev.Erp.V1.Api.Controllers
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Saves the purchase and modifies time stats.
+        /// </summary>
+        /// <param name="purchase">The Purchase object to process</param>
         private async Task<ObjectResult> ProcessTransaction(Purchase purchase)
         {
-            //using IDbContextTransaction transaction = _context.Database.BeginTransaction();
+            using IDbContextTransaction transaction = _context.Database.BeginTransaction();
             try
             {
                 try
@@ -124,7 +137,7 @@ namespace WireDev.Erp.V1.Api.Controllers
                     return StatusCode(StatusCodes.Status500InternalServerError, message);
                 }
                 _ = _context.SaveChanges(User?.Identity.Name);
-                //transaction.CreateSavepoint("BeforeStaticsPreparation");
+                transaction.CreateSavepoint("BeforeStaticsPreparation");
 
                 TotalStats? totalStats;
                 YearStats? yearStats;
@@ -141,7 +154,7 @@ namespace WireDev.Erp.V1.Api.Controllers
                     return StatusCode(StatusCodes.Status500InternalServerError, message);
                 }
                 _ = _context.SaveChanges(User?.Identity.Name);
-                //transaction.CreateSavepoint("BeforeProductModification");
+                transaction.CreateSavepoint("BeforeProductModification");
 
                 Product? product = null;
                 Price? price = null;
@@ -174,13 +187,13 @@ namespace WireDev.Erp.V1.Api.Controllers
                 }
                 catch (ArgumentNullException ex)
                 {
-                    //await transaction.RollbackAsync();
+                    await transaction.RollbackAsync();
                     _logger.LogError(ex, ex.Message);
                     return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
                 }
                 catch (Exception ex)
                 {
-                    //await transaction.RollbackAsync();
+                    await transaction.RollbackAsync();
                     string message = $"Modifing product {product.Uuid} failed! Rolling back changes.";
                     _logger.LogError(ex, message);
                     return StatusCode(StatusCodes.Status500InternalServerError, message);
@@ -189,24 +202,28 @@ namespace WireDev.Erp.V1.Api.Controllers
             }
             catch (DbUpdateException ex)
             {
-                //await transaction.RollbackAsync();
+                await transaction.RollbackAsync();
                 string message = $"Could not save changes to database! Rolling back changes.";
                 _logger.LogError(ex, message);
                 return StatusCode(StatusCodes.Status500InternalServerError, message);
             }
             catch (Exception ex)
             {
-                //await transaction.RollbackAsync();
+                await transaction.RollbackAsync();
                 string message = $"Processing purchase {purchase.Uuid} failed! Rolling back changes.";
                 _logger.LogError(ex, message);
                 return StatusCode(StatusCodes.Status500InternalServerError, message);
             }
-            //await transaction.CommitAsync();
+            await transaction.CommitAsync();
 
             return Ok(purchase.Uuid);
         }
 
-        [HttpGet("all")]
+        /// <summary>Gets a list of all purchases</summary>
+        /// <response code="200">List was generated</response>
+        /// <response code="500">Database error</response>
+        /// <returns>A List of Guid</returns>
+        [HttpGet("all"), Authorize(Roles = "Seller")]
         public async Task<IActionResult> GetPurchases()
         {
             List<Guid>? list;
@@ -224,7 +241,12 @@ namespace WireDev.Erp.V1.Api.Controllers
             return Ok(list);
         }
 
-        [HttpGet("{id}")]
+        /// <summary>Get a purchase by its id</summary>
+        /// <param name="id">The id of the purchase</param>
+        /// <response code="200">Purchase was found</response>
+        /// <response code="404">Purchase was not found</response>
+        /// <returns>A Purchase object</returns>
+        [HttpGet("{id}"), Authorize(Roles = "Seller")]
         public async Task<IActionResult> GetPurchase(Guid id)
         {
             Purchase? purchase;
@@ -241,8 +263,13 @@ namespace WireDev.Erp.V1.Api.Controllers
             }
         }
 
-        //[Authorize("PURCHASE_SELL:RW")]
-        [HttpPost("sell")]
+        /// <summary>Processes a sell purchase</summary>
+        /// <param name="purchase">The purchase object to process</param>
+        /// <response code="200">Saved</response>
+        /// <response code="400">Purchase has wrong transaction type</response>
+        /// <response code="500">Database error</response>
+        /// <returns>GUID of the purchase object</returns>
+        [HttpPost("sell"), Authorize(Roles = "Seller")]
         public async Task<IActionResult> SellPurchase([FromBody] Purchase purchase)
         {
             if (purchase.Type != TransactionType.Sell)
@@ -255,8 +282,13 @@ namespace WireDev.Erp.V1.Api.Controllers
             return await ProcessTransaction(purchase);
         }
 
-        //[Authorize("PURCHASE_BUY:RW")]
-        [HttpPost("buy")]
+        /// <summary>Processes a buy purchase</summary>
+        /// <param name="purchase">The purchase object to process</param>
+        /// <response code="200">Saved</response>
+        /// <response code="400">Purchase has wrong transaction type</response>
+        /// <response code="500">Database error</response>
+        /// <returns>GUID of the purchase object</returns>
+        [HttpPost("buy"), Authorize(Roles = "Seller")]
         public async Task<IActionResult> BuyPurchase([FromBody] Purchase purchase)
         {
             if (purchase.Type != TransactionType.Purchase)
@@ -269,8 +301,13 @@ namespace WireDev.Erp.V1.Api.Controllers
             return await ProcessTransaction(purchase);
         }
 
-        //[Authorize("PURCHASE_CANCEL:RW")]
-        [HttpPost("cancel")]
+        /// <summary>Processes a cancel purchase</summary>
+        /// <param name="purchase">The purchase object to process</param>
+        /// <response code="200">Saved</response>
+        /// <response code="400">Purchase has wrong transaction type</response>
+        /// <response code="500">Database error</response>
+        /// <returns>GUID of the purchase object</returns>
+        [HttpPost("cancel"), Authorize(Roles = "Seller")]
         public async Task<IActionResult> CancelPurchase([FromBody] Purchase purchase)
         {
             if (purchase.Type != TransactionType.Cancel)
@@ -283,8 +320,13 @@ namespace WireDev.Erp.V1.Api.Controllers
             return await ProcessTransaction(purchase);
         }
 
-        //[Authorize("PURCHASE_REFUND:RW")]
-        [HttpPost("refund")]
+        /// <summary>Processes a refund purchase</summary>
+        /// <param name="purchase">The purchase object to process</param>
+        /// <response code="200">Saved</response>
+        /// <response code="400">Purchase has wrong transaction type</response>
+        /// <response code="500">Database error</response>
+        /// <returns>GUID of the purchase object</returns>
+        [HttpPost("refund"), Authorize(Roles = "Seller")]
         public async Task<IActionResult> RefundPurchase([FromBody] Purchase purchase)
         {
             if (purchase.Type != TransactionType.Refund)
@@ -297,8 +339,13 @@ namespace WireDev.Erp.V1.Api.Controllers
             return await ProcessTransaction(purchase);
         }
 
-        //[Authorize("PURCHASE_DISPOSE:RW")]
-        [HttpPost("dispose")]
+        /// <summary>Processes a dispose purchase</summary>
+        /// <param name="purchase">The purchase object to process</param>
+        /// <response code="200">Saved</response>
+        /// <response code="400">Purchase has wrong transaction type</response>
+        /// <response code="500">Database error</response>
+        /// <returns>GUID of the purchase object</returns>
+        [HttpPost("dispose"), Authorize(Roles = "Manager")]
         public async Task<IActionResult> DisposalPurchase([FromBody] Purchase purchase)
         {
             if (purchase.Type != TransactionType.Disposed)

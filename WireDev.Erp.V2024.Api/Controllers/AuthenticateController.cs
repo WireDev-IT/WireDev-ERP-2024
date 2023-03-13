@@ -27,6 +27,11 @@ namespace WireDev.Erp.V1.Api.Controllers
             _configuration = configuration;
         }
 
+        /// <summary>Logs the user in</summary>
+        /// <response code="200">Token was gernerated</response>
+        /// <response code="401">Unauthorized</response>
+        /// <response code="500">Database error</response>
+        /// <returns>JWT</returns>
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
@@ -63,6 +68,9 @@ namespace WireDev.Erp.V1.Api.Controllers
             return Unauthorized();
         }
 
+        /// <summary>Creates a new user</summary>
+        /// <response code="200">Created</response>
+        /// <response code="500">Database error</response>
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
@@ -85,6 +93,9 @@ namespace WireDev.Erp.V1.Api.Controllers
                 : Ok("User created successfully!");
         }
 
+        /// <summary>Creates a new admin-user</summary>
+        /// <response code="200">Created</response>
+        /// <response code="500">Database error or weak password</response>
         [HttpPost("register-admin")]
         public async Task<IActionResult> RegisterAdmin([FromBody] RegisterModel model)
         {

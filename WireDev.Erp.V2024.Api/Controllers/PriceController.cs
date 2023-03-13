@@ -14,7 +14,6 @@ using WireDev.Erp.V1.Models.Storage;
 namespace WireDev.Erp.V1.Api.Controllers
 {
     [ApiController]
-    //[Authorize("PRICES:RO,PRICES:RW")]
     [Route("api/[controller]")]
     public class PriceController : Controller
     {
@@ -32,8 +31,7 @@ namespace WireDev.Erp.V1.Api.Controllers
         /// <response code="404">There are no prices</response>
         /// <response code="500">Oops! Getting the prices from database failed</response>
         /// <returns>A List of Guid</returns>
-        //[Authorize(Roles = "Administrator")]
-        [HttpGet("all")]
+        [HttpGet("all"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetPrices()
         {
             List<Guid>? list;
@@ -63,8 +61,7 @@ namespace WireDev.Erp.V1.Api.Controllers
         /// <response code="500">Oops! Getting the price from database failed</response>
         /// <param name="id">The id of the price object you want to get</param>
         /// <returns>A Price object</returns>
-        //[Authorize("PRICES:RO")]
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), Authorize(Roles = "Seller")]
         public async Task<IActionResult> GetPrice(Guid id)
         {
             Price? price;
@@ -92,8 +89,7 @@ namespace WireDev.Erp.V1.Api.Controllers
         /// <response code="409">A price with the same id already exists</response>
         /// <response code="500">Oops! Adding the price to database failed</response>
         /// <param name="price">The price object to add</param>
-        //[Authorize("PRICES:RW")]
-        [HttpPost("add")]
+        [HttpPost("add"), Authorize(Roles = "Manager")]
         public async Task<IActionResult> AddPrice([FromBody][Required(ErrorMessage = "To add a price, you have to provide one.")] Price price)
         {
             try
@@ -132,8 +128,7 @@ namespace WireDev.Erp.V1.Api.Controllers
         /// <param name="id">The id of the price</param>
         /// <param name="price">The price object with modifications</param>
         /// <returns>The modified Price object</returns>
-        //[Authorize("PRICES:RW")]
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize(Roles = "Manager")]
         public async Task<IActionResult> ModifyPrice(Guid id, [FromBody][Required(ErrorMessage = "To modify a price, you have to provide changes.")] Price price)
         {
             Price? temp_price;
@@ -180,8 +175,7 @@ namespace WireDev.Erp.V1.Api.Controllers
         /// <response code="423">The price is locked</response>
         /// <response code="500">Oops! Deleting the price from database failed</response>
         /// <param name="id">The id of the price</param>
-        //[Authorize("PRICES:RW")]
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize(Roles = "Manager")]
         public async Task<IActionResult> DeletePrice(Guid id)
         {
             Price? c;

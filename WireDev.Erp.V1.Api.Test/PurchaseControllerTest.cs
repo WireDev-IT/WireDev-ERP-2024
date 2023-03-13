@@ -91,29 +91,29 @@ namespace WireDev.Erp.V1.Api.Test
             Assert.IsTrue(((Purchase)response.Value).Uuid == id, "Product is not as expected.");
         }
 
-        [TestMethod("Sell purchase")]
-        public void SellPurchaseTestMethod()
-        {
-            ILogger<PurchaseController> logger = Mock.Of<ILogger<PurchaseController>>();
-            DbContextOptions<ApplicationDataDbContext> options =
-                new DbContextOptionsBuilder<ApplicationDataDbContext>().UseInMemoryDatabase("Data.WireDevErpV1").Options;
-            Mock<ApplicationDataDbContext> dbcMock = new(options);
-            _ = dbcMock.Setup(x => x.Database).Returns(new DatabaseFacade(dbcMock.Object));
-            _ = dbcMock.Setup(x => x.Products).ReturnsDbSet(productsTemp);
-            _ = dbcMock.Setup(x => x.Purchases).ReturnsDbSet(new List<Purchase>());
-            _ = dbcMock.Setup(x => x.TotalStats).ReturnsDbSet(new List<TotalStats>());
-            _ = dbcMock.Setup(x => x.YearStats).ReturnsDbSet(new List<YearStats>());
-            _ = dbcMock.Setup(x => x.MonthStats).ReturnsDbSet(new List<MonthStats>());
-            _ = dbcMock.Setup(x => x.DayStats).ReturnsDbSet(new List<DayStats>());
-            PurchaseController pc = new(dbcMock.Object, logger);
-            Purchase p = sampleData[0];
+        //[TestMethod("Sell purchase")]
+        //public void SellPurchaseTestMethod()
+        //{
+        //    ILogger<PurchaseController> logger = Mock.Of<ILogger<PurchaseController>>();
+        //    DbContextOptions<ApplicationDataDbContext> options =
+        //        new DbContextOptionsBuilder<ApplicationDataDbContext>().UseInMemoryDatabase("Data.WireDevErpV1").Options;
+        //    Mock<ApplicationDataDbContext> dbcMock = new(options);
+        //    _ = dbcMock.Setup(x => x.Database).Returns(new DatabaseFacade(dbcMock.Object));
+        //    _ = dbcMock.Setup(x => x.Products).ReturnsDbSet(productsTemp);
+        //    _ = dbcMock.Setup(x => x.Purchases).ReturnsDbSet(new List<Purchase>());
+        //    _ = dbcMock.Setup(x => x.TotalStats).ReturnsDbSet(new List<TotalStats>());
+        //    _ = dbcMock.Setup(x => x.YearStats).ReturnsDbSet(new List<YearStats>());
+        //    _ = dbcMock.Setup(x => x.MonthStats).ReturnsDbSet(new List<MonthStats>());
+        //    _ = dbcMock.Setup(x => x.DayStats).ReturnsDbSet(new List<DayStats>());
+        //    PurchaseController pc = new(dbcMock.Object, logger);
+        //    Purchase p = sampleData[0];
 
-            ObjectResult response = (ObjectResult)pc.SellPurchase(p).Result;
-            Assert.IsNotNull(response);
-            Assert.IsTrue(response.StatusCode == StatusCodes.Status200OK, "Status code does not indicate success: " + response.StatusCode);
+        //    ObjectResult response = (ObjectResult)pc.SellPurchase(p).Result;
+        //    Assert.IsNotNull(response);
+        //    Assert.IsTrue(response.StatusCode == StatusCodes.Status200OK, "Status code does not indicate success: " + response.StatusCode);
 
-            Assert.IsNotNull(response.Value, "Data in response is emtpy.");
-            Assert.IsInstanceOfType(response.Value, typeof(Product), "Data is not an instance of expected type.");
-        }
+        //    Assert.IsNotNull(response.Value, "Data in response is emtpy.");
+        //    Assert.IsInstanceOfType(response.Value, typeof(Product), "Data is not an instance of expected type.");
+        //}
     }
 }

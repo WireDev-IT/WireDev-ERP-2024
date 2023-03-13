@@ -14,7 +14,6 @@ using WireDev.Erp.V1.Models.Storage;
 namespace WireDev.Erp.V1.Api.Controllers
 {
     [ApiController]
-    //[Authorize("GROUPS:RO")]
     [Route("api/[controller]")]
     public class GroupController : Controller
     {
@@ -32,8 +31,7 @@ namespace WireDev.Erp.V1.Api.Controllers
         /// <response code="404">There are no groups</response>
         /// <response code="500">Oops! Getting the groups from database failed</response>
         /// <returns>A List of int</returns>
-        //[Authorize(Roles = "Administrator")]
-        [HttpGet("all")]
+        [HttpGet("all"), Authorize(Roles = "Manager")]
         public async Task<IActionResult> GetGroups()
         {
             List<int>? list;
@@ -57,8 +55,7 @@ namespace WireDev.Erp.V1.Api.Controllers
         /// <response code="500">Oops! Getting the group from database failed</response>
         /// <param name="id">The id of the group object you want to get</param>
         /// <returns>A Group object</returns>
-        //[Authorize("GROUPS:RO")]
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), Authorize(Roles = "Manager")]
         public async Task<IActionResult> GetGroup(int id)
         {
             Group? group;
@@ -81,8 +78,7 @@ namespace WireDev.Erp.V1.Api.Controllers
         /// <response code="500">Oops! Adding the group to database failed</response>
         /// <param name="group">The group object to add</param>
         /// <returns>The added group.</returns>
-        //[Authorize("GROUPS:RW")]
-        [HttpPost("add")]
+        [HttpPost("add"), Authorize(Roles = "Manager")]
         public async Task<IActionResult> AddGroup([FromBody][Required(ErrorMessage = "To add a group, you have to provide one.")] Group group)
         {
             try
@@ -115,7 +111,7 @@ namespace WireDev.Erp.V1.Api.Controllers
         /// <param name="group">The group object with modifications</param>
         /// <returns>The modified group object</returns>
         //[Authorize("GROUPS:RW")]
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize(Roles = "Manager")]
         public async Task<IActionResult> ModifyGroup(int id, [FromBody][Required(ErrorMessage = "To modify a group, you have to provide changes.")] Group group)
         {
             Group? temp_group;
@@ -160,8 +156,7 @@ namespace WireDev.Erp.V1.Api.Controllers
         /// <response code="423">The group is locked</response>
         /// <response code="500">Oops! Deleting the group from database failed</response>
         /// <param name="id">The id of the group</param>
-        //[Authorize("GROUPS:RW")]
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize(Roles = "Manager")]
         public async Task<IActionResult> DeleteGroup(int id)
         {
             Group? c;

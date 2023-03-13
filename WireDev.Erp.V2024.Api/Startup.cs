@@ -26,16 +26,41 @@ namespace WireDev.Erp.V1.Api
             {
                 options.Filters.Add(new ProducesAttribute("application/json"));
             });
-            _ = services.AddSwaggerGen(c =>
+
+            services.AddSwaggerGen(option =>
             {
-                c.SwaggerDoc("v1",
+                option.SwaggerDoc("v1",
                     new OpenApiInfo
                     {
                         Title = "WireDev ERP 2024",
                         Version = "v1"
                     }
                  );
-                c.IncludeXmlComments(Path.Combine(System.AppContext.BaseDirectory, "WireDev.Erp.V1.Api.xml"));
+                option.IncludeXmlComments(Path.Combine(System.AppContext.BaseDirectory, "WireDev.Erp.V1.Api.xml"));
+                option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Please enter a valid token",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    BearerFormat = "JWT",
+                    Scheme = "Bearer"
+                });
+                option.AddSecurityRequirement(
+                    new OpenApiSecurityRequirement
+                    {
+                        {
+                            new OpenApiSecurityScheme
+                            {
+                                Reference = new OpenApiReference
+                            {
+                            Type=ReferenceType.SecurityScheme,
+                            Id="Bearer"
+                            }
+                        },
+                        Array.Empty<string>()
+                    }
+                });
             });
 
             // For Entity Framework
@@ -78,25 +103,20 @@ namespace WireDev.Erp.V1.Api
             {
                 opts.AddPolicy("admin", policy =>
                 {
-                    _ = policy.RequireRole("Administrator");
-                    _ = policy.RequireClaim("scopes", "ADMIN:RW");
+                    _ = policy.RequireRole("Admin");
                 });
-            });
-
-            _ = services.AddAuthorization(options =>
-            {
-                options.AddPolicy("ADMIN:RW", policy => policy.RequireClaim("scope", "ADMIN:RW"));
-                options.AddPolicy("PRODUCTS:RO", policy => policy.RequireClaim("scope", "PRODUCTS:RO"));
-                options.AddPolicy("PRODUCTS:RW", policy => policy.RequireClaim("scope", "PRODUCTS:RW"));
-                options.AddPolicy("PRICES:RO", policy => policy.RequireClaim("scope", "PRICES:RO"));
-                options.AddPolicy("PRICES:RW", policy => policy.RequireClaim("scope", "PRICES:RW"));
-                options.AddPolicy("CATEGORIES:RO", policy => policy.RequireClaim("scope", "CATEGORIES:RO"));
-                options.AddPolicy("CATEGORIES:RW", policy => policy.RequireClaim("scope", "CATEGORIES:RW"));
-                options.AddPolicy("PURCHASE:RO", policy => policy.RequireClaim("scope", "PURCHASE:RO"));
-                options.AddPolicy("PURCHASE_BUY:RW", policy => policy.RequireClaim("scope", "PURCHASE_BUY:RW"));
-                options.AddPolicy("PURCHASE_SELL:RW", policy => policy.RequireClaim("scope", "PURCHASE_SELL:RW"));
-                options.AddPolicy("PURCHASE_CANCEL:RW", policy => policy.RequireClaim("scope", "PURCHASE_CANCEL:RW"));
-                options.AddPolicy("PURCHASE_WITHDRAW:RW", policy => policy.RequireClaim("scope", "PURCHASE_WITHDRAW:RW"));
+                opts.AddPolicy("manager", policy =>
+                {
+                    _ = policy.RequireRole("Manager");
+                });
+                opts.AddPolicy("seller", policy =>
+                {
+                    _ = policy.RequireRole("Seller");
+                });
+                opts.AddPolicy("analyst", policy =>
+                {
+                    _ = policy.RequireRole("Analyst");
+                });
             });
         }
 
