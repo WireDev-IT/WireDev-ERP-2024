@@ -1,13 +1,9 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using WireDev.Erp.V1.Api.Context;
-using WireDev.Erp.V1.Models.Authentication;
-using WireDev.Erp.V1.Models.Enums;
 using WireDev.Erp.V1.Models.Storage;
-using Microsoft.AspNetCore.Identity;
 
 namespace WireDev.Erp.V1.Api.Controllers
 {

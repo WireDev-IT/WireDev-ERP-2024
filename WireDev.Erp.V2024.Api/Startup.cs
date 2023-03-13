@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -27,7 +26,7 @@ namespace WireDev.Erp.V1.Api
                 options.Filters.Add(new ProducesAttribute("application/json"));
             });
 
-            services.AddSwaggerGen(option =>
+            _ = services.AddSwaggerGen(option =>
             {
                 option.SwaggerDoc("v1",
                     new OpenApiInfo

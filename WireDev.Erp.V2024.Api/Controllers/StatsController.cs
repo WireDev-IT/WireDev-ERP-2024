@@ -1,12 +1,8 @@
-﻿using System;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 using WireDev.Erp.V1.Api.Context;
-using WireDev.Erp.V1.Models.Authentication;
 using WireDev.Erp.V1.Models.Statistics;
-using WireDev.Erp.V1.Models.Storage;
 
 namespace WireDev.Erp.V1.Api.Controllers
 {
@@ -47,12 +43,7 @@ namespace WireDev.Erp.V1.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, message);
             }
 
-            if (stats.Count == 0)
-            {
-                return StatusCode(StatusCodes.Status204NoContent, "There are no statistics.");
-            }
-
-            return Ok(stats);
+            return stats.Count == 0 ? StatusCode(StatusCodes.Status204NoContent, "There are no statistics.") : (IActionResult)Ok(stats);
         }
 
         /// <summary>Get the stats of a year by its number.</summary>

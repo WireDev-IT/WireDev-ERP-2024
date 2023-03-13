@@ -1,14 +1,11 @@
-﻿using System;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.EntityFrameworkCore;
 using WireDev.Erp.V1.Api.Context;
 using WireDev.Erp.V1.Api.Controllers;
-using WireDev.Erp.V1.Models.Statistics;
 using WireDev.Erp.V1.Models.Storage;
 
 namespace WireDev.Erp.V1.Api.Test
@@ -40,14 +37,14 @@ namespace WireDev.Erp.V1.Api.Test
                     new() { Type = Models.Enums.TransactionType.Purchase }
                 };
 
-                purchaseTemp[0].TryAddItem(9999, pricesTemp[0], 2);
-                purchaseTemp[0].TryAddItem(9998, pricesTemp[1], 36);
+                _ = purchaseTemp[0].TryAddItem(9999, pricesTemp[0], 2);
+                _ = purchaseTemp[0].TryAddItem(9998, pricesTemp[1], 36);
 
-                purchaseTemp[1].TryAddItem(9999, pricesTemp[0], 1);
-                purchaseTemp[1].TryAddItem(9998, pricesTemp[1], 6);
+                _ = purchaseTemp[1].TryAddItem(9999, pricesTemp[0], 1);
+                _ = purchaseTemp[1].TryAddItem(9998, pricesTemp[1], 6);
 
-                purchaseTemp[2].TryAddItem(9999, pricesTemp[0], 10);
-                purchaseTemp[2].TryAddItem(9998, pricesTemp[1], 45);
+                _ = purchaseTemp[2].TryAddItem(9999, pricesTemp[0], 10);
+                _ = purchaseTemp[2].TryAddItem(9998, pricesTemp[1], 45);
 
                 return purchaseTemp;
             }

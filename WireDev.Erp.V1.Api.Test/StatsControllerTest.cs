@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -13,37 +12,33 @@ namespace WireDev.Erp.V1.Api.Test
 {
     [TestClass]
     public class StatsControllerTest
-	{
-        List<YearStats> yearsTemp = new()
+    {
+        private readonly List<YearStats> yearsTemp = new()
         {
             new YearStats(new DateTime(2020, 1, 1)),
             new YearStats(new DateTime(2021, 1, 1)),
             new YearStats(new DateTime(2022, 1, 1)),
             new YearStats(new DateTime(2023, 1, 1)),
         };
-
-        List<MonthStats> monthTemp = new()
+        private readonly List<MonthStats> monthTemp = new()
         {
             new MonthStats(new DateTime(2020, 1, 1)),
             new MonthStats(new DateTime(2021, 1, 1)),
             new MonthStats(new DateTime(2022, 1, 1)),
             new MonthStats(new DateTime(2023, 1, 1)),
         };
-
-        List<DayStats> dayTemp = new()
+        private readonly List<DayStats> dayTemp = new()
         {
             new DayStats(new DateTime(2020, 1, 1)),
             new DayStats(new DateTime(2021, 1, 1)),
             new DayStats(new DateTime(2022, 1, 1)),
             new DayStats(new DateTime(2023, 1, 1)),
         };
-
-        List<TotalStats> totalTemp = new()
+        private readonly List<TotalStats> totalTemp = new()
         {
             new TotalStats(new DateTime(2020, 1, 1)),
         };
-
-        List<ProductStats> productTemp = new()
+        private readonly List<ProductStats> productTemp = new()
         {
             new ProductStats(9997),
         };
@@ -126,7 +121,7 @@ namespace WireDev.Erp.V1.Api.Test
         [TestMethod("Get single month")]
         public void GetMonthTestMethod()
         {
-            DateTime time = new DateTime(2020, 1, 1);
+            DateTime time = new(2020, 1, 1);
             ILogger<StatsController> logger = Mock.Of<ILogger<StatsController>>();
             DbContextOptions<ApplicationDataDbContext> options =
                 new DbContextOptionsBuilder<ApplicationDataDbContext>().UseInMemoryDatabase("Data.WireDevErpV1").Options;
@@ -134,7 +129,7 @@ namespace WireDev.Erp.V1.Api.Test
             _ = dbcMock.Setup(x => x.MonthStats).ReturnsDbSet(monthTemp);
             StatsController sc = new(dbcMock.Object, logger);
 
-            ObjectResult response = (ObjectResult)sc.GetMonthStats(((ushort)time.Year), ((ushort)time.Month)).Result;
+            ObjectResult response = (ObjectResult)sc.GetMonthStats((ushort)time.Year, (ushort)time.Month).Result;
             Assert.IsNotNull(response);
             Assert.IsTrue(response.StatusCode == StatusCodes.Status200OK, "Status code does not indicate success: " + response.StatusCode);
 
@@ -164,7 +159,7 @@ namespace WireDev.Erp.V1.Api.Test
         [TestMethod("Get single day")]
         public void GetDayTestMethod()
         {
-            DateTime time = new DateTime(2020, 1, 1);
+            DateTime time = new(2020, 1, 1);
             ILogger<StatsController> logger = Mock.Of<ILogger<StatsController>>();
             DbContextOptions<ApplicationDataDbContext> options =
                 new DbContextOptionsBuilder<ApplicationDataDbContext>().UseInMemoryDatabase("Data.WireDevErpV1").Options;
@@ -172,7 +167,7 @@ namespace WireDev.Erp.V1.Api.Test
             _ = dbcMock.Setup(x => x.DayStats).ReturnsDbSet(dayTemp);
             StatsController sc = new(dbcMock.Object, logger);
 
-            ObjectResult response = (ObjectResult)sc.GetDayStats(((ushort)time.Year), ((ushort)time.Month), ((ushort)time.Day)).Result;
+            ObjectResult response = (ObjectResult)sc.GetDayStats((ushort)time.Year, (ushort)time.Month, (ushort)time.Day).Result;
             Assert.IsNotNull(response);
             Assert.IsTrue(response.StatusCode == StatusCodes.Status200OK, "Status code does not indicate success: " + response.StatusCode);
 

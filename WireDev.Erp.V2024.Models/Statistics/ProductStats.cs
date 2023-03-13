@@ -1,7 +1,5 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using WireDev.Erp.V1.Models.Enums;
-using WireDev.Erp.V1.Models.Interfaces;
 using WireDev.Erp.V1.Models.Storage;
 
 namespace WireDev.Erp.V1.Models.Statistics

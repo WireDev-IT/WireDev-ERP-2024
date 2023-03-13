@@ -40,8 +40,8 @@ namespace WireDev.Erp.V1.Client.Windows.ViewModels
                     using CancellationTokenSource cts = new();
                     tokens.Add(id, cts);
                     using HttpResponseMessage response = await ApiConnection.Client.GetAsync($"api/Products/{id}", cts.Token);
-                    Response? r = await response.Content.ReadFromJsonAsync<Response>();
-                    return response.IsSuccessStatusCode && (response.Value is Product p) ? p : throw new ArgumentNullException(nameof(GetProductAsync), "Response is not as expected!");
+                    Product? p = await response.Content.ReadFromJsonAsync<Product>();
+                    return response.IsSuccessStatusCode && p!=null ? p : throw new ArgumentNullException(nameof(GetProductAsync), "Response is not as expected!");
                 }
                 catch (ArgumentNullException)
                 {

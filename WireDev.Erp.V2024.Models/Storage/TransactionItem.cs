@@ -1,10 +1,7 @@
-﻿using System;
-using WireDev.Erp.V1.Models.Enums;
-
-namespace WireDev.Erp.V1.Models.Storage
+﻿namespace WireDev.Erp.V1.Models.Storage
 {
-	public class TransactionItem
-	{
+    public class TransactionItem
+    {
         public TransactionItem(uint productId, Guid priceId, uint count)
         {
             ProductId = productId;
@@ -13,7 +10,7 @@ namespace WireDev.Erp.V1.Models.Storage
         }
 
         public uint ProductId { get; set; }
-		public Guid PriceId { get; set; }
+        public Guid PriceId { get; set; }
         public uint Count { get; set; }
-	}
+    }
 }

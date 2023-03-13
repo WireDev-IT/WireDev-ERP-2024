@@ -30,7 +30,7 @@ namespace WireDev.Erp.V1.Models.AuditLog.Trail
 
             if (auditEntries.Any())
             {
-                IEnumerable<Audit> logs = (IEnumerable<Audit>)auditEntries.Select(x => x.ToAudit());
+                IEnumerable<Audit> logs = auditEntries.Select(x => x.ToAudit());
                 Db.Audit.AddRange(logs);
             }
         }

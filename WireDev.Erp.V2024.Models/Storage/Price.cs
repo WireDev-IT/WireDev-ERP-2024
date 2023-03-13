@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Diagnostics;
 using System.Reflection;
 using WireDev.Erp.V1.Models.Interfaces;
 
@@ -79,7 +77,7 @@ namespace WireDev.Erp.V1.Models.Storage
             {
                 if (!propertyNames.Contains(sPI.Name))
                 {
-                    PropertyInfo? tPI = this.GetType().GetProperty(sPI.Name, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                    PropertyInfo? tPI = GetType().GetProperty(sPI.Name, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
                     if (tPI != null && tPI.CanWrite && tPI.PropertyType.IsAssignableFrom(sPI.PropertyType))
                     {
                         tPI.SetValue(this, sPI.GetValue(price, null), null);

@@ -6,7 +6,6 @@ using Moq;
 using Moq.EntityFrameworkCore;
 using WireDev.Erp.V1.Api.Context;
 using WireDev.Erp.V1.Api.Controllers;
-using WireDev.Erp.V1.Models.Authentication;
 using WireDev.Erp.V1.Models.Storage;
 
 namespace WireDev.Erp.V1.Api.Test;
@@ -83,7 +82,7 @@ public class ProductControllerTest
     {
         Product p = productsTemp[0];
         p.Name = "new name";
-        p.Add(17);
+        _ = p.Add(17);
 
         ILogger<ProductController> logger = Mock.Of<ILogger<ProductController>>();
         DbContextOptions<ApplicationDataDbContext> options =

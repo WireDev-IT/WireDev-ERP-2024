@@ -1,7 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using WireDev.Erp.V1.Api.Context;
-
 namespace WireDev.Erp.V1.Api
 {
     public class Program

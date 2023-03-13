@@ -1,29 +1,31 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 
 namespace WireDev.Erp.V1.Models.Storage
 {
-	public class Group
-	{
-		public Group()
-		{
+    public class Group
+    {
+        public Group()
+        {
 
-		}
+        }
 
-		public Group(int groupNumber)
-		{
-			Uuid = groupNumber;
-		}
+        public Group(int groupNumber)
+        {
+            Uuid = groupNumber;
+        }
 
-		[Key]
-		public int Uuid { get; }
-		[Required(AllowEmptyStrings = false, ErrorMessage = "Group needs a name!")]
-		public string? Name { get; set; }
-		public string? Description { get; set; }
+        [Key]
+        public int Uuid { get; }
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Group needs a name!")]
+        public string? Name { get; set; }
+        public string? Description { get; set; }
         public string? Color { get; set; }
         public bool Used { get; private set; } = false;
-		public bool Use() => Used = true;
+        public bool Use()
+        {
+            return Used = true;
+        }
 
         public Task ModifyProperties(Group group)
         {
@@ -33,7 +35,7 @@ namespace WireDev.Erp.V1.Models.Storage
             {
                 if (!propertyNames.Contains(sPI.Name))
                 {
-                    PropertyInfo? tPI = this.GetType().GetProperty(sPI.Name, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                    PropertyInfo? tPI = GetType().GetProperty(sPI.Name, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
                     if (tPI != null && tPI.CanWrite && tPI.PropertyType.IsAssignableFrom(sPI.PropertyType))
                     {
                         tPI.SetValue(this, sPI.GetValue(group, null), null);

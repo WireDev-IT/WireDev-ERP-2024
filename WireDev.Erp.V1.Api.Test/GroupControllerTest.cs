@@ -6,7 +6,6 @@ using Moq;
 using Moq.EntityFrameworkCore;
 using WireDev.Erp.V1.Api.Context;
 using WireDev.Erp.V1.Api.Controllers;
-using WireDev.Erp.V1.Models.Authentication;
 using WireDev.Erp.V1.Models.Storage;
 
 namespace WireDev.Erp.V1.Api.Test;

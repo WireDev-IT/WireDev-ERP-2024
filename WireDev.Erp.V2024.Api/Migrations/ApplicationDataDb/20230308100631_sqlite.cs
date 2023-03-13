@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -11,7 +10,7 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "Audit",
                 columns: table => new
                 {
@@ -27,10 +26,10 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Audit", x => x.Id);
+                    _ = table.PrimaryKey("PK_Audit", x => x.Id);
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "DayStats",
                 columns: table => new
                 {
@@ -47,10 +46,10 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DayStats", x => x.Date);
+                    _ = table.PrimaryKey("PK_DayStats", x => x.Date);
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "Groups",
                 columns: table => new
                 {
@@ -63,10 +62,10 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Groups", x => x.Uuid);
+                    _ = table.PrimaryKey("PK_Groups", x => x.Uuid);
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "MonthStats",
                 columns: table => new
                 {
@@ -83,10 +82,10 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MonthStats", x => x.Date);
+                    _ = table.PrimaryKey("PK_MonthStats", x => x.Date);
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "Prices",
                 columns: table => new
                 {
@@ -99,10 +98,10 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Prices", x => x.Uuid);
+                    _ = table.PrimaryKey("PK_Prices", x => x.Uuid);
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "Products",
                 columns: table => new
                 {
@@ -122,10 +121,10 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Products", x => x.Uuid);
+                    _ = table.PrimaryKey("PK_Products", x => x.Uuid);
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "ProductStats",
                 columns: table => new
                 {
@@ -135,10 +134,10 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductStats", x => x.ProductId);
+                    _ = table.PrimaryKey("PK_ProductStats", x => x.ProductId);
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "Purchases",
                 columns: table => new
                 {
@@ -151,10 +150,10 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Purchases", x => x.Uuid);
+                    _ = table.PrimaryKey("PK_Purchases", x => x.Uuid);
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "Role",
                 columns: table => new
                 {
@@ -165,10 +164,10 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Role", x => x.id);
+                    _ = table.PrimaryKey("PK_Role", x => x.id);
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "Settings",
                 columns: table => new
                 {
@@ -178,10 +177,10 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Settings", x => x.Uuid);
+                    _ = table.PrimaryKey("PK_Settings", x => x.Uuid);
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "TotalStats",
                 columns: table => new
                 {
@@ -198,10 +197,10 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TotalStats", x => x.Date);
+                    _ = table.PrimaryKey("PK_TotalStats", x => x.Date);
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "YearStats",
                 columns: table => new
                 {
@@ -218,30 +217,30 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_YearStats", x => x.Date);
+                    _ = table.PrimaryKey("PK_YearStats", x => x.Date);
                 });
 
-            migrationBuilder.InsertData(
+            _ = migrationBuilder.InsertData(
                 table: "Groups",
                 columns: new[] { "Uuid", "Color", "Description", "Name", "Used" },
                 values: new object[] { 99, null, null, "Default_Group", false });
 
-            migrationBuilder.InsertData(
+            _ = migrationBuilder.InsertData(
                 table: "Prices",
                 columns: new[] { "Uuid", "Archived", "Description", "Locked", "RetailValue", "SellValue" },
                 values: new object[] { new Guid("aa567964-1234-4070-9a1e-ad19eeba3578"), false, "Defaul_Price", false, 10m, 15m });
 
-            migrationBuilder.InsertData(
+            _ = migrationBuilder.InsertData(
                 table: "Products",
                 columns: new[] { "Uuid", "Active", "Archived", "Availible", "Description", "EAN", "Group", "Metadata", "Name", "Prices", "Properties", "Used" },
                 values: new object[] { 9999u, false, false, 0, null, "[]", 100, "{}", "Default_Product", "[\"aa567964-1234-4070-9a1e-ad19eeba3578\"]", "{}", false });
 
-            migrationBuilder.InsertData(
+            _ = migrationBuilder.InsertData(
                 table: "Purchases",
                 columns: new[] { "Uuid", "DatePosted", "Items", "Posted", "TotalPrice", "Type" },
                 values: new object[] { new Guid("fb4a837e-b279-4aa9-ad9d-9129d9ecf3c7"), new DateTime(2023, 3, 8, 10, 6, 31, 258, DateTimeKind.Utc).AddTicks(70), "[]", true, 0m, 0 });
 
-            migrationBuilder.InsertData(
+            _ = migrationBuilder.InsertData(
                 table: "Settings",
                 columns: new[] { "Uuid", "NextGroupNumber", "NextProductNumber" },
                 values: new object[] { new Guid("a92f5b39-2a34-44e7-b742-8754a7c975fe"), 100, 10000u });
@@ -250,40 +249,40 @@ namespace WireDev.Erp.V1.Api.Migrations.ApplicationDataDb
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "Audit");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "DayStats");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "Groups");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "MonthStats");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "Prices");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "Products");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "ProductStats");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "Purchases");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "Role");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "Settings");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "TotalStats");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "YearStats");
         }
     }

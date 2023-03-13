@@ -1,5 +1,4 @@
-﻿using System;
-namespace WireDev.Erp.V1.Models.Statistics
+﻿namespace WireDev.Erp.V1.Models.Statistics
 {
     public class YearStats : TimeStats
     {
@@ -8,7 +7,7 @@ namespace WireDev.Erp.V1.Models.Statistics
         public YearStats(DateTime date)
         {
             DateTime t = new(date.Year, 1, 1);
-            this.Date = t.Ticks;
+            Date = t.Ticks;
         }
 
         public override long Date { get; }

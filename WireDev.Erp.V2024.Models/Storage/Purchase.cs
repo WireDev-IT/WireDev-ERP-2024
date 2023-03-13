@@ -1,8 +1,5 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Diagnostics;
-using System.Text.Json;
 using WireDev.Erp.V1.Models.Enums;
 
 namespace WireDev.Erp.V1.Models.Storage
@@ -34,18 +31,11 @@ namespace WireDev.Erp.V1.Models.Storage
             {
                 Items.Add(new TransactionItem(productId, price.Uuid, itemCount));
 
-                if (Type == TransactionType.Sell)
-                {
-                    TotalPrice = decimal.Add(TotalPrice, price.SellValue * itemCount);
-                }
-                else if (Type == TransactionType.Disposed || Type == TransactionType.Purchase)
-                {
-                    TotalPrice = decimal.Subtract(TotalPrice, price.RetailValue * itemCount);
-                }
-                else
-                {
-                    TotalPrice = decimal.Subtract(TotalPrice, price.SellValue * itemCount);
-                }
+                TotalPrice = Type == TransactionType.Sell
+                    ? decimal.Add(TotalPrice, price.SellValue * itemCount)
+                    : Type is TransactionType.Disposed or TransactionType.Purchase
+                        ? decimal.Subtract(TotalPrice, price.RetailValue * itemCount)
+                        : decimal.Subtract(TotalPrice, price.SellValue * itemCount);
 
                 return true;
             }

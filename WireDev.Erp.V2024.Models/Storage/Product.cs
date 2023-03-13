@@ -1,15 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System.ComponentModel.DataAnnotations;
-using System.Xml;
-using WireDev.Erp.V1.Models.Statistics;
-using System.Collections.Generic;
-using System.Text.Json;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Runtime.Serialization;
-using System.Text.Json.Nodes;
-using System.Xml.Linq;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 
 namespace WireDev.Erp.V1.Models.Storage
@@ -30,7 +19,10 @@ namespace WireDev.Erp.V1.Models.Storage
         public DateTime DateCreated { get; }
 
         public bool Used { get; private set; } = false;
-        public void Use() => Used = true;
+        public void Use()
+        {
+            Used = true;
+        }
 
         [Key]
         public uint Uuid { get; }
@@ -47,8 +39,15 @@ namespace WireDev.Erp.V1.Models.Storage
         public Dictionary<string, string> Properties { get; set; } = new();
         public Dictionary<string, string> Metadata { get; set; } = new();
 
-        public int Add(uint add) => Availible += (int)add;
-        public int Remove(uint add) => Availible -= (int)add;
+        public int Add(uint add)
+        {
+            return Availible += (int)add;
+        }
+
+        public int Remove(uint add)
+        {
+            return Availible -= (int)add;
+        }
 
         public Task ModifyProperties(Product product)
         {
@@ -58,7 +57,7 @@ namespace WireDev.Erp.V1.Models.Storage
             {
                 if (!propertyNames.Contains(sPI.Name))
                 {
-                    PropertyInfo? tPI = this.GetType().GetProperty(sPI.Name, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                    PropertyInfo? tPI = GetType().GetProperty(sPI.Name, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
                     if (tPI != null && tPI.CanWrite && tPI.PropertyType.IsAssignableFrom(sPI.PropertyType))
                     {
                         tPI.SetValue(this, sPI.GetValue(product, null), null);

@@ -1,6 +1,6 @@
 ﻿using WireDev.Erp.V1.Models.Enums;
 
-namespace WireDev.Erp.V1.Models.Storage
+namespace WireDev.Erp.V1.Models.Interfaces
 {
     public interface IPurchase
     {

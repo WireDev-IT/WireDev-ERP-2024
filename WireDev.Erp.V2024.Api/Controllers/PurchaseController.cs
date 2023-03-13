@@ -1,21 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using WireDev.Erp.V1.Models.Storage;
-using WireDev.Erp.V1.Api.Context;
 using Microsoft.EntityFrameworkCore;
-using WireDev.Erp.V1.Models.Authentication;
-using WireDev.Erp.V1.Models.Enums;
-using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore.Storage;
-using System.Text.Json;
-using WireDev.Erp.V1.Models.Statistics;
 using System.Data;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
+using WireDev.Erp.V1.Api.Context;
+using WireDev.Erp.V1.Models.Enums;
+using WireDev.Erp.V1.Models.Statistics;
+using WireDev.Erp.V1.Models.Storage;
 
 namespace WireDev.Erp.V1.Api.Controllers
 {
@@ -48,28 +39,28 @@ namespace WireDev.Erp.V1.Api.Controllers
             if (totalStats == null || !_context.TotalStats.Any())
             {
                 totalStats = new(time);
-                _context.TotalStats.Add(totalStats);
+                _ = _context.TotalStats.Add(totalStats);
             }
 
-            yearStats = _context.YearStats.Find(new DateTime((int)time.Year, 1, 1).Ticks);
+            yearStats = _context.YearStats.Find(new DateTime(time.Year, 1, 1).Ticks);
             if (yearStats == null)
             {
                 yearStats = new(time);
-                _context.YearStats.Add(yearStats);
+                _ = _context.YearStats.Add(yearStats);
             }
 
-            monthStats = _context.MonthStats.Find(new DateTime((int)time.Year, (int)time.Month, 1).Ticks);
+            monthStats = _context.MonthStats.Find(new DateTime(time.Year, time.Month, 1).Ticks);
             if (monthStats == null)
             {
                 monthStats = new(time);
-                _context.MonthStats.Add(monthStats);
+                _ = _context.MonthStats.Add(monthStats);
             }
 
-            dayStats = _context.DayStats.Find(new DateTime((int)time.Year, (int)time.Month, (int)time.Day).Ticks);
+            dayStats = _context.DayStats.Find(new DateTime(time.Year, time.Month, time.Day).Ticks);
             if (dayStats == null)
             {
                 dayStats = new(time);
-                _context.DayStats.Add(dayStats);
+                _ = _context.DayStats.Add(dayStats);
             }
 
             return Task.FromResult((totalStats, yearStats, monthStats, dayStats));
@@ -87,13 +78,17 @@ namespace WireDev.Erp.V1.Api.Controllers
             product = _context.Products.Find(item.ProductId);
             if (product != null)
             {
-                if (type == TransactionType.Sell || type == TransactionType.Disposed)
-                    product.Remove(item.Count);
-                else if (type == TransactionType.Cancel || type == TransactionType.Purchase)
-                    product.Add(item.Count);
+                if (type is TransactionType.Sell or TransactionType.Disposed)
+                {
+                    _ = product.Remove(item.Count);
+                }
+                else if (type is TransactionType.Cancel or TransactionType.Purchase)
+                {
+                    _ = product.Add(item.Count);
+                }
 
                 product.Use();
-                _context.Products.Update(product);
+                _ = _context.Products.Update(product);
             }
             else
             {
@@ -105,12 +100,12 @@ namespace WireDev.Erp.V1.Api.Controllers
             {
                 productStats = new(item.ProductId);
                 productStats.AddTransaction(item, type);
-                _context.ProductStats.Add(productStats);
+                _ = _context.ProductStats.Add(productStats);
             }
             else
             {
                 productStats.AddTransaction(item, type);
-                _context.ProductStats.Update(productStats);
+                _ = _context.ProductStats.Update(productStats);
             }
 
             return Task.CompletedTask;
@@ -179,11 +174,11 @@ namespace WireDev.Erp.V1.Api.Controllers
                         }
                     }
 
-                    _context.TotalStats.Update(totalStats);
-                    _context.YearStats.Update(yearStats);
-                    _context.MonthStats.Update(monthStats);
-                    _context.DayStats.Update(dayStats);
-                    _context.Prices.Update(price);
+                    _ = _context.TotalStats.Update(totalStats);
+                    _ = _context.YearStats.Update(yearStats);
+                    _ = _context.MonthStats.Update(monthStats);
+                    _ = _context.DayStats.Update(dayStats);
+                    _ = _context.Prices.Update(price);
                 }
                 catch (ArgumentNullException ex)
                 {
