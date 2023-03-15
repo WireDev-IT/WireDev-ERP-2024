@@ -12,7 +12,7 @@
 10. Use your JWT in Swagger UI or in the authorization-header in all your requests
 
 ## Import test data
-1. Download sample data from [here](https://github.com/WireDev-IT/WireDev-ERP-2024/blob/501061b74216f1afd83c9b26d7cd85432c936376/WireDev.Erp.V1.Api.Test/sample-data.json) or go to `/WireDev.Erp.V1.Api.Test/` and copy the content of `sample-data.json`
+1. Download sample data from [here](https://github.com/WireDev-IT/WireDev-ERP-2024/blob/501061b74216f1afd83c9b26d7cd85432c936376/WireDev.Erp.V1.Api.Test/sample-data.json) or go to `/WireDev.Erp.V1.Api.Test/` and copy the contents of `sample-data.json`
 2. Log in into your API account or create a account
 3. Create a new request at `/Misc/setup/` with the contents of the `sample-data.json` in the body. The API should return `HTTP-200`.
 
