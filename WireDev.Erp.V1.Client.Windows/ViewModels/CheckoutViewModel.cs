@@ -78,7 +78,7 @@ namespace WireDev.Erp.V1.Client.Windows.ViewModels
                             purchaseToPush = null;
                             CheckoutItems.Clear();
 
-                            if (response.Value is Guid g)
+                            if (r.Data is Guid g)
                             {
                                 _ = MessageBox.Success("Transaction done!", "Sell");
                                 CheckoutItems.Clear();

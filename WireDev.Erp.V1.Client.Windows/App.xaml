@@ -9,6 +9,7 @@
                 <hc:Theme/>
                 <!-- Other merged dictionaries here -->
             </ResourceDictionary.MergedDictionaries>
+
             <!-- Other app resources here -->
         </ResourceDictionary>
     </Application.Resources>

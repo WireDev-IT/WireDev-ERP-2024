@@ -1,5 +1,25 @@
-﻿using HandyControl.Controls;using System;using System.Net;using System.Net.Http;using System.Net.Http.Json;using System.Threading.Tasks;using System.Windows;using System.Windows.Media;using System.Windows.Media.Animation;using WireDev.Erp.V1.Client.Windows.Classes;
-using WireDev.Erp.V1.Models.Authentication;using MessageBox = HandyControl.Controls.MessageBox;using Window = System.Windows.Window;namespace WireDev.Erp.V1.Client.Windows{    /// <summary>    /// Interaktionslogik für LoginWindow.xaml    /// </summary>    public partial class LoginWindow : Window    {        private AnimationPath LoadingAnimation = new()
+﻿using HandyControl.Controls;
+using System;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using WireDev.Erp.V1.Client.Windows.Classes;
+using WireDev.Erp.V1.Models.Authentication;
+using MessageBox = HandyControl.Controls.MessageBox;
+using Window = System.Windows.Window;
+
+namespace WireDev.Erp.V1.Client.Windows
+{
+    /// <summary>
+    /// Interaktionslogik für LoginWindow.xaml
+    /// </summary>
+    public partial class LoginWindow : Window
+    {
+        private AnimationPath LoadingAnimation = new()
         {
             Data = Geometry.Parse(
 "M 175.5,-0.5 C 175.833,-0.5 176.167,-0.5 176.5,-0.5C 177.167,0.833333 177.833,0.833333 178.5,-0.5C 178.833,-0.5 179.167,-0.5 179.5,-0.5C 180.167,0.833333 180.833,0.833333 181.5,-0.5C 181.833,-0.5 182.167,-0.5 182.5,-0.5C 183.167,0.833333 183.833,0.833333 184.5,-0.5C 184.833,-0.5 185.167,-0.5 185.5,-0.5C 186.167,0.833333 186.833,0.833333 187.5,-0.5C 187.833,-0.5 188.167,-0.5 188.5,-0.5C 189.167,0.833333 189.833,0.833333 190.5,-0.5C 190.833,-0.5 191.167,-0.5 191.5,-0.5C 192.167,0.833333 192.833,0.833333 193.5,-0.5C 193.833,-0.5 194.167,-0.5 194.5,-0.5C 195.167,0.833333 195.833,0.833333 196.5,-0.5C 196.833,-0.5 197.167,-0.5 197.5,-0.5C 198.167,0.833333 198.833,0.833333 199.5,-0.5C 199.833,-0.5 200.167,-0.5 200.5,-0.5C 201.167,0.833333 201.833,0.833333 202.5,-0.5C 202.833,-0.5 203.167,-0.5 203.5,-0.5C 204.167,0.833333 204.833,0.833333 205.5,-0.5C 205.833,-0.5 206.167,-0.5 206.5,-0.5C 207.167,0.833333 207.833,0.833333 208.5,-0.5C 208.833,-0.5 209.167,-0.5 209.5,-0.5C 210.167,0.833333 210.833,0.833333 211.5,-0.5C 211.833,-0.5 212.167,-0.5 212.5,-0.5C 213.167,0.833333 213.833,0.833333 214.5,-0.5C 214.833,-0.5 215.167,-0.5 215.5,-0.5C 216.167,0.833333 216.833,0.833333 217.5,-0.5C 217.833,-0.5 218.167,-0.5 218.5,-0.5C 219.167,0.833333 219.833,0.833333 220.5,-0.5C 220.833,-0.5 221.167,-0.5 221.5,-0.5C 222.167,0.833333 222.833,0.833333 223.5,-0.5C 223.833,-0.5 224.167,-0.5 224.5,-0.5C 225.167,0.833333 225.833,0.833333 226.5,-0.5C 226.833,-0.5 227.167,-0.5 227.5,-0.5C 228.167,0.833333 228.833,0.833333 229.5,-0.5C 229.833,-0.5 230.167,-0.5 230.5,-0.5C 231.167,0.833333 231.833,0.833333 232.5,-0.5C 232.833,-0.5 233.167,-0.5 233.5,-0.5C 234.167,0.833333 234.833,0.833333 235.5,-0.5C 235.833,-0.5 236.167,-0.5 236.5,-0.5C 237.167,0.833333 237.833,0.833333 238.5,-0.5C 238.833,-0.5 239.167,-0.5 239.5,-0.5C 240.167,0.833333 240.833,0.833333 241.5,-0.5C 241.833,-0.5 242.167,-0.5 242.5,-0.5C 243.167,0.833333 243.833,0.833333 244.5,-0.5C 244.833,-0.5 245.167,-0.5 245.5,-0.5C 246.167,0.833333 246.833,0.833333 247.5,-0.5C 247.833,-0.5 248.167,-0.5 248.5,-0.5C 249.167,0.833333 249.833,0.833333 250.5,-0.5C 250.833,-0.5 251.167,-0.5 251.5,-0.5C 252.167,0.833333 252.833,0.833333 253.5,-0.5C 253.833,-0.5 254.167,-0.5 254.5,-0.5C 255.167,0.833333 255.833,0.833333 256.5,-0.5C 256.833,-0.5 257.167,-0.5 257.5,-0.5C 258.167,0.833333 258.833,0.833333 259.5,-0.5C 259.833,-0.5 260.167,-0.5 260.5,-0.5C 261.167,0.833333 261.833,0.833333 262.5,-0.5C 262.833,-0.5 263.167,-0.5 263.5,-0.5C 264.167,0.833333 264.833,0.833333 265.5,-0.5C 265.833,-0.5 266.167,-0.5 266.5,-0.5C 267.167,0.833333 267.833,0.833333 268.5,-0.5C 268.833,-0.5 269.167,-0.5 269.5,-0.5C 270.167,0.833333 270.833,0.833333 271.5,-0.5C 271.833,-0.5 272.167,-0.5 272.5,-0.5C 273.167,0.833333 273.833,0.833333 274.5,-0.5C 274.833,-0.5 275.167,-0.5 275.5,-0.5C 276.167,0.833333 276.833,0.833333 277.5,-0.5C 277.833,-0.5 278.167,-0.5 278.5,-0.5C 279.167,0.833333 279.833,0.833333 280.5,-0.5C 280.833,-0.5 281.167,-0.5 281.5,-0.5C 282.167,0.833333 282.833,0.833333 283.5,-0.5C 283.833,-0.5 284.167,-0.5 284.5,-0.5C 285.167,0.833333 285.833,0.833333 286.5,-0.5C 286.833,-0.5 287.167,-0.5 287.5,-0.5C 288.167,0.833333 288.833,0.833333 289.5,-0.5C 289.833,-0.5 290.167,-0.5 290.5,-0.5C 291.167,0.833333 291.833,0.833333 292.5,-0.5C 292.833,-0.5 293.167,-0.5 293.5,-0.5C 294.167,0.833333 294.833,0.833333 295.5,-0.5C 295.833,-0.5 296.167,-0.5 296.5,-0.5C 297.167,0.833333 297.833,0.833333 298.5,-0.5C 298.833,-0.5 299.167,-0.5 299.5,-0.5C 300.167,0.833333 300.833,0.833333 301.5,-0.5C 301.833,-0.5 302.167,-0.5 302.5,-0.5C 303.167,0.833333 303.833,0.833333 304.5,-0.5C 304.833,-0.5 305.167,-0.5 305.5,-0.5C 306.167,0.833333 306.833,0.833333 307.5,-0.5C 307.833,-0.5 308.167,-0.5 308.5,-0.5C 308.918,0.221579 309.584,0.721579 310.5,1C 287.599,23.7359 264.599,46.2359 241.5,68.5C 218.115,46.4585 195.115,23.9585 172.5,1C 173.737,0.76791 174.737,0.26791 175.5,-0.5 Z " +
@@ -17,7 +37,101 @@ using WireDev.Erp.V1.Models.Authentication;using MessageBox = HandyControl.Cont
             IsPlaying = true,
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center
-        };        public LoginWindow()        {            InitializeComponent();            SetServerStatus(false);        }        private void CredentialsPanel_GotFocus(object sender, RoutedEventArgs e)        {            Storyboard? sb = FindResource("LoginPanelFocus") as Storyboard;            sb.Begin();        }        private void CredentialsPanel_LostFocus(object sender, RoutedEventArgs e)        {            Storyboard? sb = FindResource("LoginPanelDefocus") as Storyboard;            sb.Begin();        }        private async void LoginBtn_Click(object sender, RoutedEventArgs e)        {            Storyboard? sb = FindResource("LoginSubmit") as Storyboard;            sb.Begin();            _ = FormPanel.Children.Add(LoadingAnimation);            await SetSubtitel("Connecting to server...");            if (!await ApiConnection.IsOnline())            {                await SetSubtitel("Connection error");                _ = MessageBox.Show("The server refused to connect! We can not log you in. Try again later.", "Connection error", MessageBoxButton.OK, MessageBoxImage.Error);                                Storyboard? sb2 = FindResource("LoginReset") as Storyboard;                sb2.Begin();                FormPanel.Children.Remove(LoadingAnimation);                await SetSubtitel("Login into your Account");            }            else            {                await SetSubtitel("Loggin in...");                try                {                    HttpResponseMessage response = await ApiConnection.Client.PostAsJsonAsync<LoginModel>("api/Authenticate/login",                        new() { Username = UsernameInput.Password, Password = PasswordInput.Password });                    if (response.StatusCode == HttpStatusCode.OK)                    {                        ApiConnection.SetToken((await response.Content.ReadFromJsonAsync<Response>()).Data.ToString());                    }                    else                    {                        _ = MessageBox.Show("Either username or password is incorrect!", "Authentication", MessageBoxButton.OK, MessageBoxImage.Error);                        UsernameInput.IsError = true;                        PasswordInput.IsError = true;                    }                }                catch (HttpRequestException ex)                {                    _ = MessageBox.Show("It was not possible to send your credentials to the server for validation. Try again later.", "Connection error", MessageBoxButton.OK, MessageBoxImage.Error);                }                catch (Exception ex)                {                    _ = MessageBox.Show($"An unexpected error occured: {ex.Message}\n\nContact your administrator if this happens more than two times.", "Unknown error", MessageBoxButton.OK, MessageBoxImage.Error);                }                SubtitleTxt.Text = "Retrieving data...";                MainWindow window = new();                window.Show();                Close();            }        }        private void TroubleBtn_Click(object sender, RoutedEventArgs e)        {            _ = MessageBox.Show("Send a request to your administrator to regain access to your account.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);        }        private void UsernameInput_TextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)        {            UsernameInput.IsError = false;        }        private void PasswordInput_TextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)        {            PasswordInput.IsError = false;        }        private Task SetSubtitel(string text)        {            SubtitelTransition.Visibility = Visibility.Collapsed;            SubtitleTxt.Text = text;            SubtitelTransition.Visibility = Visibility.Visible;            return Task.CompletedTask;        }        private Task SetServerStatus(bool status)
+        };
+
+        public LoginWindow()
+        {
+            InitializeComponent();
+            SetServerStatus(false);
+        }
+
+        private void CredentialsPanel_GotFocus(object sender, RoutedEventArgs e)
+        {
+            Storyboard? sb = FindResource("LoginPanelFocus") as Storyboard;
+            sb.Begin();
+        }
+
+        private void CredentialsPanel_LostFocus(object sender, RoutedEventArgs e)
+        {
+            Storyboard? sb = FindResource("LoginPanelDefocus") as Storyboard;
+            sb.Begin();
+        }
+
+        private async void LoginBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Storyboard? sb = FindResource("LoginSubmit") as Storyboard;
+            sb.Begin();
+            _ = FormPanel.Children.Add(LoadingAnimation);
+            await SetSubtitel("Connecting to server...");
+
+            if (!await ApiConnection.IsOnline())
+            {
+                await SetSubtitel("Connection error");
+                _ = MessageBox.Show("The server refused to connect! We can not log you in. Try again later.", "Connection error", MessageBoxButton.OK, MessageBoxImage.Error);
+                
+                Storyboard? sb2 = FindResource("LoginReset") as Storyboard;
+                sb2.Begin();
+                FormPanel.Children.Remove(LoadingAnimation);
+                await SetSubtitel("Login into your Account");
+            }
+            else
+            {
+                await SetSubtitel("Loggin in...");
+                try
+                {
+                    HttpResponseMessage response = await ApiConnection.Client.PostAsJsonAsync<LoginModel>("api/Authenticate/login",
+                        new() { Username = UsernameInput.Password, Password = PasswordInput.Password });
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        ApiConnection.SetToken((await response.Content.ReadFromJsonAsync<Response>()).Data.ToString());
+                    }
+                    else
+                    {
+                        _ = MessageBox.Show("Either username or password is incorrect!", "Authentication", MessageBoxButton.OK, MessageBoxImage.Error);
+                        UsernameInput.IsError = true;
+                        PasswordInput.IsError = true;
+                    }
+                }
+                catch (HttpRequestException ex)
+                {
+                    _ = MessageBox.Show("It was not possible to send your credentials to the server for validation. Try again later.", "Connection error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                catch (Exception ex)
+                {
+                    _ = MessageBox.Show($"An unexpected error occured: {ex.Message}\n\nContact your administrator if this happens more than two times.", "Unknown error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+
+                SubtitleTxt.Text = "Retrieving data...";
+                MainWindow window = new();
+                window.Show();
+                Close();
+            }
+        }
+
+        private void TroubleBtn_Click(object sender, RoutedEventArgs e)
+        {
+            _ = MessageBox.Show("Send a request to your administrator to regain access to your account.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void UsernameInput_TextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
+        {
+            UsernameInput.IsError = false;
+        }
+
+        private void PasswordInput_TextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
+        {
+            PasswordInput.IsError = false;
+        }
+
+        private Task SetSubtitel(string text)
+        {
+            SubtitelTransition.Visibility = Visibility.Collapsed;
+            SubtitleTxt.Text = text;
+            SubtitelTransition.Visibility = Visibility.Visible;
+            return Task.CompletedTask;
+        }
+
+        private Task SetServerStatus(bool status)
         {
             switch (status)
             {
@@ -31,4 +145,6 @@ using WireDev.Erp.V1.Models.Authentication;using MessageBox = HandyControl.Cont
                     break;
             }
             return Task.CompletedTask;
-        }    }}
+        }
+    }
+}

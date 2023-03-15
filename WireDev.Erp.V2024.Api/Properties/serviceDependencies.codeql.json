@@ -1,0 +1,24 @@
+{
+  "dependencies": {
+    "mssql1": {
+      "ignored": "true",
+      "type": "mssql",
+      "connectionId": "ConnectionStrings:ProductConnStr"
+    },
+    "mssql2": {
+      "ignored": "true",
+      "type": "mssql",
+      "connectionId": "ConnectionStrings:UserConnStr"
+    },
+    "mssql3": {
+      "ignored": "true",
+      "type": "mssql",
+      "connectionId": "ConnectionStrings:DataDatabase"
+    },
+    "mssql4": {
+      "ignored": "true",
+      "type": "mssql",
+      "connectionId": "ConnectionStrings:UserDatabase"
+    }
+  }
+}

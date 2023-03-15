@@ -3,17 +3,25 @@
     "secrets1": {
       "type": "secrets.user"
     },
+    "mssql3": {
+      "ignored": "true",
+      "type": "mssql",
+      "connectionId": "ConnectionStrings:DataDatabase"
+    },
+    "mssql4": {
+      "ignored": "true",
+      "type": "mssql",
+      "connectionId": "ConnectionStrings:UserDatabase"
+    },
     "mssql1": {
-      "secretStore": "LocalSecretsFile",
-      "type": "mssql.local",
-      "connectionId": "ConnectionStrings:ProductConnStr",
-      "dynamicId": null
+      "ignored": "true",
+      "type": "mssql",
+      "connectionId": "ConnectionStrings:ProductConnStr"
     },
     "mssql2": {
-      "secretStore": "LocalSecretsFile",
-      "type": "mssql.local",
-      "connectionId": "ConnectionStrings:UserConnStr",
-      "dynamicId": null
+      "ignored": "true",
+      "type": "mssql",
+      "connectionId": "ConnectionStrings:UserConnStr"
     }
   }
 }

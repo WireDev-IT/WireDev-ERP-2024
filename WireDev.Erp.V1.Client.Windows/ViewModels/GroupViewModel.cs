@@ -88,7 +88,7 @@ namespace WireDev.Erp.V1.Client.Windows.ViewModels
 
                     if (response.IsSuccessStatusCode)
                     {
-                        return GroupIds = response.Value is List<int> list ? list : throw new ArgumentNullException("Response is not as expected!");
+                        return GroupIds = r.Data is List<int> list ? list : throw new ArgumentNullException("Response is not as expected!");
                     }
                     else
                     {
@@ -115,7 +115,7 @@ namespace WireDev.Erp.V1.Client.Windows.ViewModels
                 {
                     using HttpResponseMessage response = await ApiConnection.Client.GetAsync($"api/Groups/{id}", groupLoadCts.Token);
                     Response? r = await response.Content.ReadFromJsonAsync<Response>(cancellationToken: groupLoadCts.Token);
-                    if (response.IsSuccessStatusCode && response.Value is Group g)
+                    if (response.IsSuccessStatusCode && r.Data is Group g)
                     {
                         if (!Groups.ContainsKey(id)) { Groups.Add(id, g); }
                         else { Groups[id] = g; }
@@ -144,7 +144,7 @@ namespace WireDev.Erp.V1.Client.Windows.ViewModels
             {
                 using HttpResponseMessage response = await ApiConnection.Client.PutAsJsonAsync($"api/Prices/add", group, token);
                 Response? r = await response.Content.ReadFromJsonAsync<Response>(cancellationToken: token);
-                if (response.IsSuccessStatusCode && response.Value is Group g)
+                if (response.IsSuccessStatusCode && r.Data is Group g)
                 {
                     if (!Groups.ContainsKey(g.Uuid)) { Groups.Add(g.Uuid, g); }
                     else { Groups[g.Uuid] = g; }
@@ -172,7 +172,7 @@ namespace WireDev.Erp.V1.Client.Windows.ViewModels
             {
                 using HttpResponseMessage response = await ApiConnection.Client.PutAsJsonAsync($"api/Groups/{group.Uuid}", group, token);
                 Response? r = await response.Content.ReadFromJsonAsync<Response>(cancellationToken: token);
-                if (response.IsSuccessStatusCode && response.Value is Group g)
+                if (response.IsSuccessStatusCode && r.Data is Group g)
                 {
                     if (!Groups.ContainsKey(g.Uuid)) { Groups.Add(g.Uuid, g); }
                     else { Groups[g.Uuid] = g; }
